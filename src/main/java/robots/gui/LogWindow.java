@@ -11,7 +11,7 @@ import robots.log.LogChangeListener;
 import robots.log.LogEntry;
 import robots.log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener {
+public class LogWindow extends InternalJFrameReactor implements LogChangeListener {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
 

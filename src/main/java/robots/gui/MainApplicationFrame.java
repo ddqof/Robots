@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 import robots.log.Logger;
 
@@ -21,7 +23,7 @@ import robots.log.Logger;
  * 1. Метод создания меню перегружен функционалом и трудно читается.
  * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
  */
-public class MainApplicationFrame extends JFrame {
+public class MainApplicationFrame extends JFrameReactor {
     private final JDesktopPane desktopPane = new JDesktopPane();
 
     public MainApplicationFrame() {
@@ -32,23 +34,40 @@ public class MainApplicationFrame extends JFrame {
         setBounds(inset, inset,
                 screenSize.width - inset * 2,
                 screenSize.height - inset * 2);
-
         setContentPane(desktopPane);
-
-
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
-
-        GameWindow gameWindow = new GameWindow();
-        gameWindow.setSize(400, 400);
-        addWindow(gameWindow);
-
+        createGameWindow();
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
+    protected void createGameWindow() {
+        GameWindow gameWindow = new GameWindow();
+
+        gameWindow.addInternalFrameListener(new InternalFrameAdapter() {
+            public void internalFrameClosing(InternalFrameEvent e) {
+                gameWindow.reactToInternalFrameClosing(
+                        "Do you want to exit game window?",
+                        "Exit game window"
+                );
+            }
+        });
+
+        gameWindow.setSize(400, 400);
+        addWindow(gameWindow);
+    }
+
     protected LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
+        logWindow.addInternalFrameListener(new InternalFrameAdapter() {
+            public void internalFrameClosing(InternalFrameEvent e) {
+                logWindow.reactToInternalFrameClosing(
+                        "Do you want to exit log window?",
+                        "Exit log window"
+                );
+            }
+        });
         logWindow.setLocation(10, 10);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
@@ -56,6 +75,7 @@ public class MainApplicationFrame extends JFrame {
         Logger.debug("Протокол работает");
         return logWindow;
     }
+
 
     protected void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
