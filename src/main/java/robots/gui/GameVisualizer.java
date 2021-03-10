@@ -53,9 +53,17 @@ public class GameVisualizer extends JPanel {
         setDoubleBuffered(true);
     }
 
-    protected void setTargetPosition(Point p) {
+    public void setTargetPosition(Point p) {
         targetPositionX = p.x;
         targetPositionY = p.y;
+    }
+
+    public Point getRobotPosition(){
+        return new Point(round(robotPositionX), round(robotPositionY));
+    }
+
+    public Point getTargetPosition(){
+        return new Point(round(targetPositionX), round(targetPositionY));
     }
 
     protected void onRedrawEvent() {
@@ -75,13 +83,16 @@ public class GameVisualizer extends JPanel {
         return asNormalizedRadians(Math.atan2(diffY, diffX));
     }
 
-    protected void onModelUpdateEvent() {
+    public void onModelUpdateEvent() {
         double distance = distance(targetPositionX, targetPositionY, robotPositionX, robotPositionY);
         if (distance < 0.5) return;
         double angleToTarget = angleTo(robotPositionX, robotPositionY, targetPositionX, targetPositionY);
         double angularVelocity = 0;
         robotDirection = angleToTarget;
         moveRobot(maxVelocity, angularVelocity, 10);
+        var a = this.getSize().height;
+        var b = this.getSize().width;
+        var c = 2;
     }
 
     private static double applyLimits(double value, double min, double max) {
