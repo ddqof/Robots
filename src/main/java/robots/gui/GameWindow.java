@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
-public class GameWindow extends InternalJFrameReactor {
+public class GameWindow extends JInternalFrameReactor {
     private final GameVisualizer m_visualizer;
 
     public GameWindow() {

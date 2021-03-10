@@ -1,3 +1,5 @@
+package logTests;
+
 import org.junit.*;
 import robots.log.LogEntry;
 import robots.log.LogLevel;

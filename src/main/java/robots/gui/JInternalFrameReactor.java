@@ -2,9 +2,9 @@ package robots.gui;
 
 import javax.swing.*;
 
-class InternalJFrameReactor extends JInternalFrame {
+class JInternalFrameReactor extends JInternalFrame {
 
-    public InternalJFrameReactor(
+    public JInternalFrameReactor(
             String title, Boolean resizable, Boolean closable, Boolean maximizable, Boolean iconifiable) {
         super(title, resizable, closable, maximizable, iconifiable);
     }

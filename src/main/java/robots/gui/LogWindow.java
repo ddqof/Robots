@@ -4,14 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.TextArea;
 
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 import robots.log.LogChangeListener;
 import robots.log.LogEntry;
 import robots.log.LogWindowSource;
 
-public class LogWindow extends InternalJFrameReactor implements LogChangeListener {
+public class LogWindow extends JInternalFrameReactor implements LogChangeListener {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
 
