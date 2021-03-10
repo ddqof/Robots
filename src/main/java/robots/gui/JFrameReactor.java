@@ -14,7 +14,7 @@ class JFrameReactor extends JFrame{
         if (result == JOptionPane.YES_OPTION) {
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
-        else if (result == JOptionPane.NO_OPTION || result == JOptionPane.DEFAULT_OPTION) {
+        else {
             this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         }
     }

@@ -14,7 +14,7 @@ class JInternalFrameReactor extends JInternalFrame {
                 confirmMessage, confirmTitle, JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-        } else if (result == JOptionPane.NO_OPTION || result == JOptionPane.DEFAULT_OPTION) {
+        } else {
             this.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
         }
     }
