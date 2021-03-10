@@ -90,9 +90,6 @@ public class GameVisualizer extends JPanel {
         double angularVelocity = 0;
         robotDirection = angleToTarget;
         moveRobot(maxVelocity, angularVelocity, 10);
-        var a = this.getSize().height;
-        var b = this.getSize().width;
-        var c = 2;
     }
 
     private static double applyLimits(double value, double min, double max) {
