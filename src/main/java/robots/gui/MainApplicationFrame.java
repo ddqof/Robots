@@ -3,6 +3,7 @@ package robots.gui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -15,6 +16,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import robots.log.Logger;
 
@@ -111,7 +114,28 @@ public class MainApplicationFrame extends JFrameReactor {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(generateLookAndFeelMenu());
         menuBar.add(generateTestMenu());
+        menuBar.add(generateExitMenu());
         return menuBar;
+    }
+
+    private JMenu generateExitMenu() {
+        JMenu exitMenu = new JMenu("Выйти");
+        exitMenu.setMnemonic(KeyEvent.VK_Q);
+        exitMenu.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                MainApplicationFrame.this.dispatchEvent(
+                        new WindowEvent(MainApplicationFrame.this,
+                        WindowEvent.WINDOW_CLOSING));
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) { }
+
+            @Override
+            public void menuCanceled(MenuEvent e) { }
+        });
+        return exitMenu;
     }
 
     private JMenu generateTestMenu() {
