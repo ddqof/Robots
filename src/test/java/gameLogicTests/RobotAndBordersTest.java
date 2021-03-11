@@ -1,3 +1,5 @@
+package gameLogicTests;
+
 import org.junit.*;
 import robots.gui.GameVisualizer;
 import java.awt.*;
