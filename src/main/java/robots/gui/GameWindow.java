@@ -2,10 +2,9 @@ package robots.gui;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
-public class GameWindow extends JInternalFrame {
+public class GameWindow extends JInternalFrameReactor {
     private final GameVisualizer m_visualizer;
 
     public GameWindow() {
