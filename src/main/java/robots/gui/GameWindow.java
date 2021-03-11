@@ -14,5 +14,6 @@ public class GameWindow extends JInternalFrameReactor {
         panel.add(m_visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
+
     }
 }
