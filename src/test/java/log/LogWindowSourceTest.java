@@ -1,4 +1,4 @@
-package logTests;
+package log;
 
 import org.junit.*;
 import robots.log.LogEntry;

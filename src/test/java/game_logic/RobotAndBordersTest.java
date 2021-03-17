@@ -1,4 +1,4 @@
-package gameLogicTests;
+package game_logic;
 
 import org.junit.*;
 import robots.gui.GameVisualizer;
