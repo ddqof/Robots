@@ -3,7 +3,7 @@ package robots.log;
 import java.util.Queue;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 /**
@@ -21,7 +21,7 @@ public class LogWindowSource {
     private volatile LogChangeListener[] activeListeners;
 
     public LogWindowSource(int queueLength) {
-        messages = new CircularFifoQueue<>(queueLength);
+        messages = QueueUtils.synchronizedQueue(new CircularFifoQueue<>(queueLength));
         listeners = new ArrayList<>();
     }
 
