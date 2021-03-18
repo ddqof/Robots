@@ -1,9 +1,9 @@
-package log;
+package model.log;
 
 import org.junit.*;
-import robots.log.LogEntry;
-import robots.log.LogLevel;
-import robots.log.LogWindowSource;
+import robots.model.log.LogEntry;
+import robots.model.log.LogLevel;
+import robots.model.log.LogWindowSource;
 
 import java.util.Iterator;
 

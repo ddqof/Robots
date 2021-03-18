@@ -1,4 +1,4 @@
-package robots.log;
+package robots.model.log;
 
 public interface LogChangeListener {
     public void onLogChanged();

@@ -1,4 +1,4 @@
-package robots.log;
+package robots.model.log;
 
 public final class Logger {
     private static final LogWindowSource defaultLogSource;

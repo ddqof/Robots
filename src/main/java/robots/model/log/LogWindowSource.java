@@ -1,4 +1,4 @@
-package robots.log;
+package robots.model.log;
 
 import java.util.Queue;
 import java.util.ArrayList;
