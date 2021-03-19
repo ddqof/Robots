@@ -1,4 +1,4 @@
-package robots.view;
+package robots.view.frames;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -14,9 +14,9 @@ public class ClosingLogWindow extends JInternalFrameClosing implements LogChange
     private LogWindowSource logSource;
     private TextArea logContent;
 
-    public ClosingLogWindow(LogWindowSource logSource) {
+    public ClosingLogWindow(LogWindowSource logSource, int width, int height, int x, int y) {
         super(
-                "Протокол работы",
+                "Work protocol",
                 true,
                 true,
                 true,
@@ -28,12 +28,13 @@ public class ClosingLogWindow extends JInternalFrameClosing implements LogChange
         this.logSource.registerListener(this);
         logContent = new TextArea("");
         logContent.setSize(200, 500);
-
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
-        pack();
         updateLogContent();
+        setLocation(x, y);
+        setSize(width, height);
+        pack();
     }
 
     private void updateLogContent() {

@@ -1,14 +1,15 @@
-package robots.view;
+package robots.view.frames;
 
 import robots.model.game.GameModel;
+import robots.view.panels.GamePanel;
 
 import java.awt.*;
 import javax.swing.JPanel;
 
 public class ClosingGameWindow extends JInternalFrameClosing {
-    public ClosingGameWindow(GameModel gameModel) {
+    public ClosingGameWindow(GameModel gameModel, int width, int height, int x, int y) {
         super(
-                "Игровое поле",
+                "Game field",
                 true,
                 true,
                 true,
@@ -21,5 +22,6 @@ public class ClosingGameWindow extends JInternalFrameClosing {
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
+        setSize(width, height);
     }
 }

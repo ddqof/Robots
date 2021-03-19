@@ -1,10 +1,10 @@
-package robots.view;
+package robots.view.frames;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-class JFrameClosing extends JFrame {
+public class JFrameClosing extends JFrame {
 
     public JFrameClosing(String closingConfirmMessage, String closingDialogTitle) {
         super();
