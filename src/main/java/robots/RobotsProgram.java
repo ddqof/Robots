@@ -22,7 +22,7 @@ public class RobotsProgram {
             MainApplicationClosingFrame closingFrame = new MainApplicationClosingFrame("Protocol is working");
             closingFrame.addWindow(
                     new ClosingLogWindow(
-                            Logger.getDefaultLogSource(), 300, 800, 10, 10
+                            Logger.getDefaultLogSource(), 300, 800, 500, 250
                     )
             );
             closingFrame.addWindow(
@@ -30,7 +30,7 @@ public class RobotsProgram {
                             new GameModel(
                                     new Robot(100, 100, 0),
                                     new Target(150, 100)
-                            ), 400, 400
+                            ), 400, 400, 800, 250
                     )
             );
             closingFrame.pack();

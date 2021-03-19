@@ -3,6 +3,9 @@ package robots.model.game;
 public class GameModel {
     private final Robot robot;
     private Target target;
+    private static final double DEFAULT_VELOCITY = 0.1;
+    private static final double DEFAULT_ANGULAR_VELOCITY = 0;
+    private static final double DEFAULT_DURATION = 10;
 
     public GameModel(Robot robot, Target target) {
         this.robot = robot;
@@ -19,6 +22,11 @@ public class GameModel {
 
     public void update(int targetPositionX, int targetPositionY) {
         target = new Target(targetPositionX, targetPositionY);
-        robot.move(target, 0.1, 0, 10);
+        robot.move(
+                target,
+                DEFAULT_VELOCITY,
+                DEFAULT_ANGULAR_VELOCITY,
+                DEFAULT_DURATION
+        );
     }
 }

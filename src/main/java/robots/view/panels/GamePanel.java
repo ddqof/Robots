@@ -13,8 +13,9 @@ import java.util.TimerTask;
 
 public class GamePanel extends JPanel {
 
+    private static final String TIMER_NAME = "Events generator";
     private final GameModel gameModel;
-    private final Timer timer = new Timer("events generator", true);
+    private final Timer timer = new Timer(TIMER_NAME, true);
     private volatile int clickedPositionX;
     private volatile int clickedPositionY;
 

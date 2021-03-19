@@ -13,16 +13,19 @@ import robots.model.log.LogWindowSource;
 public class ClosingLogWindow extends JInternalFrameClosing implements LogChangeListener {
     private LogWindowSource logSource;
     private TextArea logContent;
+    private static final String CLOSING_LOG_WINDOW_TITLE = "Work protocol";
+    private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit?";
+    private static final String CLOSING_DIALOG_TITLE = "Exit log window";
 
     public ClosingLogWindow(LogWindowSource logSource, int width, int height, int x, int y) {
         super(
-                "Work protocol",
+                CLOSING_LOG_WINDOW_TITLE,
                 true,
                 true,
                 true,
                 true,
-                "Do you want to exit?",
-                "Exit log window"
+                CLOSING_CONFIRM_MESSAGE,
+                CLOSING_DIALOG_TITLE
         );
         this.logSource = logSource;
         this.logSource.registerListener(this);
