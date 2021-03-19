@@ -30,7 +30,7 @@ public class RobotsProgram {
                             new GameModel(
                                     new Robot(100, 100, 0),
                                     new Target(150, 100)
-                            ), 400, 400, 0, 0
+                            ), 400, 400
                     )
             );
             closingFrame.pack();

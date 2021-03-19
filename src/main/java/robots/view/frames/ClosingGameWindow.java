@@ -7,7 +7,7 @@ import java.awt.*;
 import javax.swing.JPanel;
 
 public class ClosingGameWindow extends JInternalFrameClosing {
-    public ClosingGameWindow(GameModel gameModel, int width, int height, int x, int y) {
+    public ClosingGameWindow(GameModel gameModel, int width, int height) {
         super(
                 "Game field",
                 true,
