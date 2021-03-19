@@ -1,4 +1,4 @@
-package robots.log;
+package robots.model.log;
 
 public enum LogLevel {
     Trace(0),

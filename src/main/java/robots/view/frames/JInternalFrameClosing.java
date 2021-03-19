@@ -1,10 +1,10 @@
-package robots.gui;
+package robots.view.frames;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-class JInternalFrameClosing extends JInternalFrame {
+public class JInternalFrameClosing extends JInternalFrame {
 
     public JInternalFrameClosing(
             String title,
@@ -13,7 +13,8 @@ class JInternalFrameClosing extends JInternalFrame {
             Boolean maximizable,
             Boolean iconifiable,
             String closingConfirmMessage,
-            String closingDialogTitle) {
+            String closingDialogTitle
+    ) {
         super(title, resizable, closable, maximizable, iconifiable);
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
