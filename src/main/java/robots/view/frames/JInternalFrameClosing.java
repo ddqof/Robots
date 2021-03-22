@@ -13,8 +13,7 @@ public class JInternalFrameClosing extends JInternalFrame {
             Boolean maximizable,
             Boolean iconifiable,
             String closingConfirmMessage,
-            String closingDialogTitle
-    ) {
+            String closingDialogTitle) {
         super(title, resizable, closable, maximizable, iconifiable);
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override

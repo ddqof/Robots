@@ -10,7 +10,6 @@ import robots.view.frames.MainApplicationClosingFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.ref.PhantomReference;
 
 public class RobotsProgram {
     private static final int LOG_WINDOW_WIDTH = 300;
@@ -26,6 +25,7 @@ public class RobotsProgram {
     private static final int GAME_WINDOW_HEIGHT = 400;
     private static final int GAME_WINDOW_POS_X = 800;
     private static final int GAME_WINDOW_POS_Y = 250;
+    private static final String MAIN_APP_LOG_MESSAGE = "Protocol is working";
 
     public static void main(String[] args) {
         try {
@@ -34,7 +34,7 @@ public class RobotsProgram {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-            MainApplicationClosingFrame closingFrame = new MainApplicationClosingFrame("Protocol is working");
+            MainApplicationClosingFrame closingFrame = new MainApplicationClosingFrame(MAIN_APP_LOG_MESSAGE);
             closingFrame.addWindow(
                     new ClosingLogWindow(
                             Logger.getDefaultLogSource(),

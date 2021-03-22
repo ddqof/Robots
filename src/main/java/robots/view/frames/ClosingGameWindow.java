@@ -10,14 +10,18 @@ public class ClosingGameWindow extends JInternalFrameClosing {
     private static final String FIELD_TITLE = "Game field";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit game window?";
     private static final String CLOSING_DIALOG_TITLE = "Exit game window?";
+    private static final boolean SET_RESIZABLE_WINDOW = true;
+    private static final boolean SET_CLOSABLE_WINDOW = true;
+    private static final boolean SET_MAXIMIZABLE_WINDOW = true;
+    private static final boolean SET_ICONIFIABLE_WINDOW = true;
 
     public ClosingGameWindow(GameModel gameModel, int width, int height, int x, int y) {
         super(
                 FIELD_TITLE,
-                true,
-                true,
-                true,
-                true,
+                SET_RESIZABLE_WINDOW,
+                SET_CLOSABLE_WINDOW,
+                SET_MAXIMIZABLE_WINDOW,
+                SET_ICONIFIABLE_WINDOW,
                 CLOSING_CONFIRM_MESSAGE,
                 CLOSING_DIALOG_TITLE
         );
