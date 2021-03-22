@@ -20,6 +20,7 @@ public class ClosingLogWindow extends JInternalFrameClosing implements LogChange
     private static final boolean SET_CLOSABLE_WINDOW = true;
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
+    private final Runnable actionOnLogWindowClose = () -> logSource.unregisterListener(this);
 
     public ClosingLogWindow(LogWindowSource logSource, int width, int height, int x, int y) {
         super(
@@ -31,6 +32,7 @@ public class ClosingLogWindow extends JInternalFrameClosing implements LogChange
                 CLOSING_CONFIRM_MESSAGE,
                 CLOSING_DIALOG_TITLE
         );
+        setActionOnClose(actionOnLogWindowClose);
         this.logSource = logSource;
         this.logSource.registerListener(this);
         logContent = new TextArea("");
