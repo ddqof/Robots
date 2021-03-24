@@ -21,8 +21,8 @@ public class RobotsProgram {
     private static final int ROBOT_DIRECTION = 0;
     private static final int TARGET_POSITION_X = 150;
     private static final int TARGET_POSITION_Y = 100;
-    private static final int GAME_WINDOW_WIDTH = 400;
-    private static final int GAME_WINDOW_HEIGHT = 400;
+    private static final int MODEL_SPACE_HEIGHT = 400;
+    private static final int MODEL_SPACE_WIDTH = 400;
     private static final int GAME_WINDOW_POS_X = 800;
     private static final int GAME_WINDOW_POS_Y = 250;
     private static final String MAIN_APP_LOG_MESSAGE = "Protocol is working";
@@ -48,8 +48,10 @@ public class RobotsProgram {
                     new ClosingGameWindow(
                             new GameModel(
                                     new Robot(ROBOT_POSITION_X, ROBOT_POSITION_Y, ROBOT_DIRECTION),
-                                    new Target(TARGET_POSITION_X, TARGET_POSITION_Y)
-                            ), GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, GAME_WINDOW_POS_X, GAME_WINDOW_POS_Y
+                                    new Target(TARGET_POSITION_X, TARGET_POSITION_Y),
+                                    MODEL_SPACE_HEIGHT,
+                                    MODEL_SPACE_WIDTH
+                            ), GAME_WINDOW_POS_X, GAME_WINDOW_POS_Y
                     )
             );
             closingFrame.pack();

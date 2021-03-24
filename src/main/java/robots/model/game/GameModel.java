@@ -3,13 +3,22 @@ package robots.model.game;
 public class GameModel {
     private final Robot robot;
     private Target target;
-    private static final double DEFAULT_VELOCITY = 0.1;
-    private static final double DEFAULT_ANGULAR_VELOCITY = 0;
-    private static final double DEFAULT_DURATION = 10;
+    private int spaceHeight;
+    private int spaceWidth;
 
-    public GameModel(Robot robot, Target target) {
+    public GameModel(Robot robot, Target target, int spaceHeight, int spaceWidth) {
         this.robot = robot;
         this.target = target;
+        this.spaceHeight = spaceHeight;
+        this.spaceWidth = spaceWidth;
+    }
+
+    public int getSpaceHeight() {
+        return spaceHeight;
+    }
+
+    public int getSpaceWidth() {
+        return spaceWidth;
     }
 
     public Robot getRobot() {
@@ -20,13 +29,13 @@ public class GameModel {
         return target;
     }
 
-    public void update(int targetPositionX, int targetPositionY) {
+    public void update(int targetPositionX, int targetPositionY, int height, int width) {
+        spaceHeight = height;
+        spaceWidth = width;
         target = new Target(targetPositionX, targetPositionY);
-        robot.move(
-                target,
-                DEFAULT_VELOCITY,
-                DEFAULT_ANGULAR_VELOCITY,
-                DEFAULT_DURATION
-        );
+        if (robot.getDistanceTo(target.getPositionX(), target.getPositionY()) < 0.5) {
+            return;
+        }
+        robot.move(target, spaceHeight, spaceWidth);
     }
 }

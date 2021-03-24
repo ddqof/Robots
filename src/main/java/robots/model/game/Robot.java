@@ -5,8 +5,9 @@ public class Robot {
     private volatile double positionX;
     private volatile double positionY;
     private volatile double direction;
-    private final double maxVelocity;
-    private final double maxAngularVelocity;
+    public static final double DEFAULT_DURATION = 10;
+    public static final double MAX_VELOCITY = 0.1;
+    public static final double MAX_ANGULAR_VELOCITY = 0.001;
 
     public double getPositionX() {
         return positionX;
@@ -25,52 +26,50 @@ public class Robot {
         positionX = startPositionX;
         positionY = startPositionY;
         this.direction = direction;
-        maxVelocity = 0.1;
-        maxAngularVelocity = 0.001;
     }
 
-    public void move(
-            Target target,
-            double velocity,
-            double angularVelocity,
-            double duration
-    ) {
-        double distance = getDistanceTo(target.getPositionX(), target.getPositionY());
-        if (distance < 0.5) return;
-        updateDirection(target.getPositionX(), target.getPositionY());
-        var angle = direction + angularVelocity * duration;
-        velocity = applyLimits(velocity, -1, maxVelocity);
-        angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
+    private double getAngularVelocity(Target target) {
+        double angularVelocity = 0;
+        double angleToTarget = angleTo(target.getPositionX(), target.getPositionY());
+        if (angleToTarget > direction) {
+            angularVelocity = MAX_ANGULAR_VELOCITY;
+        }
+        if (angleToTarget < direction) {
+            angularVelocity = -MAX_ANGULAR_VELOCITY;
+        }
+        return angularVelocity;
+    }
 
-        double newX = positionX + velocity / angularVelocity * (Math.sin(angle) - Math.sin(direction));
-        if (!Double.isFinite(newX))
+    public void move(Target target, int spaceHeight, int spaceWidth) {
+        double velocity = MAX_VELOCITY;
+        double angularVelocity = getAngularVelocity(target);
+        double duration = DEFAULT_DURATION;
+        double newDirection = direction + angularVelocity * duration;
+        double newX = positionX + velocity / angularVelocity *
+                (Math.sin(newDirection) - Math.sin(direction));
+        if (!Double.isFinite(newX)) {
             newX = positionX + velocity * duration * Math.cos(direction);
-
-        double newY = positionY - velocity / angularVelocity * (Math.cos(angle) - Math.cos(direction));
-        if (!Double.isFinite(newY))
+        }
+        double newY = positionY - velocity / angularVelocity *
+                (Math.cos(newDirection) - Math.cos(direction));
+        if (!Double.isFinite(newY)) {
             newY = positionY + velocity * duration * Math.sin(direction);
-
+        }
         positionX = newX;
         positionY = newY;
-        direction = asNormalizedRadians(angle);
+        direction = asNormalizedRadians(newDirection);
     }
 
-    private double getDistanceTo(double targetPositionX, double targetPositionY) {
+    public double getDistanceTo(double targetPositionX, double targetPositionY) {
         double diffX = positionX - targetPositionX;
         double diffY = positionY - targetPositionY;
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 
-    private void updateDirection(double targetPositionX, double targetPositionY) {
+    public double angleTo(double targetPositionX, double targetPositionY) {
         double diffX = targetPositionX - positionX;
         double diffY = targetPositionY - positionY;
-        direction = asNormalizedRadians(Math.atan2(diffY, diffX));
-    }
-
-    private static double applyLimits(double value, double min, double max) {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
+        return asNormalizedRadians(Math.atan2(diffY, diffX));
     }
 
     private static double asNormalizedRadians(double angle) {

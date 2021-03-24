@@ -32,7 +32,13 @@ public class GamePanel extends JPanel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                gameModel.update(clickedPositionX, clickedPositionY);
+                int height = getHeight();
+                int width = getWidth();
+                if (height == 0 && width == 0) {
+                    height = gameModel.getSpaceHeight();
+                    width = gameModel.getSpaceWidth();
+                }
+                gameModel.update(clickedPositionX, clickedPositionY, height, width);
             }
         }, 0, 10);
         addMouseListener(new MouseAdapter() {
@@ -41,7 +47,7 @@ public class GamePanel extends JPanel {
                 Point p = e.getPoint();
                 clickedPositionX = p.x;
                 clickedPositionY = p.y;
-                gameModel.update(clickedPositionX, clickedPositionY);
+                gameModel.update(clickedPositionX, clickedPositionY, getHeight(), getWidth());
                 repaint();
             }
         });
