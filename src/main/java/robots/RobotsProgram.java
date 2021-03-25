@@ -16,9 +16,9 @@ public class RobotsProgram {
     private static final int LOG_WINDOW_HEIGHT = 800;
     private static final int LOG_WINDOW_POS_X = 500;
     private static final int LOG_WINDOW_POS_Y = 250;
-    private static final int ROBOT_POSITION_X = 100;
-    private static final int ROBOT_POSITION_Y = 100;
-    private static final int ROBOT_DIRECTION = 0;
+    private static final double ROBOT_POSITION_X = 100;
+    private static final double ROBOT_POSITION_Y = 100;
+    private static final double ROBOT_DIRECTION = 0;
     private static final int TARGET_POSITION_X = 150;
     private static final int TARGET_POSITION_Y = 100;
     private static final int MODEL_SPACE_HEIGHT = 400;
