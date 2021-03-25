@@ -14,15 +14,15 @@ import java.util.TimerTask;
 public class GamePanel extends JPanel {
 
     private static final String TIMER_NAME = "Events generator";
-    private final GameModel gameModel;
-    private final Timer timer = new Timer(TIMER_NAME, true);
-    private volatile int clickedPositionX;
-    private volatile int clickedPositionY;
+    private GameModel gameModel;
+    private volatile int targetPositionX;
+    private volatile int targetPositionY;
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
-        clickedPositionX = gameModel.getTarget().getPositionX();
-        clickedPositionY = gameModel.getTarget().getPositionY();
+        targetPositionX = gameModel.getTarget().getPositionX();
+        targetPositionY = gameModel.getTarget().getPositionY();
+        Timer timer = new Timer(TIMER_NAME, true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -35,20 +35,31 @@ public class GamePanel extends JPanel {
                 int height = getHeight();
                 int width = getWidth();
                 if (height == 0 && width == 0) {
-                    height = gameModel.getSpaceHeight();
-                    width = gameModel.getSpaceWidth();
+                    height = GamePanel.this.gameModel.getSpaceHeight();
+                    width = GamePanel.this.gameModel.getSpaceWidth();
                 }
-                gameModel.update(clickedPositionX, clickedPositionY, height, width);
+                if (targetPositionX > width) {
+                    targetPositionX = width;
+                }
+                if (targetPositionY > height) {
+                    targetPositionY = height;
+                }
+                GamePanel.this.gameModel = new GameModel(
+                        GamePanel.this.gameModel.getRobot(),
+                        new Target(targetPositionX, targetPositionY),
+                        height,
+                        width
+                );
+                GamePanel.this.gameModel.moveRobot();
+                repaint();
             }
-        }, 0, 10);
+        }, 0, 6);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point p = e.getPoint();
-                clickedPositionX = p.x;
-                clickedPositionY = p.y;
-                gameModel.update(clickedPositionX, clickedPositionY, getHeight(), getWidth());
-                repaint();
+                targetPositionX = p.x;
+                targetPositionY = p.y;
             }
         });
         setDoubleBuffered(true);

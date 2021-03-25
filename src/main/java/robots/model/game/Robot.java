@@ -16,6 +16,14 @@ public class Robot {
         return positionY;
     }
 
+    public void setPositionX(double positionX) {
+        this.positionX = positionX;
+    }
+
+    public void setPositionY(double positionY) {
+        this.positionY = positionY;
+    }
+
     public double getDirection() {
         return direction;
     }

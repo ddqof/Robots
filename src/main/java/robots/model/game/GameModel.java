@@ -2,9 +2,9 @@ package robots.model.game;
 
 public class GameModel {
     private final Robot robot;
-    private Target target;
-    private int spaceHeight;
-    private int spaceWidth;
+    private final Target target;
+    private final int spaceHeight;
+    private final int spaceWidth;
 
     public GameModel(Robot robot, Target target, int spaceHeight, int spaceWidth) {
         this.robot = robot;
@@ -29,13 +29,16 @@ public class GameModel {
         return target;
     }
 
-    public void update(int targetPositionX, int targetPositionY, int height, int width) {
-        spaceHeight = height;
-        spaceWidth = width;
-        target = new Target(targetPositionX, targetPositionY);
+    public void moveRobot() {
         if (robot.getDistanceTo(target.getPositionX(), target.getPositionY()) < 0.5) {
             return;
         }
-        robot.move(target, spaceHeight, spaceWidth);
+        if (robot.getPositionX() > spaceWidth) {
+            robot.setPositionX(spaceWidth);
+        } else if (robot.getPositionY() > spaceHeight){
+            robot.setPositionY(spaceHeight);
+        } else {
+            robot.move(target, spaceHeight, spaceWidth);
+        }
     }
 }
