@@ -1,6 +1,5 @@
 package robots.model.game;
 
-
 public class Robot {
     private volatile double positionX;
     private volatile double positionY;
@@ -57,7 +56,19 @@ public class Robot {
         }
         positionX = newX;
         positionY = newY;
-        direction = asNormalizedRadians(newDirection);
+        newDirection = asNormalizedRadians(resolveBorders(newDirection, spaceWidth, spaceHeight));
+        direction = newDirection;
+    }
+
+    private double resolveBorders(double direction, int width, int height) {
+        double resolvedDirection = direction;
+        if ((positionX <= 0) || (positionY >= height)) {
+            resolvedDirection += Math.PI;
+        }
+        if ((positionX >= width) || (positionY <= 0)) {
+            resolvedDirection -= Math.PI;
+        }
+        return resolvedDirection;
     }
 
     public double getDistanceTo(double targetPositionX, double targetPositionY) {
