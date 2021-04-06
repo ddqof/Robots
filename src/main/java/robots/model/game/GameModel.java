@@ -3,9 +3,6 @@ package robots.model.game;
 public class GameModel {
     private final Robot robot;
     private Target target;
-    private static final double DEFAULT_VELOCITY = 0.1;
-    private static final double DEFAULT_ANGULAR_VELOCITY = 0;
-    private static final double DEFAULT_DURATION = 10;
 
     public GameModel(Robot robot, Target target) {
         this.robot = robot;
@@ -20,13 +17,24 @@ public class GameModel {
         return target;
     }
 
-    public void update(int targetPositionX, int targetPositionY) {
-        target = new Target(targetPositionX, targetPositionY);
-        robot.move(
-                target,
-                DEFAULT_VELOCITY,
-                DEFAULT_ANGULAR_VELOCITY,
-                DEFAULT_DURATION
-        );
+    public void updateTarget(Target target) {
+        this.target = target;
+    }
+
+    public void moveRobot(int spaceHeight, int spaceWidth) {
+        if (robot.getDistanceTo(target.getPositionX(), target.getPositionY()) < 0.5) {
+            return;
+        }
+        if (robot.getPositionX() > spaceWidth) {
+            robot.setPositionX(spaceWidth);
+        } else if(robot.getPositionX() < 0) {
+            robot.setPositionX(0);
+        } else if (robot.getPositionY() < 0) {
+            robot.setPositionY(0);
+        } else if (robot.getPositionY() > spaceHeight){
+            robot.setPositionY(spaceHeight);
+        } else {
+            robot.move(target, spaceHeight, spaceWidth);
+        }
     }
 }

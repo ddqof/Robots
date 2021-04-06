@@ -15,14 +15,14 @@ public class GamePanel extends JPanel {
 
     private static final String TIMER_NAME = "Events generator";
     private final GameModel gameModel;
-    private final Timer timer = new Timer(TIMER_NAME, true);
-    private volatile int clickedPositionX;
-    private volatile int clickedPositionY;
+    private volatile int targetPositionX;
+    private volatile int targetPositionY;
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
-        clickedPositionX = gameModel.getTarget().getPositionX();
-        clickedPositionY = gameModel.getTarget().getPositionY();
+        targetPositionX = gameModel.getTarget().getPositionX();
+        targetPositionY = gameModel.getTarget().getPositionY();
+        Timer timer = new Timer(TIMER_NAME, true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -32,17 +32,28 @@ public class GamePanel extends JPanel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                gameModel.update(clickedPositionX, clickedPositionY);
+                int height = getHeight();
+                int width = getWidth();
+                if (height == 0 && width == 0) {
+                    return;
+                }
+                if (targetPositionX > width) {
+                    targetPositionX = width;
+                }
+                if (targetPositionY > height) {
+                    targetPositionY = height;
+                }
+                gameModel.updateTarget(new Target(targetPositionX, targetPositionY));
+                GamePanel.this.gameModel.moveRobot(height, width);
+                repaint();
             }
         }, 0, 10);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point p = e.getPoint();
-                clickedPositionX = p.x;
-                clickedPositionY = p.y;
-                gameModel.update(clickedPositionX, clickedPositionY);
-                repaint();
+                targetPositionX = p.x;
+                targetPositionY = p.y;
             }
         });
         setDoubleBuffered(true);

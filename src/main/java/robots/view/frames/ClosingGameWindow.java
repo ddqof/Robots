@@ -15,7 +15,7 @@ public class ClosingGameWindow extends JInternalFrameClosing {
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
 
-    public ClosingGameWindow(GameModel gameModel, int width, int height, int x, int y) {
+    public ClosingGameWindow(GameModel gameModel, int locationX, int locationY, int height, int width) {
         super(
                 FIELD_TITLE,
                 SET_RESIZABLE_WINDOW,
@@ -29,7 +29,7 @@ public class ClosingGameWindow extends JInternalFrameClosing {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);
-        setLocation(x, y);
+        setLocation(locationX, locationY);
         pack();
         setSize(width, height);
     }
