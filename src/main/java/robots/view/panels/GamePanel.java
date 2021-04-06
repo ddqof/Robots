@@ -35,8 +35,7 @@ public class GamePanel extends JPanel {
                 int height = getHeight();
                 int width = getWidth();
                 if (height == 0 && width == 0) {
-                    height = GamePanel.this.gameModel.getSpaceHeight();
-                    width = GamePanel.this.gameModel.getSpaceWidth();
+                    return;
                 }
                 if (targetPositionX > width) {
                     targetPositionX = width;
