@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class GamePanel extends JPanel {
 
     private static final String TIMER_NAME = "Events generator";
-    private GameModel gameModel;
+    private final GameModel gameModel;
     private volatile int targetPositionX;
     private volatile int targetPositionY;
 
@@ -43,16 +43,11 @@ public class GamePanel extends JPanel {
                 if (targetPositionY > height) {
                     targetPositionY = height;
                 }
-                GamePanel.this.gameModel = new GameModel(
-                        GamePanel.this.gameModel.getRobot(),
-                        new Target(targetPositionX, targetPositionY),
-                        height,
-                        width
-                );
-                GamePanel.this.gameModel.moveRobot();
+                gameModel.updateTarget(new Target(targetPositionX, targetPositionY));
+                GamePanel.this.gameModel.moveRobot(height, width);
                 repaint();
             }
-        }, 0, 6);
+        }, 0, 10);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
