@@ -1,4 +1,4 @@
-package robots.view.frames;
+package robots.view.internal_frames;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -9,8 +9,9 @@ import javax.swing.*;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
+import robots.view.internal_frames.JInternalFrameClosing;
 
-public class ClosingLogWindow extends JInternalFrameClosing implements LogChangeListener {
+public class ClosingLogInternalFrame extends JInternalFrameClosing implements LogChangeListener {
     private LogWindowSource logSource;
     private TextArea logContent;
     private static final String CLOSING_LOG_WINDOW_TITLE = "Work protocol";
@@ -22,7 +23,7 @@ public class ClosingLogWindow extends JInternalFrameClosing implements LogChange
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
     private final Runnable actionOnLogWindowClose = () -> logSource.unregisterListener(this);
 
-    public ClosingLogWindow(LogWindowSource logSource, int width, int height, int x, int y) {
+    public ClosingLogInternalFrame(LogWindowSource logSource, int width, int height, int x, int y) {
         super(
                 CLOSING_LOG_WINDOW_TITLE,
                 SET_RESIZABLE_WINDOW,

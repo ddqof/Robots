@@ -1,12 +1,13 @@
-package robots.view.frames;
+package robots.view.internal_frames;
 
 import robots.model.game.GameModel;
+import robots.view.internal_frames.JInternalFrameClosing;
 import robots.view.panels.GamePanel;
 
 import java.awt.*;
 import javax.swing.JPanel;
 
-public class ClosingGameWindow extends JInternalFrameClosing {
+public class ClosingGameInternalFrame extends JInternalFrameClosing {
     private static final String FIELD_TITLE = "Game field";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit game window?";
     private static final String CLOSING_DIALOG_TITLE = "Exit game window?";
@@ -15,7 +16,7 @@ public class ClosingGameWindow extends JInternalFrameClosing {
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
 
-    public ClosingGameWindow(GameModel gameModel, int locationX, int locationY, int height, int width) {
+    public ClosingGameInternalFrame(GameModel gameModel, int locationX, int locationY, int height, int width) {
         super(
                 FIELD_TITLE,
                 SET_RESIZABLE_WINDOW,

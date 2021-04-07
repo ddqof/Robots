@@ -4,8 +4,8 @@ import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
 import robots.model.log.Logger;
-import robots.view.frames.ClosingGameWindow;
-import robots.view.frames.ClosingLogWindow;
+import robots.view.internal_frames.ClosingGameInternalFrame;
+import robots.view.internal_frames.ClosingLogInternalFrame;
 import robots.view.frames.MainApplicationClosingFrame;
 
 import javax.swing.*;
@@ -34,9 +34,9 @@ public class RobotsProgram {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-            MainApplicationClosingFrame closingFrame = new MainApplicationClosingFrame(MAIN_APP_LOG_MESSAGE);
-            closingFrame.addWindow(
-                    new ClosingLogWindow(
+            MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame(MAIN_APP_LOG_MESSAGE);
+            mainFrame.addWindow(
+                    new ClosingLogInternalFrame(
                             Logger.getDefaultLogSource(),
                             LOG_WINDOW_WIDTH,
                             LOG_WINDOW_HEIGHT,
@@ -44,8 +44,8 @@ public class RobotsProgram {
                             LOG_WINDOW_POS_Y
                     )
             );
-            closingFrame.addWindow(
-                    new ClosingGameWindow(
+            mainFrame.addWindow(
+                    new ClosingGameInternalFrame(
                             new GameModel(
                                     new Robot(ROBOT_POSITION_X, ROBOT_POSITION_Y, ROBOT_DIRECTION),
                                     new Target(TARGET_POSITION_X, TARGET_POSITION_Y)
@@ -56,9 +56,9 @@ public class RobotsProgram {
                             GAME_WINDOW_WIDTH
                     )
             );
-            closingFrame.pack();
-            closingFrame.setVisible(true);
-            closingFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+            mainFrame.pack();
+            mainFrame.setVisible(true);
+            mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
         });
     }
 }

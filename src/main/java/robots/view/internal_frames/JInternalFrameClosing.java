@@ -1,4 +1,4 @@
-package robots.view.frames;
+package robots.view.internal_frames;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
