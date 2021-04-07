@@ -44,3 +44,5 @@ tmp/
 local.properties
 .loadpath
 .factorypath
+
+saves/
