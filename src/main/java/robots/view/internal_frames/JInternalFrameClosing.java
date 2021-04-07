@@ -6,7 +6,8 @@ import javax.swing.event.InternalFrameEvent;
 
 public class JInternalFrameClosing extends JInternalFrame {
 
-    private Runnable actionOnClose = () -> {};
+    private Runnable actionOnClose = () -> {
+    };
 
     public JInternalFrameClosing(
             String title,

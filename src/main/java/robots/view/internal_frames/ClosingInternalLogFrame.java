@@ -1,19 +1,22 @@
 package robots.view.internal_frames;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.TextArea;
-
-import javax.swing.*;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
-import robots.view.internal_frames.JInternalFrameClosing;
+import robots.serialize.JInternalFrameSerializer;
 
-public class ClosingLogInternalFrame extends JInternalFrameClosing implements LogChangeListener {
-    private LogWindowSource logSource;
-    private TextArea logContent;
+import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyVetoException;
+
+import static robots.serialize.SavesConfig.*;
+
+@JsonSerialize(using = JInternalFrameSerializer.class)
+public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener {
+    private final LogWindowSource logSource;
+    private final TextArea logContent;
     private static final String CLOSING_LOG_WINDOW_TITLE = "Work protocol";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit?";
     private static final String CLOSING_DIALOG_TITLE = "Exit log window";
@@ -21,9 +24,18 @@ public class ClosingLogInternalFrame extends JInternalFrameClosing implements Lo
     private static final boolean SET_CLOSABLE_WINDOW = true;
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
-    private final Runnable actionOnLogWindowClose = () -> logSource.unregisterListener(this);
 
-    public ClosingLogInternalFrame(LogWindowSource logSource, int width, int height, int x, int y) {
+    public LogWindowSource getLogSource() {
+        return logSource;
+    }
+
+    public ClosingInternalLogFrame(
+            @JsonProperty(LOG_SOURCE_FIELD_NAME) LogWindowSource logSource,
+            @JsonProperty(WIDTH_FIELD_NAME) int width,
+            @JsonProperty(HEIGHT_FIELD_NAME) int height,
+            @JsonProperty(X_POS_FIELD_NAME) int x,
+            @JsonProperty(Y_POS_FIELD_NAME) int y,
+            @JsonProperty(ICON_FIELD_NAME) boolean isIcon) {
         super(
                 CLOSING_LOG_WINDOW_TITLE,
                 SET_RESIZABLE_WINDOW,
@@ -33,7 +45,7 @@ public class ClosingLogInternalFrame extends JInternalFrameClosing implements Lo
                 CLOSING_CONFIRM_MESSAGE,
                 CLOSING_DIALOG_TITLE
         );
-        setActionOnClose(actionOnLogWindowClose);
+        setActionOnClose(() -> logSource.unregisterListener(this));
         this.logSource = logSource;
         this.logSource.registerListener(this);
         logContent = new TextArea("");
@@ -45,6 +57,11 @@ public class ClosingLogInternalFrame extends JInternalFrameClosing implements Lo
         setLocation(x, y);
         setSize(width, height);
         pack();
+        try {
+            setIcon(isIcon);
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateLogContent() {

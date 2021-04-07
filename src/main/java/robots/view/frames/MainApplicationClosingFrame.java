@@ -1,10 +1,9 @@
 package robots.view.frames;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
-
 import robots.model.log.Logger;
 import robots.view.menus.MainApplicationMenuBar;
+
+import javax.swing.*;
 
 /**
  * Что требуется сделать:
@@ -24,7 +23,7 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    public void addWindow(JInternalFrame frame) {
+    public void addFrame(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
     }

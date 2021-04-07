@@ -1,11 +1,15 @@
 package robots.model.log;
 
-import java.util.Queue;
-import java.util.ArrayList;
-import java.util.Collections;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
+import robots.serialize.LogWindowSourceSerializer;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * Что починить:
@@ -16,13 +20,23 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
  * величиной m_iQueueLength (т.е. реально нужна очередь сообщений
  * ограниченного размера)
  */
+@JsonSerialize(using = LogWindowSourceSerializer.class)
 public class LogWindowSource {
-    private Queue<LogEntry> messages;
-    private final ArrayList<LogChangeListener> listeners;
+    private final Queue<LogEntry> messages;
+    private final List<LogChangeListener> listeners;
     private volatile LogChangeListener[] activeListeners;
+
+    public Queue<LogEntry> getMessages() {
+        return messages;
+    }
 
     public LogWindowSource(int queueLength) {
         messages = QueueUtils.synchronizedQueue(new CircularFifoQueue<>(queueLength));
+        listeners = new ArrayList<>();
+    }
+
+    public LogWindowSource(@JsonProperty("messages") CircularFifoQueue<LogEntry> messages) {
+        this.messages = QueueUtils.synchronizedQueue(messages);
         listeners = new ArrayList<>();
     }
 

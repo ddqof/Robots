@@ -1,10 +1,14 @@
 package robots.model.log;
 
-public class LogEntry {
-    private LogLevel logLevel;
-    private String message;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public LogEntry(LogLevel logLevel, String message) {
+public class LogEntry {
+    private final LogLevel logLevel;
+    private final String message;
+
+    public LogEntry(
+            @JsonProperty("level") LogLevel logLevel,
+            @JsonProperty("message") String message) {
         this.message = message;
         this.logLevel = logLevel;
     }

@@ -1,10 +1,14 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class GameModel {
     private final Robot robot;
     private Target target;
 
-    public GameModel(Robot robot, Target target) {
+    public GameModel(
+            @JsonProperty("robot") Robot robot,
+            @JsonProperty("target") Target target) {
         this.robot = robot;
         this.target = target;
     }
@@ -27,11 +31,11 @@ public class GameModel {
         }
         if (robot.getPositionX() > spaceWidth) {
             robot.setPositionX(spaceWidth);
-        } else if(robot.getPositionX() < 0) {
+        } else if (robot.getPositionX() < 0) {
             robot.setPositionX(0);
         } else if (robot.getPositionY() < 0) {
             robot.setPositionY(0);
-        } else if (robot.getPositionY() > spaceHeight){
+        } else if (robot.getPositionY() > spaceHeight) {
             robot.setPositionY(spaceHeight);
         } else {
             robot.move(target, spaceHeight, spaceWidth);
