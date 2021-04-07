@@ -1,11 +1,13 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GameModel {
     private final Robot robot;
     private Target target;
 
+    @JsonCreator
     public GameModel(
             @JsonProperty("robot") Robot robot,
             @JsonProperty("target") Target target) {

@@ -1,8 +1,12 @@
 package robots.view.internal_frames;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.game.GameModel;
+import robots.model.game.Robot;
+import robots.model.game.Target;
+import robots.serialize.ClosingInternalGameFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
 import robots.view.panels.GamePanel;
 
@@ -13,6 +17,7 @@ import java.beans.PropertyVetoException;
 import static robots.serialize.SavesConfig.*;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
+@JsonDeserialize(using = ClosingInternalGameFrameDeserializer.class)
 public class ClosingInternalGameFrame extends JInternalFrameClosing {
     private static final String FIELD_TITLE = "Game field";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit game window?";
@@ -22,19 +27,41 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
 
+    private static final double DEFAULT_ROBOT_POSITION_X = 50;
+    private static final double DEFAULT_ROBOT_POSITION_Y = 50;
+    private static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
+    private static final int DEFAULT_TARGET_POSITION_X = 50;
+    private static final int DEFAULT_TARGET_POSITION_Y = 50;
+    private static final int DEFAULT_GAME_WINDOW_HEIGHT = 200;
+    private static final int DEFAULT_GAME_WINDOW_WIDTH = 200;
+    private static final int DEFAULT_GAME_WINDOW_POS_X = 800;
+    private static final int DEFAULT_GAME_WINDOW_POS_Y = 250;
+
     public GameModel getGameModel() {
         return gameModel;
     }
 
     private final GameModel gameModel;
 
+    public static ClosingInternalGameFrame getDefaultInstance() {
+        return new ClosingInternalGameFrame(
+                new GameModel(
+                        new Robot(DEFAULT_ROBOT_POSITION_X, DEFAULT_ROBOT_POSITION_Y, DEFAULT_ROBOT_DIRECTION),
+                        new Target(DEFAULT_TARGET_POSITION_X, DEFAULT_TARGET_POSITION_Y)
+                ),
+                DEFAULT_GAME_WINDOW_POS_X,
+                DEFAULT_GAME_WINDOW_POS_Y,
+                DEFAULT_GAME_WINDOW_HEIGHT,
+                DEFAULT_GAME_WINDOW_WIDTH
+        );
+    }
+
     public ClosingInternalGameFrame(
             @JsonProperty(GAME_MODEL_FIELD_NAME) GameModel gameModel,
             @JsonProperty(X_POS_FIELD_NAME) int locationX,
             @JsonProperty(Y_POS_FIELD_NAME) int locationY,
             @JsonProperty(HEIGHT_FIELD_NAME) int height,
-            @JsonProperty(WIDTH_FIELD_NAME) int width,
-            @JsonProperty(ICON_FIELD_NAME) boolean isIcon) {
+            @JsonProperty(WIDTH_FIELD_NAME) int width) {
         super(
                 FIELD_TITLE,
                 SET_RESIZABLE_WINDOW,
@@ -50,12 +77,6 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);
         setLocation(locationX, locationY);
-        pack();
         setSize(width, height);
-        try {
-            setIcon(isIcon);
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        }
     }
 }

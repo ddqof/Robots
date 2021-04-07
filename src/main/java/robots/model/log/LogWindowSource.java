@@ -1,5 +1,6 @@
 package robots.model.log;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.collections4.QueueUtils;
@@ -35,6 +36,7 @@ public class LogWindowSource {
         listeners = new ArrayList<>();
     }
 
+    @JsonCreator
     public LogWindowSource(@JsonProperty("messages") CircularFifoQueue<LogEntry> messages) {
         this.messages = QueueUtils.synchronizedQueue(messages);
         listeners = new ArrayList<>();

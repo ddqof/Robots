@@ -1,5 +1,6 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Robot {
@@ -31,6 +32,7 @@ public class Robot {
     }
 
 
+    @JsonCreator
     public Robot(
             @JsonProperty("positionX") double startPositionX,
             @JsonProperty("positionY") double startPositionY,

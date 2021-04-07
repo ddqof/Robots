@@ -1,18 +1,22 @@
 package robots.view.internal_frames;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
+import robots.model.log.Logger;
+import robots.serialize.ClosingInternalLogFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyVetoException;
 
 import static robots.serialize.SavesConfig.*;
 
+@JsonDeserialize(using = ClosingInternalLogFrameDeserializer.class)
 @JsonSerialize(using = JInternalFrameSerializer.class)
 public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener {
     private final LogWindowSource logSource;
@@ -25,17 +29,32 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
 
+    private static final int DEFAULT_LOG_WINDOW_WIDTH = 300;
+    private static final int DEFAULT_LOG_WINDOW_HEIGHT = 400;
+    private static final int DEFAULT_LOG_WINDOW_POS_X = 500;
+    private static final int DEFAULT_LOG_WINDOW_POS_Y = 250;
+
+    public static ClosingInternalLogFrame getDefaultInstance() {
+        return new ClosingInternalLogFrame(
+                Logger.getDefaultLogSource(),
+                DEFAULT_LOG_WINDOW_WIDTH,
+                DEFAULT_LOG_WINDOW_HEIGHT,
+                DEFAULT_LOG_WINDOW_POS_X,
+                DEFAULT_LOG_WINDOW_POS_Y
+        );
+    }
+
     public LogWindowSource getLogSource() {
         return logSource;
     }
 
+    @JsonCreator
     public ClosingInternalLogFrame(
             @JsonProperty(LOG_SOURCE_FIELD_NAME) LogWindowSource logSource,
             @JsonProperty(WIDTH_FIELD_NAME) int width,
             @JsonProperty(HEIGHT_FIELD_NAME) int height,
             @JsonProperty(X_POS_FIELD_NAME) int x,
-            @JsonProperty(Y_POS_FIELD_NAME) int y,
-            @JsonProperty(ICON_FIELD_NAME) boolean isIcon) {
+            @JsonProperty(Y_POS_FIELD_NAME) int y) {
         super(
                 CLOSING_LOG_WINDOW_TITLE,
                 SET_RESIZABLE_WINDOW,
@@ -49,19 +68,13 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         this.logSource = logSource;
         this.logSource.registerListener(this);
         logContent = new TextArea("");
-        logContent.setSize(200, 500);
+        logContent.setSize(DEFAULT_LOG_WINDOW_WIDTH, DEFAULT_LOG_WINDOW_HEIGHT);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
         updateLogContent();
         setLocation(x, y);
         setSize(width, height);
-        pack();
-        try {
-            setIcon(isIcon);
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        }
     }
 
     private void updateLogContent() {

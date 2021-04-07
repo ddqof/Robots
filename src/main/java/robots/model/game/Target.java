@@ -1,5 +1,6 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Target {
@@ -14,6 +15,7 @@ public class Target {
         return positionY;
     }
 
+    @JsonCreator
     public Target(
             @JsonProperty("positionX") int startPositionX,
             @JsonProperty("positionY") int startPositionY) {

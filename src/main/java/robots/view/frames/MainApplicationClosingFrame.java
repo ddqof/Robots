@@ -14,6 +14,8 @@ public class MainApplicationClosingFrame extends JFrameClosing {
     private final JDesktopPane desktopPane = new JDesktopPane();
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit?";
     private static final String CLOSING_DIALOG_TITLE = "Exit confirmation";
+    private static final String SAVES_FOUND_MESSAGE = "Would you like to restore your local saves?";
+    private static final String SAVES_FOUND_DIALOG_TITLE = "Saves found";
 
     public MainApplicationClosingFrame(String logMessage) {
         super(CLOSING_CONFIRM_MESSAGE, CLOSING_DIALOG_TITLE);
@@ -26,5 +28,13 @@ public class MainApplicationClosingFrame extends JFrameClosing {
     public void addFrame(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
+    }
+
+    public int askForSavesRestore() {
+        return JOptionPane.showConfirmDialog(
+                null,
+                SAVES_FOUND_MESSAGE,
+                SAVES_FOUND_DIALOG_TITLE,
+                JOptionPane.YES_NO_OPTION);
     }
 }
