@@ -1,20 +1,16 @@
 package robots.view.internal_frames;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import robots.controller.serialize.ClosingInternalLogFrameDeserializer;
+import robots.controller.serialize.JInternalFrameSerializer;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
-import robots.controller.serialize.ClosingInternalLogFrameDeserializer;
-import robots.controller.serialize.JInternalFrameSerializer;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static robots.controller.Saves.*;
 
 @JsonDeserialize(using = ClosingInternalLogFrameDeserializer.class)
 @JsonSerialize(using = JInternalFrameSerializer.class)
@@ -36,7 +32,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
 
     public static ClosingInternalLogFrame getDefaultInstance() {
         return new ClosingInternalLogFrame(
-                Logger.getDefaultLogSource(),
+                Logger.getLogWindowSource(),
                 DEFAULT_LOG_WINDOW_WIDTH,
                 DEFAULT_LOG_WINDOW_HEIGHT,
                 DEFAULT_LOG_WINDOW_POS_X,
@@ -48,13 +44,12 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         return logSource;
     }
 
-    @JsonCreator
     public ClosingInternalLogFrame(
-            @JsonProperty(LOG_SOURCE_FIELD_NAME) LogWindowSource logSource,
-            @JsonProperty(WIDTH_FIELD_NAME) int width,
-            @JsonProperty(HEIGHT_FIELD_NAME) int height,
-            @JsonProperty(X_POS_FIELD_NAME) int x,
-            @JsonProperty(Y_POS_FIELD_NAME) int y) {
+            LogWindowSource logSource,
+            int width,
+            int height,
+            int x,
+            int y) {
         super(
                 CLOSING_LOG_WINDOW_TITLE,
                 SET_RESIZABLE_WINDOW,

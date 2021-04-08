@@ -1,19 +1,16 @@
 package robots.view.internal_frames;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import robots.controller.serialize.ClosingInternalGameFrameDeserializer;
+import robots.controller.serialize.JInternalFrameSerializer;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
-import robots.controller.serialize.ClosingInternalGameFrameDeserializer;
-import robots.controller.serialize.JInternalFrameSerializer;
 import robots.view.panels.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static robots.controller.Saves.*;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = ClosingInternalGameFrameDeserializer.class)
@@ -56,11 +53,11 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
     }
 
     public ClosingInternalGameFrame(
-            @JsonProperty(GAME_MODEL_FIELD_NAME) GameModel gameModel,
-            @JsonProperty(X_POS_FIELD_NAME) int locationX,
-            @JsonProperty(Y_POS_FIELD_NAME) int locationY,
-            @JsonProperty(HEIGHT_FIELD_NAME) int height,
-            @JsonProperty(WIDTH_FIELD_NAME) int width) {
+            GameModel gameModel,
+            int locationX,
+            int locationY,
+            int height,
+            int width) {
         super(
                 FIELD_TITLE,
                 SET_RESIZABLE_WINDOW,

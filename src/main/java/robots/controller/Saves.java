@@ -6,12 +6,10 @@ import org.javatuples.Pair;
 import robots.view.frames.MainApplicationClosingFrame;
 import robots.view.internal_frames.ClosingInternalGameFrame;
 import robots.view.internal_frames.ClosingInternalLogFrame;
-import robots.view.internal_frames.JInternalFrameClosing;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
 
 public class Saves {

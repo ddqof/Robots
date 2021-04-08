@@ -22,15 +22,13 @@ public class ClosingInternalGameFrameDeserializer extends StdDeserializer<Closin
     public ClosingInternalGameFrame deserialize(
             JsonParser jsonParser, DeserializationContext deserializationContext
     ) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        GameModel gameModel = mapper.readValue(GAME_MODEL_SAVES_FILE, GameModel.class);
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         ClosingInternalGameFrame gameFrame = new ClosingInternalGameFrame(
-                gameModel,
-                (int) node.get(X_POS_FIELD_NAME).numberValue(),
-                (int) node.get(Y_POS_FIELD_NAME).numberValue(),
-                (int) node.get(HEIGHT_FIELD_NAME).numberValue(),
-                (int) node.get(WIDTH_FIELD_NAME).numberValue()
+                new ObjectMapper().readValue(GAME_MODEL_SAVES_FILE, GameModel.class),
+                node.get(X_POS_FIELD_NAME).intValue(),
+                node.get(Y_POS_FIELD_NAME).intValue(),
+                node.get(HEIGHT_FIELD_NAME).intValue(),
+                node.get(WIDTH_FIELD_NAME).intValue()
         );
         try {
             gameFrame.setIcon(node.get(ICON_FIELD_NAME).booleanValue());

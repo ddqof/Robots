@@ -1,7 +1,10 @@
 package robots;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javatuples.Pair;
 import robots.controller.Saves;
+import robots.model.log.LogWindowSource;
+import robots.model.log.Logger;
 import robots.view.frames.MainApplicationClosingFrame;
 import robots.view.internal_frames.ClosingInternalGameFrame;
 import robots.view.internal_frames.ClosingInternalLogFrame;
@@ -10,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Optional;
+
+import static robots.controller.Saves.LOG_SOURCE_SAVES_FILE;
 
 
 public class RobotsProgram {
@@ -22,6 +27,13 @@ public class RobotsProgram {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
+            try {
+                if (LOG_SOURCE_SAVES_FILE.exists()) {
+                    Logger.createInstance(new ObjectMapper().readValue(LOG_SOURCE_SAVES_FILE, LogWindowSource.class));
+                }
+            } catch (IOException e) {
+                Logger.createDefaultInstance();
+            }
             MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame(MAIN_APP_LOG_MESSAGE);
             mainFrame.setVisible(true);
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
