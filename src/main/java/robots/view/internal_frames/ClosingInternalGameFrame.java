@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
-import robots.serialize.ClosingInternalGameFrameDeserializer;
-import robots.serialize.JInternalFrameSerializer;
+import robots.controller.serialize.ClosingInternalGameFrameDeserializer;
+import robots.controller.serialize.JInternalFrameSerializer;
 import robots.view.panels.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyVetoException;
 
-import static robots.serialize.SavesConfig.*;
+import static robots.controller.Saves.*;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = ClosingInternalGameFrameDeserializer.class)

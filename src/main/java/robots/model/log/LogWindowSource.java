@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import robots.serialize.LogWindowSourceSerializer;
+import robots.controller.serialize.LogWindowSourceSerializer;
 
 import java.util.ArrayList;
 import java.util.Collections;

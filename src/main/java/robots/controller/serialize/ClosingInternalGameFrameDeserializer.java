@@ -1,4 +1,4 @@
-package robots.serialize;
+package robots.controller.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -11,7 +11,7 @@ import robots.view.internal_frames.ClosingInternalGameFrame;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 
-import static robots.serialize.SavesConfig.*;
+import static robots.controller.Saves.*;
 
 public class ClosingInternalGameFrameDeserializer extends StdDeserializer<ClosingInternalGameFrame> {
     public ClosingInternalGameFrameDeserializer() {

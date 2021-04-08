@@ -1,4 +1,4 @@
-package robots.serialize;
+package robots.controller.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import robots.model.log.LogWindowSource;
 import robots.view.internal_frames.ClosingInternalLogFrame;
-import static robots.serialize.SavesConfig.*;
+import static robots.controller.Saves.*;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;

@@ -8,13 +8,13 @@ import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
-import robots.serialize.ClosingInternalLogFrameDeserializer;
-import robots.serialize.JInternalFrameSerializer;
+import robots.controller.serialize.ClosingInternalLogFrameDeserializer;
+import robots.controller.serialize.JInternalFrameSerializer;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static robots.serialize.SavesConfig.*;
+import static robots.controller.Saves.*;
 
 @JsonDeserialize(using = ClosingInternalLogFrameDeserializer.class)
 @JsonSerialize(using = JInternalFrameSerializer.class)

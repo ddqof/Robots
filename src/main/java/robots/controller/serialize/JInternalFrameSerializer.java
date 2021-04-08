@@ -1,4 +1,4 @@
-package robots.serialize;
+package robots.controller.serialize;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import javax.swing.*;
 import java.io.IOException;
 
-import static robots.serialize.SavesConfig.*;
+import static robots.controller.Saves.*;
 
 public class JInternalFrameSerializer extends StdSerializer<JInternalFrame> {
 
