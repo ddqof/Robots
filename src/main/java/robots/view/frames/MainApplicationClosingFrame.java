@@ -16,7 +16,6 @@ public class MainApplicationClosingFrame extends JFrameClosing {
     private static final String CLOSING_DIALOG_TITLE = "Exit confirmation";
     private static final String SAVES_FOUND_MESSAGE = "Would you like to restore your local saves?";
     private static final String SAVES_FOUND_DIALOG_TITLE = "Saves found";
-    private static final String SAVES_RESTORE_FAILED_MSG = "Saves restoring failed due to corrupted save files.";
 
     public MainApplicationClosingFrame(String logMessage) {
         super(CLOSING_CONFIRM_MESSAGE, CLOSING_DIALOG_TITLE);
@@ -39,7 +38,7 @@ public class MainApplicationClosingFrame extends JFrameClosing {
                 JOptionPane.YES_NO_OPTION);
     }
 
-    public void showSavesRestoreFailedDialog() {
-        JOptionPane.showMessageDialog(this, SAVES_RESTORE_FAILED_MSG);
+    public void showSavesRestoreFailedDialog(String messageOnFail) {
+        JOptionPane.showMessageDialog(this, messageOnFail);
     }
 }

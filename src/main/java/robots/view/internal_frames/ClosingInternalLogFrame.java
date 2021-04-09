@@ -25,13 +25,13 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
 
-    private static final int DEFAULT_LOG_WINDOW_WIDTH = 300;
-    private static final int DEFAULT_LOG_WINDOW_HEIGHT = 400;
-    private static final int DEFAULT_LOG_WINDOW_POS_X = 500;
-    private static final int DEFAULT_LOG_WINDOW_POS_Y = 250;
+    public static final int DEFAULT_LOG_WINDOW_WIDTH = 300;
+    public static final int DEFAULT_LOG_WINDOW_HEIGHT = 400;
+    public static final int DEFAULT_LOG_WINDOW_POS_X = 500;
+    public static final int DEFAULT_LOG_WINDOW_POS_Y = 250;
 
-    public static ClosingInternalLogFrame getDefaultInstance() {
-        return new ClosingInternalLogFrame(
+    public ClosingInternalLogFrame() {
+        this(
                 Logger.getLogWindowSource(),
                 DEFAULT_LOG_WINDOW_WIDTH,
                 DEFAULT_LOG_WINDOW_HEIGHT,

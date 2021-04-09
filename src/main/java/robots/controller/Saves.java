@@ -25,45 +25,55 @@ public class Saves {
     public static final String Y_POS_FIELD_NAME = "positionY";
     public static final String WIDTH_FIELD_NAME = "width";
     public static final String HEIGHT_FIELD_NAME = "height";
-    public static final String LOG_SOURCE_FIELD_NAME = "logSource";
-    public static final String GAME_MODEL_FIELD_NAME = "gameModel";
     public static final String LOG_SOURCE_MESSAGES_FIELD_NAME = "messages";
 
-    public static boolean exists() {
-        boolean gameModelCanBeRestored = GAME_MODEL_SAVES_FILE.exists() && GAME_MODEL_SAVES_FILE.exists();
-        boolean logModelCanBeRestored = LOG_FRAME_SAVES_FILE.exists() && LOG_SOURCE_SAVES_FILE.exists();
-        return gameModelCanBeRestored || logModelCanBeRestored;
+    public static final String LOG_WINDOW_RESTORE_FAILED_MSG = "Log window restoring failed due to corrupted save files.";
+    public static final String GAME_WINDOW_RESTORE_FAILED_MSG = "Game window restoring failed due to corrupted files.";
+
+    private final MainApplicationClosingFrame frame;
+
+    public Saves(MainApplicationClosingFrame frameToSave) {
+        this.frame = frameToSave;
     }
 
-    public static Optional<Pair<ClosingInternalGameFrame, ClosingInternalLogFrame>> restore(
-            MainApplicationClosingFrame frame) throws IOException {
-        if (frame.askForSavesRestore() == JOptionPane.YES_OPTION) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            ClosingInternalGameFrame gameFrame = objectMapper
-                    .readValue(GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class);
-            ClosingInternalLogFrame logFrame = objectMapper.
-                    readValue(LOG_FRAME_SAVES_FILE, ClosingInternalLogFrame.class);
-            return Optional.of(new Pair<>(gameFrame, logFrame));
+    public Pair<Optional<ClosingInternalGameFrame>, Optional<ClosingInternalLogFrame>> restore() {
+        Optional<ClosingInternalGameFrame> optionalGameFrame = Optional.empty();
+        Optional<ClosingInternalLogFrame> optionalLogFrame = Optional.empty();
+        if (SAVES_PATH.exists() && frame.askForSavesRestore() == JOptionPane.YES_OPTION) {
+            optionalGameFrame = loadSave(
+                    GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class, Saves.GAME_WINDOW_RESTORE_FAILED_MSG);
+            optionalLogFrame = loadSave(
+                    LOG_FRAME_SAVES_FILE, ClosingInternalLogFrame.class, Saves.LOG_WINDOW_RESTORE_FAILED_MSG);
         }
-        return Optional.empty();
+        return new Pair<>(optionalGameFrame, optionalLogFrame);
     }
 
-    public static Runnable getSaveAction(
-            ClosingInternalGameFrame gameFrame, ClosingInternalLogFrame logFrame) {
-        return () -> {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                if (!SAVES_PATH.exists()) {
-                    SAVES_PATH.mkdir();
+    private <T> Optional<T> loadSave(File saveFile, Class<T> className, String messageOnFail) {
+        try {
+            return Optional.of(new ObjectMapper().readValue(saveFile, className));
+        } catch (IOException e) {
+            frame.showSavesRestoreFailedDialog(messageOnFail);
+            return Optional.empty();
+        }
+    }
+
+    public void store(ClosingInternalGameFrame gameFrame, ClosingInternalLogFrame logFrame) {
+        frame.setActionOnClose(
+                () -> {
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        if (!SAVES_PATH.exists()) {
+                            SAVES_PATH.mkdir();
+                        }
+                        ObjectWriter prettyPrinter = mapper.writerWithDefaultPrettyPrinter();
+                        prettyPrinter.writeValue(GAME_FRAME_SAVES_FILE, gameFrame);
+                        prettyPrinter.writeValue(GAME_MODEL_SAVES_FILE, gameFrame.getGameModel());
+                        prettyPrinter.writeValue(LOG_FRAME_SAVES_FILE, logFrame);
+                        prettyPrinter.writeValue(LOG_SOURCE_SAVES_FILE, logFrame.getLogSource());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                ObjectWriter prettyPrinter = mapper.writerWithDefaultPrettyPrinter();
-                prettyPrinter.writeValue(GAME_FRAME_SAVES_FILE, gameFrame);
-                prettyPrinter.writeValue(GAME_MODEL_SAVES_FILE, gameFrame.getGameModel());
-                prettyPrinter.writeValue(LOG_FRAME_SAVES_FILE, logFrame);
-                prettyPrinter.writeValue(LOG_SOURCE_SAVES_FILE, logFrame.getLogSource());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
+        );
     }
 }

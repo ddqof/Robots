@@ -23,15 +23,15 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
 
-    private static final double DEFAULT_ROBOT_POSITION_X = 50;
-    private static final double DEFAULT_ROBOT_POSITION_Y = 50;
-    private static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
-    private static final int DEFAULT_TARGET_POSITION_X = 50;
-    private static final int DEFAULT_TARGET_POSITION_Y = 50;
-    private static final int DEFAULT_GAME_WINDOW_HEIGHT = 200;
-    private static final int DEFAULT_GAME_WINDOW_WIDTH = 200;
-    private static final int DEFAULT_GAME_WINDOW_POS_X = 800;
-    private static final int DEFAULT_GAME_WINDOW_POS_Y = 250;
+    public static final double DEFAULT_ROBOT_POSITION_X = 50;
+    public static final double DEFAULT_ROBOT_POSITION_Y = 50;
+    public static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
+    public static final int DEFAULT_TARGET_POSITION_X = 50;
+    public static final int DEFAULT_TARGET_POSITION_Y = 50;
+    public static final int DEFAULT_GAME_WINDOW_HEIGHT = 200;
+    public static final int DEFAULT_GAME_WINDOW_WIDTH = 200;
+    public static final int DEFAULT_GAME_WINDOW_POS_X = 800;
+    public static final int DEFAULT_GAME_WINDOW_POS_Y = 250;
 
     public GameModel getGameModel() {
         return gameModel;
@@ -39,8 +39,8 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
 
     private final GameModel gameModel;
 
-    public static ClosingInternalGameFrame getDefaultInstance() {
-        return new ClosingInternalGameFrame(
+    public ClosingInternalGameFrame() {
+        this(
                 new GameModel(
                         new Robot(DEFAULT_ROBOT_POSITION_X, DEFAULT_ROBOT_POSITION_Y, DEFAULT_ROBOT_DIRECTION),
                         new Target(DEFAULT_TARGET_POSITION_X, DEFAULT_TARGET_POSITION_Y)

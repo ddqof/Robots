@@ -3,14 +3,14 @@ package robots.controller.serialize;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
 import robots.view.internal_frames.ClosingInternalLogFrame;
+import static robots.view.internal_frames.ClosingInternalLogFrame.*;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.Map;
 
 import static robots.controller.Saves.*;
 
@@ -24,12 +24,19 @@ public class ClosingInternalLogFrameDeserializer extends StdDeserializer<Closing
             JsonParser jsonParser, DeserializationContext deserializationContext
     ) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+        Map<String, Integer> jsonValues = DefaultDeserializer.getDefaultOrRead(
+                node,
+                DEFAULT_LOG_WINDOW_POS_X,
+                DEFAULT_LOG_WINDOW_POS_Y,
+                DEFAULT_LOG_WINDOW_HEIGHT,
+                DEFAULT_LOG_WINDOW_WIDTH
+        );
         ClosingInternalLogFrame logFrame = new ClosingInternalLogFrame(
                 Logger.getLogWindowSource(),
-                node.get(WIDTH_FIELD_NAME).intValue(),
-                node.get(HEIGHT_FIELD_NAME).intValue(),
-                node.get(X_POS_FIELD_NAME).intValue(),
-                node.get(Y_POS_FIELD_NAME).intValue()
+                jsonValues.get(WIDTH_FIELD_NAME),
+                jsonValues.get(HEIGHT_FIELD_NAME),
+                jsonValues.get(X_POS_FIELD_NAME),
+                jsonValues.get(Y_POS_FIELD_NAME)
         );
         try {
             logFrame.setIcon(node.get(ICON_FIELD_NAME).booleanValue());
