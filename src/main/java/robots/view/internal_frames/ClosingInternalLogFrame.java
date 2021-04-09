@@ -1,9 +1,12 @@
 package robots.view.internal_frames;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import robots.controller.Saves;
 import robots.controller.serialize.ClosingInternalLogFrameDeserializer;
 import robots.controller.serialize.JInternalFrameSerializer;
+import robots.controller.serialize.MySerializable;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
@@ -11,10 +14,11 @@ import robots.model.log.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 @JsonDeserialize(using = ClosingInternalLogFrameDeserializer.class)
 @JsonSerialize(using = JInternalFrameSerializer.class)
-public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener {
+public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, MySerializable {
     private final LogWindowSource logSource;
     private final TextArea logContent;
     private static final String CLOSING_LOG_WINDOW_TITLE = "Work protocol";
@@ -84,5 +88,10 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     @Override
     public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
+    }
+
+    @Override
+    public void serialize(ObjectWriter writer) throws IOException {
+        writer.writeValue(Saves.LOG_FRAME_SAVES_FILE, this);
     }
 }

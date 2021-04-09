@@ -1,9 +1,12 @@
 package robots.view.internal_frames;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import robots.controller.Saves;
 import robots.controller.serialize.ClosingInternalGameFrameDeserializer;
 import robots.controller.serialize.JInternalFrameSerializer;
+import robots.controller.serialize.MySerializable;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
@@ -11,10 +14,11 @@ import robots.view.panels.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = ClosingInternalGameFrameDeserializer.class)
-public class ClosingInternalGameFrame extends JInternalFrameClosing {
+public class ClosingInternalGameFrame extends JInternalFrameClosing implements MySerializable {
     private static final String FIELD_TITLE = "Game field";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit game window?";
     private static final String CLOSING_DIALOG_TITLE = "Exit game window?";
@@ -74,5 +78,10 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
         getContentPane().add(panel);
         setLocation(locationX, locationY);
         setSize(width, height);
+    }
+
+    @Override
+    public void serialize(ObjectWriter writer) throws IOException {
+        writer.writeValue(Saves.GAME_FRAME_SAVES_FILE, this);
     }
 }

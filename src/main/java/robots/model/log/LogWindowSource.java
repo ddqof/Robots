@@ -2,11 +2,15 @@ package robots.model.log;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
+import robots.controller.Saves;
 import robots.controller.serialize.LogWindowSourceSerializer;
+import robots.controller.serialize.MySerializable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +26,7 @@ import java.util.Queue;
  * ограниченного размера)
  */
 @JsonSerialize(using = LogWindowSourceSerializer.class)
-public class LogWindowSource {
+public class LogWindowSource implements MySerializable {
     private final Queue<LogEntry> messages;
     private final List<LogChangeListener> listeners;
     private volatile LogChangeListener[] activeListeners;
@@ -83,5 +87,10 @@ public class LogWindowSource {
 
     public Iterable<LogEntry> all() {
         return messages;
+    }
+
+    @Override
+    public void serialize(ObjectWriter writer) throws IOException {
+        writer.writeValue(Saves.LOG_SOURCE_SAVES_FILE, this);
     }
 }

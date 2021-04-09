@@ -3,6 +3,7 @@ package robots.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.javatuples.Pair;
+import robots.controller.serialize.MySerializable;
 import robots.view.frames.MainApplicationClosingFrame;
 import robots.view.internal_frames.ClosingInternalGameFrame;
 import robots.view.internal_frames.ClosingInternalLogFrame;
@@ -10,6 +11,7 @@ import robots.view.internal_frames.ClosingInternalLogFrame;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public class Saves {
@@ -57,22 +59,18 @@ public class Saves {
         }
     }
 
-    public void store(ClosingInternalGameFrame gameFrame, ClosingInternalLogFrame logFrame) {
+    public void storeAtExit(List<MySerializable> objectsToSave) {
         frame.setActionOnClose(
                 () -> {
-                    ObjectMapper mapper = new ObjectMapper();
-                    try {
-                        if (!SAVES_PATH.exists()) {
-                            SAVES_PATH.mkdir();
+                    if (!SAVES_PATH.exists()) SAVES_PATH.mkdir();
+                    ObjectWriter prettyPrinter = new ObjectMapper().writerWithDefaultPrettyPrinter();
+                    objectsToSave.forEach(x -> {
+                        try {
+                            x.serialize(prettyPrinter);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                        ObjectWriter prettyPrinter = mapper.writerWithDefaultPrettyPrinter();
-                        prettyPrinter.writeValue(GAME_FRAME_SAVES_FILE, gameFrame);
-                        prettyPrinter.writeValue(GAME_MODEL_SAVES_FILE, gameFrame.getGameModel());
-                        prettyPrinter.writeValue(LOG_FRAME_SAVES_FILE, logFrame);
-                        prettyPrinter.writeValue(LOG_SOURCE_SAVES_FILE, logFrame.getLogSource());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    });
                 }
         );
     }

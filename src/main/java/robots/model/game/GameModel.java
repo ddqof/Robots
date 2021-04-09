@@ -2,8 +2,13 @@ package robots.model.game;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import robots.controller.Saves;
+import robots.controller.serialize.MySerializable;
 
-public class GameModel {
+import java.io.IOException;
+
+public class GameModel implements MySerializable {
     private final Robot robot;
     private Target target;
 
@@ -42,5 +47,10 @@ public class GameModel {
         } else {
             robot.move(target, spaceHeight, spaceWidth);
         }
+    }
+
+    @Override
+    public void serialize(ObjectWriter writer) throws IOException {
+        writer.writeValue(Saves.GAME_MODEL_SAVES_FILE, this);
     }
 }

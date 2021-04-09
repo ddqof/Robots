@@ -9,6 +9,7 @@ import robots.view.internal_frames.ClosingInternalLogFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.Optional;
 
 public class RobotsProgram {
@@ -33,7 +34,7 @@ public class RobotsProgram {
             mainFrame.addFrame(logFrame);
             mainFrame.pack();
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
-            saves.store(gameFrame, logFrame);
+            saves.storeAtExit(List.of(gameFrame, gameFrame.getGameModel(), logFrame, logFrame.getLogSource()));
         });
     }
 }
