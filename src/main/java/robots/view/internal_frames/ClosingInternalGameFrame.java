@@ -3,17 +3,18 @@ package robots.view.internal_frames;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import robots.controller.Saves;
-import robots.controller.serialize.ClosingInternalGameFrameDeserializer;
-import robots.controller.serialize.JInternalFrameSerializer;
-import robots.controller.serialize.MySerializable;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
+import robots.serialize.ClosingInternalGameFrameDeserializer;
+import robots.serialize.JInternalFrameSerializer;
+import robots.serialize.MySerializable;
+import robots.serialize.save.Saves;
 import robots.view.panels.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
@@ -26,6 +27,7 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
     private static final boolean SET_CLOSABLE_WINDOW = true;
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
+    public static final File GAME_FRAME_SAVES_FILE = new File(Saves.SAVES_PATH, "gameFrame" + Saves.JSON_EXTENSION);
 
     public static final double DEFAULT_ROBOT_POSITION_X = 50;
     public static final double DEFAULT_ROBOT_POSITION_Y = 50;
@@ -82,6 +84,6 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
 
     @Override
     public void serialize(ObjectWriter writer) throws IOException {
-        writer.writeValue(Saves.GAME_FRAME_SAVES_FILE, this);
+        writer.writeValue(GAME_FRAME_SAVES_FILE, this);
     }
 }

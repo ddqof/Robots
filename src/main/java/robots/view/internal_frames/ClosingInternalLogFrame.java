@@ -3,17 +3,18 @@ package robots.view.internal_frames;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import robots.controller.Saves;
-import robots.controller.serialize.ClosingInternalLogFrameDeserializer;
-import robots.controller.serialize.JInternalFrameSerializer;
-import robots.controller.serialize.MySerializable;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
+import robots.serialize.ClosingInternalLogFrameDeserializer;
+import robots.serialize.JInternalFrameSerializer;
+import robots.serialize.MySerializable;
+import robots.serialize.save.Saves;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 @JsonDeserialize(using = ClosingInternalLogFrameDeserializer.class)
@@ -28,6 +29,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     private static final boolean SET_CLOSABLE_WINDOW = true;
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
+    public static final File LOG_FRAME_SAVES_FILE = new File(Saves.SAVES_PATH, "logFrame" + Saves.JSON_EXTENSION);
 
     public static final int DEFAULT_LOG_WINDOW_WIDTH = 300;
     public static final int DEFAULT_LOG_WINDOW_HEIGHT = 400;
@@ -92,6 +94,6 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
 
     @Override
     public void serialize(ObjectWriter writer) throws IOException {
-        writer.writeValue(Saves.LOG_FRAME_SAVES_FILE, this);
+        writer.writeValue(LOG_FRAME_SAVES_FILE, this);
     }
 }

@@ -1,4 +1,4 @@
-package robots.controller.serialize;
+package robots.serialize;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 

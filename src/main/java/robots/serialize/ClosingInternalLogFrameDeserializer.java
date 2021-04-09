@@ -1,4 +1,4 @@
-package robots.controller.serialize;
+package robots.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -6,13 +6,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import robots.model.log.Logger;
 import robots.view.internal_frames.ClosingInternalLogFrame;
-import static robots.view.internal_frames.ClosingInternalLogFrame.*;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.Map;
 
-import static robots.controller.Saves.*;
+import static robots.view.internal_frames.ClosingInternalLogFrame.*;
 
 public class ClosingInternalLogFrameDeserializer extends StdDeserializer<ClosingInternalLogFrame> {
     public ClosingInternalLogFrameDeserializer() {

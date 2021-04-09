@@ -1,8 +1,8 @@
 package robots;
 
-import org.javatuples.Pair;
-import robots.controller.Saves;
 import robots.model.log.Logger;
+import robots.serialize.save.Save;
+import robots.serialize.save.Saves;
 import robots.view.frames.MainApplicationClosingFrame;
 import robots.view.internal_frames.ClosingInternalGameFrame;
 import robots.view.internal_frames.ClosingInternalLogFrame;
@@ -11,6 +11,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
+
+import static robots.view.internal_frames.ClosingInternalGameFrame.GAME_FRAME_SAVES_FILE;
+import static robots.view.internal_frames.ClosingInternalLogFrame.LOG_FRAME_SAVES_FILE;
 
 public class RobotsProgram {
     private static final String MAIN_APP_LOG_MESSAGE = "Protocol is working";
@@ -26,10 +29,18 @@ public class RobotsProgram {
             MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame(MAIN_APP_LOG_MESSAGE);
             mainFrame.setVisible(true);
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
-            Saves saves = new Saves(mainFrame);
-            Pair<Optional<ClosingInternalGameFrame>, Optional<ClosingInternalLogFrame>> savedFrames = saves.restore();
-            ClosingInternalGameFrame gameFrame = savedFrames.getValue0().orElse(new ClosingInternalGameFrame());
-            ClosingInternalLogFrame logFrame = savedFrames.getValue1().orElse(new ClosingInternalLogFrame());
+            Saves saves = new Saves(
+                    mainFrame,
+                    List.of(new Save(GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class),
+                            new Save(LOG_FRAME_SAVES_FILE, ClosingInternalLogFrame.class))
+            );
+            List<Optional<Object>> savedFrames = saves.restore();
+            ClosingInternalGameFrame gameFrame = (ClosingInternalGameFrame) savedFrames
+                    .get(0)
+                    .orElse(new ClosingInternalGameFrame());
+            ClosingInternalLogFrame logFrame = (ClosingInternalLogFrame) savedFrames
+                    .get(1)
+                    .orElse(new ClosingInternalLogFrame());
             mainFrame.addFrame(gameFrame);
             mainFrame.addFrame(logFrame);
             mainFrame.pack();

@@ -6,10 +6,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import robots.controller.Saves;
-import robots.controller.serialize.LogWindowSourceSerializer;
-import robots.controller.serialize.MySerializable;
+import robots.serialize.LogWindowSourceSerializer;
+import robots.serialize.MySerializable;
+import robots.serialize.save.Saves;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +28,9 @@ import java.util.Queue;
  */
 @JsonSerialize(using = LogWindowSourceSerializer.class)
 public class LogWindowSource implements MySerializable {
+    public static final File LOG_SOURCE_SAVES_FILE = new File(Saves.SAVES_PATH, "logSource" + Saves.JSON_EXTENSION);
+    public static final String LOG_SOURCE_MESSAGES_FIELD_NAME = "messages";
+
     private final Queue<LogEntry> messages;
     private final List<LogChangeListener> listeners;
     private volatile LogChangeListener[] activeListeners;
@@ -91,6 +95,6 @@ public class LogWindowSource implements MySerializable {
 
     @Override
     public void serialize(ObjectWriter writer) throws IOException {
-        writer.writeValue(Saves.LOG_SOURCE_SAVES_FILE, this);
+        writer.writeValue(LOG_SOURCE_SAVES_FILE, this);
     }
 }

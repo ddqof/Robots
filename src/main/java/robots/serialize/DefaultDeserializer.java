@@ -1,12 +1,11 @@
-package robots.controller.serialize;
+package robots.serialize;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static robots.controller.Saves.*;
-import static robots.controller.Saves.Y_POS_FIELD_NAME;
+import static robots.view.internal_frames.JInternalFrameClosing.*;
 
 public class DefaultDeserializer {
     public static Map<String, Integer> getDefaultOrRead(JsonNode node, int def_x, int def_y, int def_height, int def_width) {

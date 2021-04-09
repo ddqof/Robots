@@ -1,4 +1,4 @@
-package robots.controller.serialize;
+package robots.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -7,13 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import robots.model.game.GameModel;
 import robots.view.internal_frames.ClosingInternalGameFrame;
-import robots.controller.Saves;
 import robots.view.internal_frames.ClosingInternalLogFrame;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.Map;
 
+import static robots.model.game.GameModel.GAME_MODEL_SAVES_FILE;
+import static robots.view.internal_frames.JInternalFrameClosing.*;
 
 public class ClosingInternalGameFrameDeserializer extends StdDeserializer<ClosingInternalGameFrame> {
     public ClosingInternalGameFrameDeserializer() {
@@ -33,14 +34,14 @@ public class ClosingInternalGameFrameDeserializer extends StdDeserializer<Closin
                 ClosingInternalLogFrame.DEFAULT_LOG_WINDOW_WIDTH
         );
         ClosingInternalGameFrame gameFrame = new ClosingInternalGameFrame(
-                new ObjectMapper().readValue(Saves.GAME_MODEL_SAVES_FILE, GameModel.class),
-                jsonValues.get(Saves.X_POS_FIELD_NAME),
-                jsonValues.get(Saves.Y_POS_FIELD_NAME),
-                jsonValues.get(Saves.HEIGHT_FIELD_NAME),
-                jsonValues.get(Saves.WIDTH_FIELD_NAME)
+                new ObjectMapper().readValue(GAME_MODEL_SAVES_FILE, GameModel.class),
+                jsonValues.get(X_POS_FIELD_NAME),
+                jsonValues.get(Y_POS_FIELD_NAME),
+                jsonValues.get(HEIGHT_FIELD_NAME),
+                jsonValues.get(WIDTH_FIELD_NAME)
         );
         try {
-            gameFrame.setIcon(node.get(Saves.ICON_FIELD_NAME).booleanValue());
+            gameFrame.setIcon(node.get(ICON_FIELD_NAME).booleanValue());
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         }

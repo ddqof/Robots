@@ -1,4 +1,4 @@
-package robots.controller.serialize;
+package robots.serialize;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -7,7 +7,7 @@ import robots.model.log.LogWindowSource;
 
 import java.io.IOException;
 
-import static robots.controller.Saves.LOG_SOURCE_MESSAGES_FIELD_NAME;
+import static robots.model.log.LogWindowSource.LOG_SOURCE_MESSAGES_FIELD_NAME;
 
 public class LogWindowSourceSerializer extends StdSerializer<LogWindowSource> {
     public LogWindowSourceSerializer() {

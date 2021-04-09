@@ -37,8 +37,4 @@ public class MainApplicationClosingFrame extends JFrameClosing {
                 SAVES_FOUND_DIALOG_TITLE,
                 JOptionPane.YES_NO_OPTION);
     }
-
-    public void showSavesRestoreFailedDialog(String messageOnFail) {
-        JOptionPane.showMessageDialog(this, messageOnFail);
-    }
 }

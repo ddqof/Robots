@@ -1,10 +1,9 @@
 package robots.model.log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import robots.serialize.save.ObjectRestoreFailedException;
+import robots.serialize.save.Save;
 
-import java.io.IOException;
-
-import robots.controller.Saves;
+import static robots.model.log.LogWindowSource.LOG_SOURCE_SAVES_FILE;
 
 public final class Logger {
     private static LogWindowSource logWindowSource;
@@ -12,8 +11,8 @@ public final class Logger {
     public static void init() {
         if (logWindowSource == null) {
             try {
-                logWindowSource = new ObjectMapper().readValue(Saves.LOG_SOURCE_SAVES_FILE, LogWindowSource.class);
-            } catch (IOException e) {
+                logWindowSource = (LogWindowSource) new Save(LOG_SOURCE_SAVES_FILE, LogWindowSource.class).restore();
+            } catch (ObjectRestoreFailedException e) {
                 logWindowSource = new LogWindowSource(100);
             }
         }
