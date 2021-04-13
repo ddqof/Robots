@@ -8,24 +8,15 @@ import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import robots.serialize.LogWindowSourceSerializer;
 import robots.serialize.MySerializable;
+import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
-/**
- * Что починить:
- * 1. Этот класс порождает утечку ресурсов (связанные слушатели оказываются
- * удерживаемыми в памяти)
- * 2. Этот класс хранит активные сообщения лога, но в такой реализации он
- * их лишь накапливает. Надо же, чтобы количество сообщений в логе было ограничено
- * величиной m_iQueueLength (т.е. реально нужна очередь сообщений
- * ограниченного размера)
- */
 @JsonSerialize(using = LogWindowSourceSerializer.class)
 public class LogWindowSource implements MySerializable {
     public static final File LOG_SOURCE_SAVES_FILE = new File(Saves.SAVES_PATH, "logSource" + Saves.JSON_EXTENSION);
@@ -94,7 +85,7 @@ public class LogWindowSource implements MySerializable {
     }
 
     @Override
-    public void serialize(ObjectWriter writer) throws IOException {
-        writer.writeValue(LOG_SOURCE_SAVES_FILE, this);
+    public boolean serialize(ObjectWriter writer) {
+        return Save.storeObject(LOG_SOURCE_SAVES_FILE, this, writer);
     }
 }

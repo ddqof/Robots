@@ -10,12 +10,12 @@ import robots.model.log.Logger;
 import robots.serialize.ClosingInternalLogFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
 import robots.serialize.MySerializable;
+import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 @JsonDeserialize(using = ClosingInternalLogFrameDeserializer.class)
 @JsonSerialize(using = JInternalFrameSerializer.class)
@@ -93,7 +93,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     }
 
     @Override
-    public void serialize(ObjectWriter writer) throws IOException {
-        writer.writeValue(LOG_FRAME_SAVES_FILE, this);
+    public boolean serialize(ObjectWriter writer) {
+        return Save.storeObject(LOG_FRAME_SAVES_FILE, this, writer);
     }
 }

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import robots.serialize.MySerializable;
+import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
 import java.io.File;
-import java.io.IOException;
 
 public class GameModel implements MySerializable {
     public static final File GAME_MODEL_SAVES_FILE = new File(Saves.SAVES_PATH, "gameModel" + Saves.JSON_EXTENSION);
@@ -53,7 +53,7 @@ public class GameModel implements MySerializable {
     }
 
     @Override
-    public void serialize(ObjectWriter writer) throws IOException {
-        writer.writeValue(GAME_MODEL_SAVES_FILE, this);
+    public boolean serialize(ObjectWriter writer) {
+        return Save.storeObject(GAME_MODEL_SAVES_FILE, this, writer);
     }
 }

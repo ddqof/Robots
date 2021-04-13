@@ -9,13 +9,13 @@ import robots.model.game.Target;
 import robots.serialize.ClosingInternalGameFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
 import robots.serialize.MySerializable;
+import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 import robots.view.panels.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = ClosingInternalGameFrameDeserializer.class)
@@ -83,7 +83,7 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
     }
 
     @Override
-    public void serialize(ObjectWriter writer) throws IOException {
-        writer.writeValue(GAME_FRAME_SAVES_FILE, this);
+    public boolean serialize(ObjectWriter writer) {
+        return Save.storeObject(GAME_FRAME_SAVES_FILE, this, writer);
     }
 }

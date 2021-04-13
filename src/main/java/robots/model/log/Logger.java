@@ -1,6 +1,5 @@
 package robots.model.log;
 
-import robots.serialize.save.ObjectRestoreFailedException;
 import robots.serialize.save.Save;
 
 import static robots.model.log.LogWindowSource.LOG_SOURCE_SAVES_FILE;
@@ -10,11 +9,9 @@ public final class Logger {
 
     public static void init() {
         if (logWindowSource == null) {
-            try {
-                logWindowSource = (LogWindowSource) new Save(LOG_SOURCE_SAVES_FILE, LogWindowSource.class).restore();
-            } catch (ObjectRestoreFailedException e) {
-                logWindowSource = new LogWindowSource(100);
-            }
+            logWindowSource = (LogWindowSource) new Save(LOG_SOURCE_SAVES_FILE, LogWindowSource.class)
+                    .restore()
+                    .orElse(new LogWindowSource(100));
         }
     }
 
