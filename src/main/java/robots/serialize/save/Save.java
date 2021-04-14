@@ -30,7 +30,9 @@ public class Save {
                 return Optional.empty();
             }
         } catch (IOException e) {
-            Logger.error(String.format(RESTORING_FAILED_IO, savedClass.getName()));
+            if (Logger.getLogWindowSource() != null) {
+                Logger.error(String.format(RESTORING_FAILED_IO, savedClass.getName()));
+            }
             return Optional.empty();
         }
     }

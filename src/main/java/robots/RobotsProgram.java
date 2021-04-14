@@ -1,22 +1,21 @@
 package robots;
 
+import org.javatuples.Pair;
+import robots.model.game.GameModel;
+import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 import robots.view.frames.MainApplicationClosingFrame;
 import robots.view.internal_frames.ClosingInternalGameFrame;
 import robots.view.internal_frames.ClosingInternalLogFrame;
+import robots.view.panes.RestoreDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-import static robots.view.internal_frames.ClosingInternalGameFrame.GAME_FRAME_SAVES_FILE;
-import static robots.view.internal_frames.ClosingInternalLogFrame.LOG_FRAME_SAVES_FILE;
-
 public class RobotsProgram {
-    private static final String MAIN_APP_LOG_MESSAGE = "Protocol is working";
-
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -24,17 +23,28 @@ public class RobotsProgram {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-            Logger.init();
-            MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame(
-                    MAIN_APP_LOG_MESSAGE,
-                    new Saves(List.of(
-                            new Save(GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class),
-                            new Save(LOG_FRAME_SAVES_FILE, ClosingInternalLogFrame.class))
+            int userChoiceForRestore = JOptionPane.NO_OPTION;
+            if (Saves.SAVES_PATH.exists()) {
+                userChoiceForRestore = RestoreDialog.show();
+            }
+            Logger.init(userChoiceForRestore);
+            Saves saves = new Saves(
+                    List.of(
+                            new Save(ClosingInternalGameFrame.GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class),
+                            new Save(ClosingInternalLogFrame.LOG_FRAME_SAVES_FILE, ClosingInternalLogFrame.class),
+                            new Save(GameModel.GAME_MODEL_SAVES_FILE, GameModel.class),
+                            new Save(LogWindowSource.LOG_SOURCE_SAVES_FILE, LogWindowSource.class)
                     )
             );
+            MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
+            Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored = saves.restoreOrGetDefaultValues(userChoiceForRestore);
+            ClosingInternalGameFrame gameFrame = restored.getValue0();
+            ClosingInternalLogFrame logFrame = restored.getValue1();
+            mainFrame.addFrame(gameFrame);
+            mainFrame.addFrame(logFrame);
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
             mainFrame.setVisible(true);
-            mainFrame.storeInternalFramesAtExit();
+            mainFrame.storeSerializableAtClose(List.of(gameFrame, logFrame, gameFrame.getGameModel(), logFrame.getLogSource()));
         });
     }
 }

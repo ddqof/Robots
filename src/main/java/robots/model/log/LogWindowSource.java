@@ -1,6 +1,7 @@
 package robots.model.log;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.collections4.QueueUtils;
@@ -11,7 +12,6 @@ import robots.serialize.save.Saves;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
@@ -23,6 +23,11 @@ public class LogWindowSource implements MySerializable {
     private final List<LogChangeListener> listeners;
     private volatile LogChangeListener[] activeListeners;
 
+    public static LogWindowSource getDefaultSource() {
+        return new LogWindowSource(100);
+    }
+
+    @JsonGetter("messages")
     public Queue<LogEntry> getMessages() {
         return messages;
     }
@@ -63,18 +68,6 @@ public class LogWindowSource implements MySerializable {
         for (LogChangeListener listener : activeListeners) {
             listener.onLogChanged();
         }
-    }
-
-    public int size() {
-        return messages.size();
-    }
-
-    public Iterable<LogEntry> range(int startFrom, int count) {
-        if (startFrom < 0 || startFrom >= messages.size()) {
-            return Collections.emptyList();
-        }
-        int indexTo = Math.min(startFrom + count, messages.size());
-        return new ArrayList<>(messages).subList(startFrom, indexTo);
     }
 
     public Iterable<LogEntry> all() {

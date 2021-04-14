@@ -7,7 +7,7 @@ import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
-import robots.serialize.ClosingInternalLogFrameDeserializer;
+import robots.serialize.JInternalFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
 import robots.serialize.MySerializable;
 import robots.serialize.save.Save;
@@ -15,10 +15,11 @@ import robots.serialize.save.Saves;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyVetoException;
 import java.io.File;
 
-@JsonDeserialize(using = ClosingInternalLogFrameDeserializer.class)
 @JsonSerialize(using = JInternalFrameSerializer.class)
+@JsonDeserialize(using = JInternalFrameDeserializer.class)
 public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, MySerializable {
     private final LogWindowSource logSource;
     private final TextArea logContent;
@@ -29,25 +30,34 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     private static final boolean SET_CLOSABLE_WINDOW = true;
     private static final boolean SET_MAXIMIZABLE_WINDOW = true;
     private static final boolean SET_ICONIFIABLE_WINDOW = true;
+    private static final boolean SET_ICON = false;
     public static final File LOG_FRAME_SAVES_FILE = new File(Saves.SAVES_PATH, "logFrame" + Saves.JSON_EXTENSION);
 
-    public static final int DEFAULT_LOG_WINDOW_WIDTH = 300;
+    public static final int DEFAULT_LOG_WINDOW_WIDTH = 1030;
     public static final int DEFAULT_LOG_WINDOW_HEIGHT = 400;
-    public static final int DEFAULT_LOG_WINDOW_POS_X = 500;
-    public static final int DEFAULT_LOG_WINDOW_POS_Y = 250;
-
-    public ClosingInternalLogFrame() {
-        this(
-                Logger.getLogWindowSource(),
-                DEFAULT_LOG_WINDOW_WIDTH,
-                DEFAULT_LOG_WINDOW_HEIGHT,
-                DEFAULT_LOG_WINDOW_POS_X,
-                DEFAULT_LOG_WINDOW_POS_Y
-        );
-    }
+    public static final int DEFAULT_LOG_WINDOW_POS_X = 10;
+    public static final int DEFAULT_LOG_WINDOW_POS_Y = 10;
 
     public LogWindowSource getLogSource() {
         return logSource;
+    }
+
+    public static JInternalFrame getDefaultEmptyFrame() {
+        JInternalFrame internalFrame = new JInternalFrame();
+        internalFrame.setSize(DEFAULT_LOG_WINDOW_WIDTH, DEFAULT_LOG_WINDOW_HEIGHT);
+        internalFrame.setLocation(DEFAULT_LOG_WINDOW_POS_X, DEFAULT_LOG_WINDOW_POS_Y);
+        return internalFrame;
+    }
+
+    public ClosingInternalLogFrame(LogWindowSource logSource, JInternalFrame internalFrame) {
+        this(
+                logSource,
+                internalFrame.getWidth(),
+                internalFrame.getHeight(),
+                internalFrame.getX(),
+                internalFrame.getY(),
+                internalFrame.isIcon()
+        );
     }
 
     public ClosingInternalLogFrame(
@@ -55,7 +65,8 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
             int width,
             int height,
             int x,
-            int y) {
+            int y,
+            boolean isIcon) {
         super(
                 CLOSING_LOG_WINDOW_TITLE,
                 SET_RESIZABLE_WINDOW,
@@ -76,6 +87,11 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         updateLogContent();
         setLocation(x, y);
         setSize(width, height);
+        try {
+            setIcon(isIcon);
+        } catch (PropertyVetoException e) {
+            Logger.debug(ClosingInternalGameFrame.FAILED_TO_SET_ICON_MSG);
+        }
     }
 
     private void updateLogContent() {

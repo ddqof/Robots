@@ -1,5 +1,12 @@
 package robots.serialize.save;
 
+import org.javatuples.Pair;
+import robots.model.game.GameModel;
+import robots.model.log.Logger;
+import robots.view.internal_frames.ClosingInternalGameFrame;
+import robots.view.internal_frames.ClosingInternalLogFrame;
+
+import javax.swing.*;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +16,11 @@ import java.util.stream.Collectors;
 public class Saves {
     public static final File SAVES_PATH = new File("saves");
     public static final String JSON_EXTENSION = ".json";
-
+    private static final String STATE_RESTORE_MSG = "Main application frame state restored";
+    private static final String NEW_INSTANCES_CREATED = String.format(
+            "New instances for: %s and %s was created",
+            ClosingInternalLogFrame.class, ClosingInternalGameFrame.class
+    );
     private final List<Save> saveList;
 
     public Saves(List<Save> saveList) {
@@ -20,5 +31,36 @@ public class Saves {
         return saveList
                 .stream()
                 .collect(Collectors.toMap(Save::getSavedClass, Save::restore));
+    }
+
+
+    public Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restoreOrGetDefaultValues(int userChoice) {
+        ClosingInternalGameFrame gameFrame = new ClosingInternalGameFrame(
+                new GameModel(), ClosingInternalGameFrame.getDefaultEmptyFrame()
+        );
+        ClosingInternalLogFrame logFrame = new ClosingInternalLogFrame(
+                Logger.getLogWindowSource(), ClosingInternalLogFrame.getDefaultEmptyFrame()
+        );
+        if (SAVES_PATH.exists() && userChoice == JOptionPane.YES_OPTION) {
+            Map<Class<?>, Optional<Object>> savedFrames = restore();
+            gameFrame = new ClosingInternalGameFrame(
+                    (GameModel) savedFrames
+                            .get(GameModel.class)
+                            .orElse(new GameModel()),
+                    (JInternalFrame) savedFrames
+                            .get(ClosingInternalGameFrame.class)
+                            .orElse(ClosingInternalGameFrame.getDefaultEmptyFrame())
+            );
+            logFrame = new ClosingInternalLogFrame(
+                    Logger.getLogWindowSource(),
+                    (JInternalFrame) savedFrames
+                            .get(ClosingInternalLogFrame.class)
+                            .orElse(ClosingInternalLogFrame.getDefaultEmptyFrame())
+            );
+            Logger.debug(STATE_RESTORE_MSG);
+        } else {
+            Logger.debug(NEW_INSTANCES_CREATED);
+        }
+        return new Pair<>(gameFrame, logFrame);
     }
 }
