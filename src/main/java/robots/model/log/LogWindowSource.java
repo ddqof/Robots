@@ -3,10 +3,8 @@ package robots.model.log;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import robots.serialize.LogWindowSourceSerializer;
 import robots.serialize.MySerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
@@ -17,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
-@JsonSerialize(using = LogWindowSourceSerializer.class)
 public class LogWindowSource implements MySerializable {
     public static final File LOG_SOURCE_SAVES_FILE = new File(Saves.SAVES_PATH, "logSource" + Saves.JSON_EXTENSION);
     public static final String LOG_SOURCE_MESSAGES_FIELD_NAME = "messages";
