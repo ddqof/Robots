@@ -1,32 +1,21 @@
 package robots;
 
+import org.javatuples.Pair;
 import robots.model.game.GameModel;
-import robots.model.game.Robot;
-import robots.model.game.Target;
+import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
-import robots.view.frames.ClosingGameWindow;
-import robots.view.frames.ClosingLogWindow;
+import robots.serialize.save.Save;
+import robots.serialize.save.Saves;
 import robots.view.frames.MainApplicationClosingFrame;
+import robots.view.internal_frames.ClosingInternalGameFrame;
+import robots.view.internal_frames.ClosingInternalLogFrame;
+import robots.view.panes.RestoreDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class RobotsProgram {
-    private static final int LOG_WINDOW_WIDTH = 300;
-    private static final int LOG_WINDOW_HEIGHT = 800;
-    private static final int LOG_WINDOW_POS_X = 500;
-    private static final int LOG_WINDOW_POS_Y = 250;
-    private static final double ROBOT_POSITION_X = 50;
-    private static final double ROBOT_POSITION_Y = 50;
-    private static final double ROBOT_DIRECTION = Math.PI;
-    private static final int TARGET_POSITION_X = 50;
-    private static final int TARGET_POSITION_Y = 50;
-    private static final int GAME_WINDOW_HEIGHT = 200;
-    private static final int GAME_WINDOW_WIDTH = 200;
-    private static final int GAME_WINDOW_POS_X = 800;
-    private static final int GAME_WINDOW_POS_Y = 250;
-    private static final String MAIN_APP_LOG_MESSAGE = "Protocol is working";
-
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -34,31 +23,28 @@ public class RobotsProgram {
             e.printStackTrace();
         }
         SwingUtilities.invokeLater(() -> {
-            MainApplicationClosingFrame closingFrame = new MainApplicationClosingFrame(MAIN_APP_LOG_MESSAGE);
-            closingFrame.addWindow(
-                    new ClosingLogWindow(
-                            Logger.getDefaultLogSource(),
-                            LOG_WINDOW_WIDTH,
-                            LOG_WINDOW_HEIGHT,
-                            LOG_WINDOW_POS_X,
-                            LOG_WINDOW_POS_Y
+            int userChoiceForRestore = JOptionPane.NO_OPTION;
+            if (Saves.SAVES_PATH.exists()) {
+                userChoiceForRestore = RestoreDialog.show();
+            }
+            Logger.init(userChoiceForRestore);
+            Saves saves = new Saves(
+                    List.of(
+                            new Save(ClosingInternalGameFrame.GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class),
+                            new Save(ClosingInternalLogFrame.LOG_FRAME_SAVES_FILE, ClosingInternalLogFrame.class),
+                            new Save(GameModel.GAME_MODEL_SAVES_FILE, GameModel.class),
+                            new Save(LogWindowSource.LOG_SOURCE_SAVES_FILE, LogWindowSource.class)
                     )
             );
-            closingFrame.addWindow(
-                    new ClosingGameWindow(
-                            new GameModel(
-                                    new Robot(ROBOT_POSITION_X, ROBOT_POSITION_Y, ROBOT_DIRECTION),
-                                    new Target(TARGET_POSITION_X, TARGET_POSITION_Y)
-                            ),
-                            GAME_WINDOW_POS_X,
-                            GAME_WINDOW_POS_Y,
-                            GAME_WINDOW_HEIGHT,
-                            GAME_WINDOW_WIDTH
-                    )
-            );
-            closingFrame.pack();
-            closingFrame.setVisible(true);
-            closingFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+            MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
+            Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored = saves.restoreOrGetDefaultValues(userChoiceForRestore);
+            ClosingInternalGameFrame gameFrame = restored.getValue0();
+            ClosingInternalLogFrame logFrame = restored.getValue1();
+            mainFrame.addFrame(gameFrame);
+            mainFrame.addFrame(logFrame);
+            mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+            mainFrame.setVisible(true);
+            mainFrame.storeSerializableAtClose(List.of(gameFrame, logFrame, gameFrame.getGameModel(), logFrame.getLogSource()));
         });
     }
 }

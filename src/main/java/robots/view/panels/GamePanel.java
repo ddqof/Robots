@@ -4,9 +4,10 @@ import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Timer;
 import java.util.TimerTask;

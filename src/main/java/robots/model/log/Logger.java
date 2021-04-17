@@ -1,24 +1,42 @@
 package robots.model.log;
 
-public final class Logger {
-    private static final LogWindowSource defaultLogSource;
+import robots.serialize.save.Save;
 
-    static {
-        defaultLogSource = new LogWindowSource(100);
+import javax.swing.*;
+
+import static robots.model.log.LogWindowSource.LOG_SOURCE_SAVES_FILE;
+
+public final class Logger {
+    private static LogWindowSource logWindowSource;
+
+    public static void init(int restoreOption) {
+        if (logWindowSource == null) {
+            if (restoreOption == JOptionPane.YES_OPTION) {
+                logWindowSource = (LogWindowSource) new Save(LOG_SOURCE_SAVES_FILE, LogWindowSource.class)
+                        .restore()
+                        .orElse(LogWindowSource.getDefaultSource());
+            } else {
+                logWindowSource = LogWindowSource.getDefaultSource();
+            }
+        }
     }
 
     private Logger() {
     }
 
     public static void debug(String message) {
-        defaultLogSource.append(LogLevel.Debug, message);
+        logWindowSource.append(LogLevel.Debug, getMessageWithDate(message));
     }
 
     public static void error(String message) {
-        defaultLogSource.append(LogLevel.Error, message);
+        logWindowSource.append(LogLevel.Error, getMessageWithDate(message));
     }
 
-    public static LogWindowSource getDefaultLogSource() {
-        return defaultLogSource;
+    public static LogWindowSource getLogWindowSource() {
+        return logWindowSource;
+    }
+
+    private static String getMessageWithDate(String message) {
+        return new java.util.Date(System.currentTimeMillis()) + "\t" + message;
     }
 }

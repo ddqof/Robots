@@ -1,4 +1,4 @@
-package robots.view.frames;
+package robots.view.internal_frames;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
@@ -6,7 +6,8 @@ import javax.swing.event.InternalFrameEvent;
 
 public class JInternalFrameClosing extends JInternalFrame {
 
-    private Runnable actionOnClose = () -> {};
+    private Runnable actionOnClose = () -> {
+    };
 
     public JInternalFrameClosing(
             String title,

@@ -1,5 +1,8 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Robot {
     private volatile double positionX;
     private volatile double positionY;
@@ -29,7 +32,11 @@ public class Robot {
     }
 
 
-    public Robot(double startPositionX, double startPositionY, double direction) {
+    @JsonCreator
+    public Robot(
+            @JsonProperty("positionX") double startPositionX,
+            @JsonProperty("positionY") double startPositionY,
+            @JsonProperty("direction") double direction) {
         positionX = startPositionX;
         positionY = startPositionY;
         this.direction = direction;
