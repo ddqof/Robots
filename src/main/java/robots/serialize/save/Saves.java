@@ -28,35 +28,30 @@ public class Saves {
     }
 
     public Map<Class<?>, Optional<Object>> restore() {
-        return saveList
-                .stream()
+        return saveList.stream()
                 .collect(Collectors.toMap(Save::getSavedClass, Save::restore));
     }
 
 
     public Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restoreOrGetDefaultValues(int userChoice) {
-        ClosingInternalGameFrame gameFrame = new ClosingInternalGameFrame(
-                new GameModel(), ClosingInternalGameFrame.getDefaultEmptyFrame()
-        );
-        ClosingInternalLogFrame logFrame = new ClosingInternalLogFrame(
-                Logger.getLogWindowSource(), ClosingInternalLogFrame.getDefaultEmptyFrame()
-        );
+        ClosingInternalGameFrame gameFrame = new ClosingInternalGameFrame(new GameModel());
+        ClosingInternalLogFrame logFrame = new ClosingInternalLogFrame(Logger.getLogWindowSource());
         if (SAVES_PATH.exists() && userChoice == JOptionPane.YES_OPTION) {
             Map<Class<?>, Optional<Object>> savedFrames = restore();
-            gameFrame = new ClosingInternalGameFrame(
-                    (GameModel) savedFrames
-                            .get(GameModel.class)
-                            .orElse(new GameModel()),
-                    (JInternalFrame) savedFrames
-                            .get(ClosingInternalGameFrame.class)
-                            .orElse(ClosingInternalGameFrame.getDefaultEmptyFrame())
-            );
-            logFrame = new ClosingInternalLogFrame(
-                    Logger.getLogWindowSource(),
-                    (JInternalFrame) savedFrames
-                            .get(ClosingInternalLogFrame.class)
-                            .orElse(ClosingInternalLogFrame.getDefaultEmptyFrame())
-            );
+            Optional<?> restoredLogFrame = savedFrames.get(ClosingInternalLogFrame.class);
+            Optional<?> restoredGameFrame = savedFrames.get(ClosingInternalGameFrame.class);
+            if (restoredLogFrame.isPresent()) {
+                logFrame = new ClosingInternalLogFrame(
+                        Logger.getLogWindowSource(),
+                        (JInternalFrame) restoredLogFrame.get()
+                );
+            }
+            if (restoredGameFrame.isPresent()) {
+                gameFrame = new ClosingInternalGameFrame(
+                        (GameModel) savedFrames.get(GameModel.class).orElse(new GameModel()),
+                        (JInternalFrame) restoredGameFrame.get()
+                );
+            }
             Logger.debug(STATE_RESTORE_MSG);
         } else {
             Logger.debug(NEW_INSTANCES_CREATED);

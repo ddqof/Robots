@@ -31,7 +31,7 @@ public class RobotsProgram {
             Saves saves = new Saves(
                     List.of(
                             new Save(ClosingInternalGameFrame.GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class),
-                            new Save(ClosingInternalLogFrame.LOG_FRAME_SAVES_FILE, ClosingInternalLogFrame.class),
+                            new Save(ClosingInternalLogFrame.SAVES_FILE, ClosingInternalLogFrame.class),
                             new Save(GameModel.GAME_MODEL_SAVES_FILE, GameModel.class),
                             new Save(LogWindowSource.LOG_SOURCE_SAVES_FILE, LogWindowSource.class)
                     )
