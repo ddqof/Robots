@@ -10,7 +10,7 @@ import robots.serialize.save.Saves;
 import java.io.File;
 
 public class GameModel implements MySerializable {
-    public static final File GAME_MODEL_SAVES_FILE = new File(Saves.SAVES_PATH, "gameModel" + Saves.JSON_EXTENSION);
+    public static final File SAVES_FILE = new File(Saves.PATH, "gameModel" + Saves.JSON_EXTENSION);
 
     public static final double DEFAULT_ROBOT_POSITION_X = 50;
     public static final double DEFAULT_ROBOT_POSITION_Y = 50;
@@ -67,6 +67,6 @@ public class GameModel implements MySerializable {
 
     @Override
     public boolean serialize(ObjectWriter writer) {
-        return Save.storeObject(GAME_MODEL_SAVES_FILE, this, writer);
+        return Save.storeObject(SAVES_FILE, this, writer);
     }
 }

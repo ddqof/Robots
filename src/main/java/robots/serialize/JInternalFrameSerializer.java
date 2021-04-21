@@ -19,11 +19,12 @@ public class JInternalFrameSerializer extends StdSerializer<JInternalFrameClosin
             JInternalFrameClosing internalFrame, JsonGenerator jsonGenerator, SerializerProvider serializerProvider
     ) throws IOException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeBooleanField(JsonFieldNames.ICON_FIELD_NAME, internalFrame.isIcon());
-        jsonGenerator.writeNumberField(JsonFieldNames.X_POS_FIELD_NAME, internalFrame.getX());
-        jsonGenerator.writeNumberField(JsonFieldNames.Y_POS_FIELD_NAME, internalFrame.getY());
-        jsonGenerator.writeNumberField(JsonFieldNames.WIDTH_FIELD_NAME, internalFrame.getWidth());
-        jsonGenerator.writeNumberField(JsonFieldNames.HEIGHT_FIELD_NAME, internalFrame.getHeight());
+        jsonGenerator.writeBooleanField(JsonFieldNames.IS_ICON, internalFrame.isIcon());
+        jsonGenerator.writeNumberField(JsonFieldNames.X, internalFrame.getX());
+        jsonGenerator.writeNumberField(JsonFieldNames.Y, internalFrame.getY());
+        jsonGenerator.writeNumberField(JsonFieldNames.WIDTH, internalFrame.getWidth());
+        jsonGenerator.writeNumberField(JsonFieldNames.HEIGHT, internalFrame.getHeight());
+        jsonGenerator.writeBooleanField(JsonFieldNames.IS_VISIBLE, internalFrame.isVisible());
         jsonGenerator.writeEndObject();
     }
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Saves {
-    public static final File SAVES_PATH = new File("saves");
+    public static final File PATH = new File("saves");
     public static final String JSON_EXTENSION = ".json";
     private static final String STATE_RESTORE_MSG = "Main application frame state restored";
     private static final String NEW_INSTANCES_CREATED = String.format(
@@ -36,7 +36,7 @@ public class Saves {
     public Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restoreOrGetDefaultValues(int userChoice) {
         ClosingInternalGameFrame gameFrame = new ClosingInternalGameFrame(new GameModel());
         ClosingInternalLogFrame logFrame = new ClosingInternalLogFrame(Logger.getLogWindowSource());
-        if (SAVES_PATH.exists() && userChoice == JOptionPane.YES_OPTION) {
+        if (PATH.exists() && userChoice == JOptionPane.YES_OPTION) {
             Map<Class<?>, Optional<Object>> savedFrames = restore();
             Optional<?> restoredLogFrame = savedFrames.get(ClosingInternalLogFrame.class);
             Optional<?> restoredGameFrame = savedFrames.get(ClosingInternalGameFrame.class);

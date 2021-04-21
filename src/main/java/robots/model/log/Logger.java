@@ -4,7 +4,7 @@ import robots.serialize.save.Save;
 
 import javax.swing.*;
 
-import static robots.model.log.LogWindowSource.LOG_SOURCE_SAVES_FILE;
+import static robots.model.log.LogWindowSource.SAVES_FILE;
 
 public final class Logger {
     private static LogWindowSource logWindowSource;
@@ -12,7 +12,7 @@ public final class Logger {
     public static void init(int restoreOption) {
         if (logWindowSource == null) {
             if (restoreOption == JOptionPane.YES_OPTION) {
-                logWindowSource = (LogWindowSource) new Save(LOG_SOURCE_SAVES_FILE, LogWindowSource.class)
+                logWindowSource = (LogWindowSource) new Save(SAVES_FILE, LogWindowSource.class)
                         .restore()
                         .orElse(LogWindowSource.getDefaultSource());
             } else {

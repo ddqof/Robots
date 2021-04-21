@@ -24,20 +24,21 @@ public class RobotsProgram {
         }
         SwingUtilities.invokeLater(() -> {
             int userChoiceForRestore = JOptionPane.NO_OPTION;
-            if (Saves.SAVES_PATH.exists()) {
+            if (Saves.PATH.exists()) {
                 userChoiceForRestore = RestoreDialog.show();
             }
             Logger.init(userChoiceForRestore);
             Saves saves = new Saves(
                     List.of(
-                            new Save(ClosingInternalGameFrame.GAME_FRAME_SAVES_FILE, ClosingInternalGameFrame.class),
+                            new Save(ClosingInternalGameFrame.SAVES_FILE, ClosingInternalGameFrame.class),
                             new Save(ClosingInternalLogFrame.SAVES_FILE, ClosingInternalLogFrame.class),
-                            new Save(GameModel.GAME_MODEL_SAVES_FILE, GameModel.class),
-                            new Save(LogWindowSource.LOG_SOURCE_SAVES_FILE, LogWindowSource.class)
+                            new Save(GameModel.SAVES_FILE, GameModel.class),
+                            new Save(LogWindowSource.SAVES_FILE, LogWindowSource.class)
                     )
             );
             MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
-            Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored = saves.restoreOrGetDefaultValues(userChoiceForRestore);
+            Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored =
+                    saves.restoreOrGetDefaultValues(userChoiceForRestore);
             ClosingInternalGameFrame gameFrame = restored.getValue0();
             ClosingInternalLogFrame logFrame = restored.getValue1();
             mainFrame.addFrame(gameFrame);

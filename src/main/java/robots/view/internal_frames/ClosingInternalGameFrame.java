@@ -23,7 +23,7 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
     private static final String TITLE = "Game field";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit game window?";
     private static final String CLOSING_DIALOG_TITLE = "Exit game window?";
-    public static final File GAME_FRAME_SAVES_FILE = new File(Saves.SAVES_PATH, "gameFrame" + Saves.JSON_EXTENSION);
+    public static final File SAVES_FILE = new File(Saves.PATH, "gameFrame" + Saves.JSON_EXTENSION);
 
     public static final int HEIGHT = 400;
     public static final int WIDTH = 400;
@@ -35,7 +35,6 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
     public GameModel getGameModel() {
         return gameModel;
     }
-
 
     public ClosingInternalGameFrame(GameModel gameModel) {
         this(gameModel, getEmptyFrame(WIDTH, HEIGHT, X, Y));
@@ -52,6 +51,6 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
 
     @Override
     public boolean serialize(ObjectWriter writer) {
-        return Save.storeObject(GAME_FRAME_SAVES_FILE, this, writer);
+        return Save.storeObject(SAVES_FILE, this, writer);
     }
 }

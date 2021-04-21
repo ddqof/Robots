@@ -26,7 +26,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     private static final String TITLE = "Work protocol";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit?";
     private static final String CLOSING_DIALOG_TITLE = "Exit log window";
-    public static final File SAVES_FILE = new File(Saves.SAVES_PATH, "logFrame" + Saves.JSON_EXTENSION);
+    public static final File SAVES_FILE = new File(Saves.PATH, "logFrame" + Saves.JSON_EXTENSION);
 
     public static final int WIDTH = 1030;
     public static final int HEIGHT = 400;
@@ -52,6 +52,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         panel.add(logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
         updateLogContent();
+        pack();
     }
 
     private void updateLogContent() {

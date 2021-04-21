@@ -4,39 +4,36 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import robots.view.internal_frames.JInternalFrameUtils;
 
 import javax.swing.*;
-import java.beans.PropertyVetoException;
 import java.io.IOException;
 
 public class JInternalFrameDeserializer extends StdDeserializer<JInternalFrame> {
-
     public JInternalFrameDeserializer() {
         super(JInternalFrame.class);
     }
 
     @Override
-    public JInternalFrame deserialize(
-            JsonParser jsonParser, DeserializationContext deserializationContext
-    ) throws IOException {
+    public JInternalFrame deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        JsonNode iconNode = node.get(JsonFieldNames.ICON_FIELD_NAME);
-        JsonNode xNode = node.get(JsonFieldNames.X_POS_FIELD_NAME);
-        JsonNode yNode = node.get(JsonFieldNames.Y_POS_FIELD_NAME);
-        JsonNode widthNode = node.get(JsonFieldNames.WIDTH_FIELD_NAME);
-        JsonNode heightNode = node.get(JsonFieldNames.HEIGHT_FIELD_NAME);
-        if (iconNode == null || xNode == null || yNode == null || widthNode == null || heightNode == null) {
+        JsonNode iconNode = node.get(JsonFieldNames.IS_ICON);
+        JsonNode xNode = node.get(JsonFieldNames.X);
+        JsonNode yNode = node.get(JsonFieldNames.Y);
+        JsonNode widthNode = node.get(JsonFieldNames.WIDTH);
+        JsonNode heightNode = node.get(JsonFieldNames.HEIGHT);
+        JsonNode isVisibleNode = node.get(JsonFieldNames.IS_VISIBLE);
+        if (iconNode == null || xNode == null || yNode == null || widthNode == null || heightNode == null || isVisibleNode == null) {
             throw new IOException();
         } else {
-            JInternalFrame internalFrame = new JInternalFrame();
-            try {
-                internalFrame.setIcon(iconNode.booleanValue());
-            } catch (PropertyVetoException e) {
-                e.printStackTrace();
-            }
-            internalFrame.setLocation(xNode.intValue(), yNode.intValue());
-            internalFrame.setSize(widthNode.intValue(), heightNode.intValue());
-            return internalFrame;
+            return JInternalFrameUtils.getEmptyFrame(
+                    iconNode.booleanValue(),
+                    isVisibleNode.booleanValue(),
+                    xNode.intValue(),
+                    yNode.intValue(),
+                    widthNode.intValue(),
+                    widthNode.intValue()
+            );
         }
     }
 }

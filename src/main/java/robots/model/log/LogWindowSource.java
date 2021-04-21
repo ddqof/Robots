@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Queue;
 
 public class LogWindowSource implements MySerializable {
-    public static final File LOG_SOURCE_SAVES_FILE = new File(Saves.SAVES_PATH, "logSource" + Saves.JSON_EXTENSION);
-    public static final String LOG_SOURCE_MESSAGES_FIELD_NAME = "messages";
+    public static final File SAVES_FILE = new File(Saves.PATH, "logSource" + Saves.JSON_EXTENSION);
+    public static final String MESSAGES_FIELD_NAME = "messages";
 
     private final Queue<LogEntry> messages;
     private final List<LogChangeListener> listeners;
@@ -27,7 +27,7 @@ public class LogWindowSource implements MySerializable {
         return new LogWindowSource(100);
     }
 
-    @JsonGetter("messages")
+    @JsonGetter(MESSAGES_FIELD_NAME)
     public Queue<LogEntry> getMessages() {
         return messages;
     }
@@ -76,6 +76,6 @@ public class LogWindowSource implements MySerializable {
 
     @Override
     public boolean serialize(ObjectWriter writer) {
-        return Save.storeObject(LOG_SOURCE_SAVES_FILE, this, writer);
+        return Save.storeObject(SAVES_FILE, this, writer);
     }
 }
