@@ -14,11 +14,11 @@ public class GameModel implements MySerializable {
     public static final File SAVES_FILE = new File(Saves.PATH, "gameModel" + Saves.JSON_EXTENSION);
 
     public static final double DEFAULT_ROBOT_POSITION_X = 0;
-    public static final double DEFAULT_ROBOT_POSITION_Y = 180;
+    public static final double DEFAULT_ROBOT_POSITION_Y = 200;
     public static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
     public static final int DEFAULT_TARGET_POSITION_X = 600;
     public static final int DEFAULT_TARGET_POSITION_Y = 180;
-    public static final double DEFAULT_BORDER_SPACE = 30;
+    public static final double DEFAULT_BORDER_SPACE = 40;
 
 
     private final Robot robot;

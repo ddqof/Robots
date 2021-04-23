@@ -39,12 +39,8 @@ public class GamePanel extends JPanel {
                 if (height == 0 && width == 0) {
                     return;
                 }
-                if (targetPositionX > width) {
-                    targetPositionX = width;
-                }
-                if (targetPositionY > height) {
-                    targetPositionY = height;
-                }
+                targetPositionX = width;
+                targetPositionY = height / 2; // не знаю насколько правильное это решение
                 gameModel.updateTarget(new Target(targetPositionX, targetPositionY));
                 GamePanel.this.gameModel.moveRobot(height, width);
                 repaint();
@@ -52,10 +48,7 @@ public class GamePanel extends JPanel {
         }, 0, 10);
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                Point p = e.getPoint();
-                targetPositionX = p.x;
-                targetPositionY = p.y;
+            public void mouseClicked(MouseEvent e) { // добавить установку турели
             }
         });
         setDoubleBuffered(true);
