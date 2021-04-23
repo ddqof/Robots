@@ -115,6 +115,7 @@ public class GamePanel extends JPanel {
             int y1 = round(border.getStartY());
             int y2 = round(border.getFinishY());
             g.drawLine(x1, y1, x2, y2);
+            g.drawLine(x1 + 1, y1 + 1, x2 + 1, y2 + 1);
         }
     }
 }
