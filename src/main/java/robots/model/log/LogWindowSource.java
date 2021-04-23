@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.collections4.QueueUtils;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import robots.serialize.MySerializable;
+import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class LogWindowSource implements MySerializable {
+public class LogWindowSource implements JsonSerializable {
     public static final File SAVES_FILE = new File(Saves.PATH, "logSource" + Saves.JSON_EXTENSION);
     public static final String MESSAGES_FIELD_NAME = "messages";
 

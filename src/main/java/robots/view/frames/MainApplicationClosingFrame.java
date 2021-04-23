@@ -3,7 +3,7 @@ package robots.view.frames;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import robots.model.log.Logger;
-import robots.serialize.MySerializable;
+import robots.serialize.JsonSerializable;
 import robots.view.internal_frames.JInternalFrameClosing;
 import robots.view.menus.MainApplicationMenuBar;
 
@@ -42,7 +42,7 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         return String.format("Failed to set Icon status on %s", targetClass.getName());
     }
 
-    public void storeSerializableAtClose(List<MySerializable> objectsToSave) {
+    public void storeSerializableAtClose(List<JsonSerializable> objectsToSave) {
         setActionOnClose(
                 () -> {
                     if (!PATH.exists()) PATH.mkdir();

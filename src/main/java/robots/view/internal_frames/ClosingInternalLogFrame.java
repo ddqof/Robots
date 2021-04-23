@@ -8,7 +8,7 @@ import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
 import robots.serialize.JInternalFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
-import robots.serialize.MySerializable;
+import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
@@ -20,7 +20,7 @@ import static robots.view.internal_frames.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, MySerializable {
+public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, JsonSerializable {
     private final LogWindowSource logSource;
     private final TextArea logContent;
     private static final String TITLE = "Work protocol";

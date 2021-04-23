@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.game.GameModel;
 import robots.serialize.JInternalFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
-import robots.serialize.MySerializable;
+import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 import robots.view.panels.GamePanel;
@@ -19,7 +19,7 @@ import static robots.view.internal_frames.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class ClosingInternalGameFrame extends JInternalFrameClosing implements MySerializable {
+public class ClosingInternalGameFrame extends JInternalFrameClosing implements JsonSerializable {
     private static final String TITLE = "Game field";
     private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit game window?";
     private static final String CLOSING_DIALOG_TITLE = "Exit game window?";

@@ -3,13 +3,13 @@ package robots.model.game;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import robots.serialize.MySerializable;
+import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
 import java.io.File;
 
-public class GameModel implements MySerializable {
+public class GameModel implements JsonSerializable {
     public static final File SAVES_FILE = new File(Saves.PATH, "gameModel" + Saves.JSON_EXTENSION);
 
     public static final double DEFAULT_ROBOT_POSITION_X = 50;
