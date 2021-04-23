@@ -3,6 +3,8 @@ package robots.model.game;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+
 public class Robot {
     private volatile double positionX;
     private volatile double positionY;
@@ -54,7 +56,7 @@ public class Robot {
         return angularVelocity;
     }
 
-    public void move(Target target, int spaceHeight, int spaceWidth) {
+    public void move(Target target, int spaceHeight, int spaceWidth, ArrayList<Border> borders) {
         double velocity = MAX_VELOCITY;
         double angularVelocity = getAngularVelocity(target);
         double duration = DEFAULT_DURATION;
@@ -71,11 +73,11 @@ public class Robot {
         }
         positionX = newX;
         positionY = newY;
-        newDirection = asNormalizedRadians(resolveBorders(newDirection, spaceWidth, spaceHeight));
+        newDirection = asNormalizedRadians(resolveBorders(newDirection, spaceWidth, spaceHeight, borders));
         direction = newDirection;
     }
 
-    private double resolveBorders(double direction, int width, int height) {
+    private double resolveBorders(double direction, int width, int height, ArrayList<Border> borders) {
         double resolvedDirection = direction;
         if ((positionX <= 0) || (positionY >= height)) {
             resolvedDirection += GameModel.DEFAULT_ROBOT_DIRECTION;
@@ -83,6 +85,22 @@ public class Robot {
         if ((positionX >= width) || (positionY <= 0)) {
             resolvedDirection -= GameModel.DEFAULT_ROBOT_DIRECTION;
         }
+
+        for (Border border : borders) {
+            if ((border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
+                    && Math.abs(positionX - border.getStartX()) <= 0.5
+                    && positionY <= border.getStartY()
+                    && positionY >= border.getFinishY()) {
+                resolvedDirection += GameModel.DEFAULT_ROBOT_DIRECTION;
+            }
+            if ((border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
+                    && Math.abs(positionY - border.getStartY()) <= 0.5
+                    && positionX <= border.getFinishX()
+                    && positionX >= border.getStartX()) {
+                resolvedDirection -= GameModel.DEFAULT_ROBOT_DIRECTION;
+            }
+        }
+
         return resolvedDirection;
     }
 

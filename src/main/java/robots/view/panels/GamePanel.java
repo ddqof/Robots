@@ -1,14 +1,14 @@
 package robots.view.panels;
 
-import robots.model.game.GameModel;
+import robots.model.game.*;
 import robots.model.game.Robot;
-import robots.model.game.Target;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,6 +35,7 @@ public class GamePanel extends JPanel {
             public void run() {
                 int height = getHeight();
                 int width = getWidth();
+                gameModel.setDefaultBorders(height, width);
                 if (height == 0 && width == 0) {
                     return;
                 }
@@ -66,6 +67,7 @@ public class GamePanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         drawRobot(g2d, gameModel.getRobot());
         drawTarget(g2d, gameModel.getTarget());
+        drawBorders(g2d, gameModel.getBorders());
     }
 
     private static int round(double value) {
@@ -104,5 +106,15 @@ public class GamePanel extends JPanel {
         fillOval(g, x, y, 5, 5);
         g.setColor(Color.BLACK);
         drawOval(g, x, y, 5, 5);
+    }
+
+    private void drawBorders(Graphics g, ArrayList<Border> borders){
+        for (Border border: borders){
+            int x1 = round(border.getStartX());
+            int x2 = round(border.getFinishX());
+            int y1 = round(border.getStartY());
+            int y2 = round(border.getFinishY());
+            g.drawLine(x1, y1, x2, y2);
+        }
     }
 }

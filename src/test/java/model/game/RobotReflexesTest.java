@@ -19,7 +19,7 @@ public class RobotReflexesTest {
         List<Double> xValues = new ArrayList<>();
         List<Double> yValues = new ArrayList<>();
         for (int i = 0; i < DEFAULT_MOVE_COUNTS; i++) {
-            robot.move(target, DEFAULT_SPACE_HEIGHT, DEFAULT_SPACE_WIDTH);
+            robot.move(target, DEFAULT_SPACE_HEIGHT, DEFAULT_SPACE_WIDTH, new ArrayList<>());
             xValues.add(robot.getPositionX());
             yValues.add(robot.getPositionY());
         }
