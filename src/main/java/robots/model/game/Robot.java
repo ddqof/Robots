@@ -78,10 +78,10 @@ public class Robot {
     private double resolveBorders(double direction, int width, int height) {
         double resolvedDirection = direction;
         if ((positionX <= 0) || (positionY >= height)) {
-            resolvedDirection += Math.PI;
+            resolvedDirection += GameModel.DEFAULT_ROBOT_DIRECTION;
         }
         if ((positionX >= width) || (positionY <= 0)) {
-            resolvedDirection -= Math.PI;
+            resolvedDirection -= GameModel.DEFAULT_ROBOT_DIRECTION;
         }
         return resolvedDirection;
     }
