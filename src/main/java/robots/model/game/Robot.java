@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Robot {
     private volatile double positionX;
@@ -56,7 +57,7 @@ public class Robot {
         return angularVelocity;
     }
 
-    public void move(Target target, int spaceHeight, int spaceWidth, ArrayList<Border> borders) {
+    public void move(Target target, int spaceHeight, int spaceWidth, List<Border> borders) {
         double velocity = MAX_VELOCITY;
         double angularVelocity = getAngularVelocity(target);
         double duration = DEFAULT_DURATION;
@@ -77,7 +78,7 @@ public class Robot {
         direction = newDirection;
     }
 
-    private double resolveBorders(double direction, int width, int height, ArrayList<Border> borders) {
+    private double resolveBorders(double direction, int width, int height, List<Border> borders) {
         double resolvedDirection = direction;
         if ((positionX <= 0) || (positionY >= height)) {
             resolvedDirection += GameModel.DEFAULT_ROBOT_DIRECTION;

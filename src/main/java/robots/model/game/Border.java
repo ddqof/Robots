@@ -7,11 +7,11 @@ public class Border {
     private final double finishY;
     private final Side side;
 
-    public Border(double startX, double startY, double finishX, double finishY, Side side){
-        this.startX = startX;
-        this.startY = startY;
-        this.finishX = finishX;
-        this.finishY = finishY;
+    public Border(double xLeft, double yBottom, double xRight, double yTop, Side side){
+        this.startX = xLeft;
+        this.startY = yBottom;
+        this.finishX = xRight;
+        this.finishY = yTop;
         this.side = side;
     }
 
