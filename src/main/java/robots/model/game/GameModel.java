@@ -14,39 +14,21 @@ import java.util.List;
 public class GameModel implements MySerializable {
     public static final File SAVES_FILE = new File(Saves.PATH, "gameModel" + Saves.JSON_EXTENSION);
 
+    public static final int WIDTH = 550;
+    public static final int HEIGHT = 550;
     public static final double DEFAULT_ROBOT_POSITION_X = 0;
     public static final double DEFAULT_ROBOT_POSITION_Y = 200;
     public static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
-    public static final int DEFAULT_TARGET_POSITION_X = 600;
-    public static final int DEFAULT_TARGET_POSITION_Y = 180;
-    public static final double DEFAULT_BORDER_SPACE = 40;
-
 
     private final Robot robot;
     private Target target;
-    private List<Border> borders;
+    private final List<Border> borders = Levels.getLevel(0).getBorders();
 
-    public void setDefaultBorders(int height, int weight) {
-        this.borders = getDefaultBorders(height, weight);
-    }
-
-    private static ArrayList<Border> getDefaultBorders(double height, double weight) {
-        ArrayList<Border> defaultBorders = new ArrayList<>();
-        defaultBorders.add(new Border(
-                0, height / 2 - DEFAULT_BORDER_SPACE / 2,
-                weight, height / 2 - DEFAULT_BORDER_SPACE / 2,
-                Side.TOP));
-        defaultBorders.add(new Border(
-                0, height / 2 + DEFAULT_BORDER_SPACE / 2,
-                weight, height / 2 + DEFAULT_BORDER_SPACE / 2,
-                Side.BOTTOM));
-        return defaultBorders;
-    }
 
     public GameModel() {
         this(
                 new Robot(DEFAULT_ROBOT_POSITION_X, DEFAULT_ROBOT_POSITION_Y, DEFAULT_ROBOT_DIRECTION),
-                new Target(DEFAULT_TARGET_POSITION_X, DEFAULT_TARGET_POSITION_Y)
+                Levels.getLevel(0).getTARGET()
         );
     }
 

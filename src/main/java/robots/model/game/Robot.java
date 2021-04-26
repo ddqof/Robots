@@ -57,7 +57,7 @@ public class Robot {
         return angularVelocity;
     }
 
-    public void move(Target target, int spaceHeight, int spaceWidth, List<Border> borders) {
+    public void move(Target target, int spaceHeight, int spaceWidth, List<Border> borders) { //todo алгоритм поиска пути
         double velocity = MAX_VELOCITY;
         double angularVelocity = getAngularVelocity(target);
         double duration = DEFAULT_DURATION;

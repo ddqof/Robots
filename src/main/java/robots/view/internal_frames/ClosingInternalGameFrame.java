@@ -25,8 +25,8 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
     private static final String CLOSING_DIALOG_TITLE = "Exit game window?";
     public static final File SAVES_FILE = new File(Saves.PATH, "gameFrame" + Saves.JSON_EXTENSION);
 
-    public static final int HEIGHT = 400;
-    public static final int WIDTH = 400;
+    public static final int HEIGHT = GameModel.HEIGHT;
+    public static final int WIDTH = GameModel.WIDTH;
     public static final int X = 1000;
     public static final int Y = 450;
 
@@ -43,7 +43,7 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements M
     public ClosingInternalGameFrame(GameModel gameModel, JInternalFrame internalFrame) {
         super(internalFrame, TITLE, CLOSING_CONFIRM_MESSAGE, CLOSING_DIALOG_TITLE);
         this.gameModel = gameModel;
-        GamePanel gamePanel = new GamePanel(gameModel);
+        GamePanel gamePanel = new GamePanel(gameModel, WIDTH, HEIGHT);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);
