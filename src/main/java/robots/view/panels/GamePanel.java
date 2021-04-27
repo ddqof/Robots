@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,15 +16,11 @@ public class GamePanel extends JPanel {
 
     private static final String TIMER_NAME = "Events generator";
     private final GameModel gameModel;
-    private final double BASE_WIDTH;
-    private final double BASE_HEIGHT;
     private volatile int targetPositionX;
     private volatile int targetPositionY;
 
-    public GamePanel(GameModel gameModel, double baseWidth, double baseHeight) {
+    public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
-        BASE_WIDTH = baseWidth;
-        BASE_HEIGHT = baseHeight;
         targetPositionX = gameModel.getTarget().getPositionX();
         targetPositionY = gameModel.getTarget().getPositionY();
         Timer timer = new Timer(TIMER_NAME, true);
@@ -38,8 +33,8 @@ public class GamePanel extends JPanel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                int height = round(getHeight() * baseHeight / getHeight());
-                int width = round(getWidth() * baseWidth/ getWidth());
+                int height = round(getHeight() * (double)GameModel.HEIGHT / getHeight());
+                int width = round(getWidth() * (double)GameModel.WIDTH/ getWidth());
                 if (height == 0 && width == 0) {
                     return;
                 }
@@ -58,8 +53,8 @@ public class GamePanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point p = e.getPoint();
-                targetPositionX = round(p.x * baseWidth / getWidth());
-                targetPositionY = round(p.y * baseHeight / getHeight());
+                targetPositionX = round(p.x * (double)GameModel.WIDTH / getWidth());
+                targetPositionY = round(p.y * (double)GameModel.HEIGHT / getHeight());
             }
         });
         setDoubleBuffered(true);
@@ -70,8 +65,8 @@ public class GamePanel extends JPanel {
         super.paint(g);
         Dimension d = getSize();
         Graphics2D g2d = (Graphics2D) g;
-        double widthRatio = d.width / BASE_WIDTH;
-        double heightRatio = d.height / BASE_HEIGHT;
+        double widthRatio = d.width / (double)GameModel.WIDTH;
+        double heightRatio = d.height / (double)GameModel.HEIGHT;
         drawRobot(g2d, gameModel.getRobot(), widthRatio, heightRatio);
         drawTarget(g2d, gameModel.getTarget(), widthRatio, heightRatio);
         drawBorders(g2d, gameModel.getBorders(), widthRatio, heightRatio);

@@ -2,16 +2,14 @@ package model.game;
 
 import org.junit.Assert;
 import org.junit.Test;
-import robots.model.game.GameModel;
-import robots.model.game.Robot;
-import robots.model.game.Target;
+import robots.model.game.*;
 
 public class ModelPinsRobotTest {
 
     private GameModel createModelWithRobotMovedForOneStep(int robotPosX, int robotPosY, int borderWidth, int borderHeight) {
         GameModel model = new GameModel(
                 new Robot(robotPosX, robotPosY, Math.PI / 2),
-                new Target(100, 100)
+                Levels.getLevel(0)
         );
         model.moveRobot(borderHeight, borderWidth);
         return model;

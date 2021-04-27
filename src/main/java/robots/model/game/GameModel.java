@@ -9,7 +9,6 @@ import robots.serialize.save.Saves;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameModel implements MySerializable {
     public static final File SAVES_FILE = new File(Saves.PATH, "gameModel" + Saves.JSON_EXTENSION);
@@ -21,23 +20,24 @@ public class GameModel implements MySerializable {
     public static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
 
     private final Robot robot;
+    private final Level level;
     private Target target;
-    private final List<Border> borders = Levels.getLevel(0).getBorders();
 
 
     public GameModel() {
         this(
                 new Robot(DEFAULT_ROBOT_POSITION_X, DEFAULT_ROBOT_POSITION_Y, DEFAULT_ROBOT_DIRECTION),
-                Levels.getLevel(0).getTARGET()
+                Levels.getLevel(0)
         );
     }
 
     @JsonCreator
     public GameModel(
-            @JsonProperty("robot") Robot robot,
-            @JsonProperty("target") Target target) {
+            @JsonProperty("robot") Robot robot, Level level) {
         this.robot = robot;
-        this.target = target;
+        this.level = level;
+        this.target = level.getTarget();
+
     }
 
     public Robot getRobot() {
@@ -49,7 +49,7 @@ public class GameModel implements MySerializable {
     }
 
     public ArrayList<Border> getBorders() {
-        return new ArrayList<>(borders);
+        return new ArrayList<>(level.getBorders());
     }
 
     public void updateTarget(Target target) {
@@ -69,7 +69,7 @@ public class GameModel implements MySerializable {
         } else if (robot.getPositionY() > spaceHeight) {
             robot.setPositionY(spaceHeight);
         } else {
-            for (Border border : borders) {
+            for (Border border : level.getBorders()) {
                 if (border.getSide() == Side.LEFT
                         && robot.getPositionX() < border.getStartX()
                         && robot.getPositionY() <= border.getStartY()
@@ -95,7 +95,7 @@ public class GameModel implements MySerializable {
                     robot.setPositionY(border.getFinishY());
                 }
             }
-            robot.move(target, spaceHeight, spaceWidth, borders);
+            robot.move(target, spaceHeight, spaceWidth, level.getBorders());
         }
     }
 
