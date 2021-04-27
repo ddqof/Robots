@@ -8,7 +8,6 @@ public class ModelPinsRobotTest {
 
     private GameModel createModelWithRobotMovedForOneStep(int robotPosX, int robotPosY, int borderWidth, int borderHeight) {
         GameModel model = new GameModel(
-                new Robot(robotPosX, robotPosY, Math.PI / 2),
                 Levels.getLevel(0)
         );
         model.moveRobot(borderHeight, borderWidth);

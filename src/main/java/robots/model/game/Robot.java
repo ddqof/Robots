@@ -10,8 +10,8 @@ public class Robot {
     private volatile double positionX;
     private volatile double positionY;
     private volatile double direction;
-    public static final double DEFAULT_DURATION = 10;
-    public static final double MAX_VELOCITY = 0.1;
+    public static final double DEFAULT_DURATION = 10; // don't touch it
+    public static final double MAX_VELOCITY = 0.1; // speed
     public static final double MAX_ANGULAR_VELOCITY = 0.001;
 
     public double getPositionX() {
@@ -57,7 +57,7 @@ public class Robot {
         return angularVelocity;
     }
 
-    public void move(Target target, int spaceHeight, int spaceWidth, List<Border> borders) { //todo алгоритм поиска пути
+    public void move(Target target, List<Border> borders) { //todo алгоритм поиска пути
         double velocity = MAX_VELOCITY;
         double angularVelocity = getAngularVelocity(target);
         double duration = DEFAULT_DURATION;
@@ -74,17 +74,18 @@ public class Robot {
         }
         positionX = newX;
         positionY = newY;
-        newDirection = asNormalizedRadians(resolveBorders(newDirection, spaceWidth, spaceHeight, borders));
-        direction = newDirection;
+        // todo будет не оч если убрать, но надо эту проблему решить (возможно стоит спросить кошелева, мб можно так оставить)
+        // newDirection = asNormalizedRadians(resolveBorders(newDirection, borders));
+        direction = angleTo(target.getPositionX(), target.getPositionY()) ;
     }
 
-    private double resolveBorders(double direction, int width, int height, List<Border> borders) {
+    private double resolveBorders(double direction, List<Border> borders) {
         double resolvedDirection = direction;
-        if ((positionX <= 0) || (positionY >= height)) {
-            resolvedDirection += GameModel.DEFAULT_ROBOT_DIRECTION;
+        if ((positionX <= 0) || (positionY >= GameModel.HEIGHT)) {
+            resolvedDirection += Math.PI;
         }
-        if ((positionX >= width) || (positionY <= 0)) {
-            resolvedDirection -= GameModel.DEFAULT_ROBOT_DIRECTION;
+        if ((positionX >= GameModel.WIDTH) || (positionY <= 0)) {
+            resolvedDirection -= Math.PI;
         }
 
         for (Border border : borders) {
@@ -92,13 +93,13 @@ public class Robot {
                     && Math.abs(positionX - border.getStartX()) <= 0.5
                     && positionY <= border.getStartY()
                     && positionY >= border.getFinishY()) {
-                resolvedDirection += GameModel.DEFAULT_ROBOT_DIRECTION;
+                resolvedDirection -= Math.PI;
             }
             if ((border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
                     && Math.abs(positionY - border.getStartY()) <= 0.5
                     && positionX <= border.getFinishX()
                     && positionX >= border.getStartX()) {
-                resolvedDirection -= GameModel.DEFAULT_ROBOT_DIRECTION;
+                resolvedDirection += Math.PI;
             }
         }
 

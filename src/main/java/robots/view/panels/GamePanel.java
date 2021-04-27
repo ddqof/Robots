@@ -33,28 +33,22 @@ public class GamePanel extends JPanel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                int height = round(getHeight() * (double)GameModel.HEIGHT / getHeight());
-                int width = round(getWidth() * (double)GameModel.WIDTH/ getWidth());
-                if (height == 0 && width == 0) {
-                    return;
+                if (targetPositionX > GameModel.WIDTH) {
+                    targetPositionX = GameModel.WIDTH;
                 }
-                if (targetPositionX > width) {
-                    targetPositionX = width;
+                if (targetPositionY > GameModel.HEIGHT) {
+                    targetPositionY = GameModel.HEIGHT;
                 }
-                if (targetPositionY > height) {
-                    targetPositionY = height;
-                }
-                gameModel.updateTarget(new Target(targetPositionX, targetPositionY));
-                GamePanel.this.gameModel.moveRobot(height, width);
+                GamePanel.this.gameModel.moveRobot(GameModel.HEIGHT, GameModel.WIDTH);
                 repaint();
             }
         }, 0, 10);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Point p = e.getPoint();
-                targetPositionX = round(p.x * (double)GameModel.WIDTH / getWidth());
-                targetPositionY = round(p.y * (double)GameModel.HEIGHT / getHeight());
+//                Point p = e.getPoint();
+//                targetPositionX = round(p.x * (double)GameModel.WIDTH / getWidth());
+//                targetPositionY = round(p.y * (double)GameModel.HEIGHT / getHeight());
             }
         });
         setDoubleBuffered(true);

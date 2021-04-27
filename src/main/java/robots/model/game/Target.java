@@ -23,4 +23,19 @@ public class Target {
         positionY = startPositionY;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Target)) {
+            return false;
+        }
+        return obj.hashCode() == this.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        int res = 17;
+        res = res * 31 + Math.min(positionX, positionY);
+        res = res * 31 + Math.max(positionX, positionY);
+        return res;
+    }
 }
