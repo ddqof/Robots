@@ -22,14 +22,6 @@ public class Robot {
         return positionY;
     }
 
-    public void setPositionX(double positionX) {
-        this.positionX = positionX;
-    }
-
-    public void setPositionY(double positionY) {
-        this.positionY = positionY;
-    }
-
     public double getDirection() {
         return direction;
     }
@@ -57,7 +49,7 @@ public class Robot {
         return angularVelocity;
     }
 
-    public void move(Target target, List<Border> borders) { //todo алгоритм поиска пути
+    public void move(Target target) {
         double velocity = MAX_VELOCITY;
         double angularVelocity = getAngularVelocity(target);
         double duration = DEFAULT_DURATION;
@@ -74,36 +66,7 @@ public class Robot {
         }
         positionX = newX;
         positionY = newY;
-        // todo будет не оч если убрать, но надо эту проблему решить (возможно стоит спросить кошелева, мб можно так оставить)
-        // newDirection = asNormalizedRadians(resolveBorders(newDirection, borders));
         direction = angleTo(target.getPositionX(), target.getPositionY()) ;
-    }
-
-    private double resolveBorders(double direction, List<Border> borders) {
-        double resolvedDirection = direction;
-        if ((positionX <= 0) || (positionY >= GameModel.HEIGHT)) {
-            resolvedDirection += Math.PI;
-        }
-        if ((positionX >= GameModel.WIDTH) || (positionY <= 0)) {
-            resolvedDirection -= Math.PI;
-        }
-
-        for (Border border : borders) {
-            if ((border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
-                    && Math.abs(positionX - border.getStartX()) <= 0.5
-                    && positionY <= border.getStartY()
-                    && positionY >= border.getFinishY()) {
-                resolvedDirection -= Math.PI;
-            }
-            if ((border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
-                    && Math.abs(positionY - border.getStartY()) <= 0.5
-                    && positionX <= border.getFinishX()
-                    && positionX >= border.getStartX()) {
-                resolvedDirection += Math.PI;
-            }
-        }
-
-        return resolvedDirection;
     }
 
     public double getDistanceTo(double targetPositionX, double targetPositionY) {

@@ -1,7 +1,9 @@
 package robots.view.panels;
 
-import robots.model.game.*;
+import robots.model.game.Border;
+import robots.model.game.GameModel;
 import robots.model.game.Robot;
+import robots.model.game.Target;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +31,7 @@ public class GamePanel extends JPanel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                GamePanel.this.gameModel.moveRobot(GameModel.HEIGHT, GameModel.WIDTH);
+                GamePanel.this.gameModel.moveRobot();
                 repaint();
             }
         }, 0, 10);
@@ -46,11 +48,15 @@ public class GamePanel extends JPanel {
         super.paint(g);
         Dimension d = getSize();
         Graphics2D g2d = (Graphics2D) g;
-        double widthRatio = d.width / (double)GameModel.WIDTH;
-        double heightRatio = d.height / (double)GameModel.HEIGHT;
-        drawRobot(g2d, gameModel.getLevel().getRobot(), widthRatio, heightRatio);
-        drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
-        drawBorders(g2d, gameModel.getBorders(), widthRatio, heightRatio);
+        double widthRatio = d.width / (double) GameModel.WIDTH;
+        double heightRatio = d.height / (double) GameModel.HEIGHT;
+        if (gameModel.isGameOver())
+            drawGameOver(g2d, widthRatio, heightRatio);
+        else {
+            drawRobot(g2d, gameModel.getLevel().getRobot(), widthRatio, heightRatio);
+            drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
+            drawBorders(g2d, gameModel.getBorders(), widthRatio, heightRatio);
+        }
     }
 
     private static int round(double value) {
@@ -63,6 +69,10 @@ public class GamePanel extends JPanel {
 
     private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
+    }
+
+    private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio) {
+        g.drawString("GAME OVER", (float) (GameModel.WIDTH * widthRatio / 2), (float) (GameModel.HEIGHT * heightRatio / 2));
     }
 
     private void drawRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
@@ -98,8 +108,8 @@ public class GamePanel extends JPanel {
         drawOval(g, x, y, targetWidth, targetHeight);
     }
 
-    private void drawBorders(Graphics g, List<Border> borders, double widthRatio, double heightRatio){
-        for (Border border: borders){
+    private void drawBorders(Graphics g, List<Border> borders, double widthRatio, double heightRatio) {
+        for (Border border : borders) {
             int x1 = round(border.getStartX() * widthRatio);
             int x2 = round(border.getFinishX() * widthRatio);
             int y1 = round(border.getStartY() * heightRatio);

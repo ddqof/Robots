@@ -28,7 +28,7 @@ public class Target {
         if (!(obj instanceof Target)) {
             return false;
         }
-        return obj.hashCode() == this.hashCode();
+        return ((Target) obj).positionX == this.positionX && ((Target) obj).positionY == this.positionY;
     }
 
     @Override

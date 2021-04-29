@@ -19,6 +19,7 @@ public class GameModel implements MySerializable {
     private final Level level;
     private Target currentlyTarget;
     private final Stack<Target> path;
+    private boolean isGameOver;
 
 
     public GameModel() {
@@ -30,10 +31,15 @@ public class GameModel implements MySerializable {
         this.level = level;
         this.path = findPath(level.getFinalTarget());
         this.currentlyTarget = path.pop();
+        this.isGameOver = false;
     }
 
     public Level getLevel() {
         return level;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
     public List<Border> getBorders() {
@@ -43,11 +49,11 @@ public class GameModel implements MySerializable {
     private boolean isNotNearBorders(double positionX, double positionY) {
         for (Border border : level.getBorders()) {
             if (((border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
-                    && Math.abs(positionX - border.getStartX()) <= STEP
+                    && Math.abs(positionX - border.getStartX()) <= (double)STEP
                     && positionY <= border.getStartY()
                     && positionY >= border.getFinishY())
                     || (border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
-                    && Math.abs(positionY - border.getStartY()) <= STEP
+                    && Math.abs(positionY - border.getStartY()) <= (double)STEP
                     && positionX <= border.getFinishX()
                     && positionX >= border.getStartX()
                     || positionX < 0
@@ -111,23 +117,13 @@ public class GameModel implements MySerializable {
         return path;
     }
 
-    public void moveRobot(int spaceHeight, int spaceWidth) {
+    public void moveRobot() {
         Robot robot = level.getRobot();
         if (robot.getDistanceTo(currentlyTarget.getPositionX(), currentlyTarget.getPositionY()) < 1) {
-            if (!path.empty())
-                currentlyTarget = path.pop();
-            return;
-        }
-        if (robot.getPositionX() > spaceWidth) {
-            robot.setPositionX(spaceWidth);
-        } else if (robot.getPositionX() < 0) {
-            robot.setPositionX(0);
-        } else if (robot.getPositionY() < 0) {
-            robot.setPositionY(0);
-        } else if (robot.getPositionY() > spaceHeight) {
-            robot.setPositionY(spaceHeight);
+            if (!path.empty()) currentlyTarget = path.pop();
+            else isGameOver = true;
         } else {
-            robot.move(currentlyTarget, level.getBorders());
+            robot.move(currentlyTarget);
         }
     }
 
