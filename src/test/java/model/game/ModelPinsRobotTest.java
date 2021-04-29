@@ -17,14 +17,14 @@ public class ModelPinsRobotTest {
     @Test
     public void testModelPinsRobotToBorderWhenWidthDecreases() {
         GameModel model = createModelWithRobotMovedForOneStep(40, 40, 30, 40);
-        Assert.assertEquals(30, model.getRobot().getPositionX(), 0);
-        Assert.assertEquals(40, model.getRobot().getPositionY(), 0);
+        Assert.assertEquals(30, model.getLevel().getRobot().getPositionX(), 0);
+        Assert.assertEquals(40, model.getLevel().getRobot().getPositionY(), 0);
     }
 
     @Test
     public void testModelPinsRobotToBorderWhenHeightDecreases() {
         GameModel model = createModelWithRobotMovedForOneStep(40, 40, 40, 30);
-        Assert.assertEquals(40, model.getRobot().getPositionX(), 0);
-        Assert.assertEquals(30, model.getRobot().getPositionY(), 0);
+        Assert.assertEquals(40, model.getLevel().getRobot().getPositionX(), 0);
+        Assert.assertEquals(30, model.getLevel().getRobot().getPositionY(), 0);
     }
 }

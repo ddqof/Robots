@@ -16,13 +16,9 @@ public class GamePanel extends JPanel {
 
     private static final String TIMER_NAME = "Events generator";
     private final GameModel gameModel;
-    private volatile int targetPositionX;
-    private volatile int targetPositionY;
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
-        targetPositionX = gameModel.getTarget().getPositionX();
-        targetPositionY = gameModel.getTarget().getPositionY();
         Timer timer = new Timer(TIMER_NAME, true);
         timer.schedule(new TimerTask() {
             @Override
@@ -33,12 +29,6 @@ public class GamePanel extends JPanel {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (targetPositionX > GameModel.WIDTH) {
-                    targetPositionX = GameModel.WIDTH;
-                }
-                if (targetPositionY > GameModel.HEIGHT) {
-                    targetPositionY = GameModel.HEIGHT;
-                }
                 GamePanel.this.gameModel.moveRobot(GameModel.HEIGHT, GameModel.WIDTH);
                 repaint();
             }
@@ -46,9 +36,6 @@ public class GamePanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-//                Point p = e.getPoint();
-//                targetPositionX = round(p.x * (double)GameModel.WIDTH / getWidth());
-//                targetPositionY = round(p.y * (double)GameModel.HEIGHT / getHeight());
             }
         });
         setDoubleBuffered(true);
@@ -61,8 +48,8 @@ public class GamePanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         double widthRatio = d.width / (double)GameModel.WIDTH;
         double heightRatio = d.height / (double)GameModel.HEIGHT;
-        drawRobot(g2d, gameModel.getRobot(), widthRatio, heightRatio);
-        drawTarget(g2d, gameModel.getTarget(), widthRatio, heightRatio);
+        drawRobot(g2d, gameModel.getLevel().getRobot(), widthRatio, heightRatio);
+        drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
         drawBorders(g2d, gameModel.getBorders(), widthRatio, heightRatio);
     }
 

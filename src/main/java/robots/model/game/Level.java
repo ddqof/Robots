@@ -4,31 +4,25 @@ import java.util.List;
 
 public class Level {
     private final List<Border> borders;
-    private final Target TARGET;
-    private final double ROBOT_START_POSITION_X;
-    private final double ROBOT_START_POSITION_Y;
+    private final Target finalTarget;
+    private final Robot robot;
 
-    public Level(List<Border> borders, Target target, double defX, double defY) {
+    public Level(List<Border> borders, Target target, Robot robot) {
         this.borders = borders;
-        TARGET = target;
-        ROBOT_START_POSITION_X = defX;
-        ROBOT_START_POSITION_Y = defY;
+        this.finalTarget = target;
+        this.robot = robot;
     }
 
-    public double getROBOT_START_POSITION_X() {
-        return ROBOT_START_POSITION_X;
-    }
-
-    public double getROBOT_START_POSITION_Y() {
-        return ROBOT_START_POSITION_Y;
+    public Robot getRobot() {
+        return robot;
     }
 
     public List<Border> getBorders() {
         return borders;
     }
 
-    public Target getTarget() {
-        return TARGET;
+    public Target getFinalTarget() {
+        return finalTarget;
     }
 
 

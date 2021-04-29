@@ -15,11 +15,9 @@ public class GameModel implements MySerializable {
     public static final int WIDTH = 550;
     public static final int HEIGHT = 550;
 
-    public static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
-
-    private final Robot robot;
+    private static final int STEP = 5;
     private final Level level;
-    private Target target;
+    private Target currentlyTarget;
     private final Stack<Target> path;
 
 
@@ -29,35 +27,27 @@ public class GameModel implements MySerializable {
 
     @JsonCreator
     public GameModel(Level level) {
-        this.robot = new Robot(
-                level.getROBOT_START_POSITION_X(),
-                level.getROBOT_START_POSITION_Y(),
-                DEFAULT_ROBOT_DIRECTION);
         this.level = level;
-        this.path = findPath(level.getTarget());
-        this.target = path.pop();
+        this.path = findPath(level.getFinalTarget());
+        this.currentlyTarget = path.pop();
     }
 
-    public Robot getRobot() {
-        return robot;
+    public Level getLevel() {
+        return level;
     }
 
-    public Target getTarget() {
-        return target;
-    }
-
-    public ArrayList<Border> getBorders() {
+    public List<Border> getBorders() {
         return new ArrayList<>(level.getBorders());
     }
 
     private boolean isNotNearBorders(double positionX, double positionY) {
         for (Border border : level.getBorders()) {
             if (((border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
-                    && Math.abs(positionX - border.getStartX()) <= 10
+                    && Math.abs(positionX - border.getStartX()) <= STEP
                     && positionY <= border.getStartY()
                     && positionY >= border.getFinishY())
                     || (border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
-                    && Math.abs(positionY - border.getStartY()) <= 10
+                    && Math.abs(positionY - border.getStartY()) <= STEP
                     && positionX <= border.getFinishX()
                     && positionX >= border.getStartX()
                     || positionX < 0
@@ -72,7 +62,7 @@ public class GameModel implements MySerializable {
 
     private ArrayList<Target> getNeighbours(Target target) {
         ArrayList<Target> neighbours = new ArrayList<>();
-        int step = 10;
+        int step = STEP;
         if (isNotNearBorders(target.getPositionX() + step, target.getPositionY()))
             neighbours.add(new Target(target.getPositionX() + step, target.getPositionY()));
         if (isNotNearBorders(target.getPositionX() - step, target.getPositionY()))
@@ -90,12 +80,12 @@ public class GameModel implements MySerializable {
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 
-    private Stack<Target> findPath(Target finish) {
+    private Stack<Target> findPath(Target finalTarget) {
         Stack<Target> path = new Stack<>();
         ArrayDeque<Target> q = new ArrayDeque<>();
         HashSet<Target> visited = new HashSet<>();
         HashMap<Target, Target> parent = new HashMap<>();
-        Target startTarget = new Target((int) level.getROBOT_START_POSITION_X(), (int) level.getROBOT_START_POSITION_Y());
+        Target startTarget = new Target((int) level.getRobot().getPositionX(), (int) level.getRobot().getPositionY());
         parent.put(startTarget, null);
         q.addLast(startTarget);
         visited.add(startTarget);
@@ -106,14 +96,14 @@ public class GameModel implements MySerializable {
                     visited.add(neighbour);
                     q.addLast(neighbour);
                     parent.put(neighbour, v);
-                    if (getDistanceBetween(neighbour, finish) <= 10 && !finish.equals(neighbour)) {
-                        parent.put(finish, neighbour);
+                    if (getDistanceBetween(neighbour, finalTarget) <= STEP && !finalTarget.equals(neighbour)) {
+                        parent.put(finalTarget, neighbour);
                         break label;
                     }
                 }
             }
         }
-        Target currentParent = parent.get(finish);
+        Target currentParent = parent.get(finalTarget);
         while (currentParent != null) {
             path.push(currentParent);
             currentParent = parent.get(currentParent);
@@ -122,9 +112,10 @@ public class GameModel implements MySerializable {
     }
 
     public void moveRobot(int spaceHeight, int spaceWidth) {
-        if (robot.getDistanceTo(target.getPositionX(), target.getPositionY()) < 1) {
+        Robot robot = level.getRobot();
+        if (robot.getDistanceTo(currentlyTarget.getPositionX(), currentlyTarget.getPositionY()) < 1) {
             if (!path.empty())
-                target = path.pop();
+                currentlyTarget = path.pop();
             return;
         }
         if (robot.getPositionX() > spaceWidth) {
@@ -136,7 +127,7 @@ public class GameModel implements MySerializable {
         } else if (robot.getPositionY() > spaceHeight) {
             robot.setPositionY(spaceHeight);
         } else {
-            robot.move(target, level.getBorders());
+            robot.move(currentlyTarget, level.getBorders());
         }
     }
 
