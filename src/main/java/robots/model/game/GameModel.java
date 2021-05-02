@@ -1,6 +1,7 @@
 package robots.model.game;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
@@ -16,7 +17,7 @@ public class GameModel implements JsonSerializable {
 
     private static final int STEP = 5;
     private final Level level;
-    private Target currentlyTarget;
+    private Target currentTarget;
     private final Stack<Target> path;
     private boolean isGameOver;
 
@@ -25,12 +26,18 @@ public class GameModel implements JsonSerializable {
         this(Levels.getLevel(1));
     }
 
-    @JsonCreator
     public GameModel(Level level) {
+        this(level, false);
+    }
+
+    @JsonCreator
+    public GameModel(
+            @JsonProperty("level") Level level,
+            @JsonProperty("gameOver") boolean isGameOver) {
         this.level = level;
         this.path = findPath(level.getFinalTarget());
-        this.currentlyTarget = path.pop();
-        this.isGameOver = false;
+        this.currentTarget = path.pop();
+        this.isGameOver = isGameOver;
     }
 
     public Level getLevel() {
@@ -41,18 +48,14 @@ public class GameModel implements JsonSerializable {
         return isGameOver;
     }
 
-    public List<Border> getBorders() {
-        return new ArrayList<>(level.getBorders());
-    }
-
     private boolean isNotNearBorders(double positionX, double positionY) {
         for (Border border : level.getBorders()) {
             if (((border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
-                    && Math.abs(positionX - border.getStartX()) <= (double)STEP
+                    && Math.abs(positionX - border.getStartX()) <= (double) STEP
                     && positionY <= border.getStartY()
                     && positionY >= border.getFinishY())
                     || (border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
-                    && Math.abs(positionY - border.getStartY()) <= (double)STEP
+                    && Math.abs(positionY - border.getStartY()) <= (double) STEP
                     && positionX <= border.getFinishX()
                     && positionX >= border.getStartX()
                     || positionX < 0
@@ -94,7 +97,8 @@ public class GameModel implements JsonSerializable {
         parent.put(startTarget, null);
         q.addLast(startTarget);
         visited.add(startTarget);
-        label: while (!q.isEmpty()) {
+        label:
+        while (!q.isEmpty()) {
             Target v = q.poll();
             for (Target neighbour : getNeighbours(v)) {
                 if (!visited.contains(neighbour)) {
@@ -118,11 +122,11 @@ public class GameModel implements JsonSerializable {
 
     public void moveRobot() {
         Robot robot = level.getRobot();
-        if (robot.getDistanceTo(currentlyTarget.getPositionX(), currentlyTarget.getPositionY()) < 1) {
-            if (!path.empty()) currentlyTarget = path.pop();
+        if (robot.getDistanceTo(currentTarget.getPositionX(), currentTarget.getPositionY()) < 1) {
+            if (!path.empty()) currentTarget = path.pop();
             else isGameOver = true;
         } else {
-            robot.move(currentlyTarget);
+            robot.move(currentTarget);
         }
     }
 

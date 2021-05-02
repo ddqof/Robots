@@ -55,7 +55,7 @@ public class GamePanel extends JPanel {
         else {
             drawRobot(g2d, gameModel.getLevel().getRobot(), widthRatio, heightRatio);
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
-            drawBorders(g2d, gameModel.getBorders(), widthRatio, heightRatio);
+            drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
         }
     }
 

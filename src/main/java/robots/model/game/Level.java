@@ -1,5 +1,8 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class Level {
@@ -7,7 +10,11 @@ public class Level {
     private final Target finalTarget;
     private final Robot robot;
 
-    public Level(List<Border> borders, Target target, Robot robot) {
+    @JsonCreator
+    public Level(
+            @JsonProperty("borders") List<Border> borders,
+            @JsonProperty("target") Target target,
+            @JsonProperty("robot") Robot robot) {
         this.borders = borders;
         this.finalTarget = target;
         this.robot = robot;

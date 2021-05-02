@@ -1,5 +1,8 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Border {
     private final double startX;
     private final double startY;
@@ -7,7 +10,13 @@ public class Border {
     private final double finishY;
     private final Side side;
 
-    public Border(double xLeft, double yBottom, double xRight, double yTop, Side side){
+    @JsonCreator
+    public Border(
+            @JsonProperty("startX") double xLeft,
+            @JsonProperty("startY") double yBottom,
+            @JsonProperty("finishX") double xRight,
+            @JsonProperty("finishY") double yTop,
+            @JsonProperty("side") Side side){
         this.startX = xLeft;
         this.startY = yBottom;
         this.finishX = xRight;
