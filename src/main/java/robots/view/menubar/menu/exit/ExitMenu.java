@@ -1,18 +1,18 @@
-package robots.view.menus;
+package robots.view.menubar.menu.exit;
 
-import robots.view.frames.MainApplicationClosingFrame;
+import robots.view.frame.closing.MainApplicationClosingFrame;
 
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 
 public class ExitMenu extends JMenu {
+    public static String TITLE = "Exit";
 
-    public ExitMenu(String title, MainApplicationClosingFrame frame) {
-        super(title);
-        setMnemonic(KeyEvent.VK_Q);
+    public ExitMenu(MainApplicationClosingFrame frame, int alias) {
+        super(TITLE);
+        setMnemonic(alias);
         addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {

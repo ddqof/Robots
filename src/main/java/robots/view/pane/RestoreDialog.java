@@ -1,4 +1,4 @@
-package robots.view.panes;
+package robots.view.pane;
 
 import javax.swing.*;
 

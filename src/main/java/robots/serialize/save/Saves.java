@@ -3,8 +3,8 @@ package robots.serialize.save;
 import org.javatuples.Pair;
 import robots.model.game.GameModel;
 import robots.model.log.Logger;
-import robots.view.internal_frames.ClosingInternalGameFrame;
-import robots.view.internal_frames.ClosingInternalLogFrame;
+import robots.view.frame.closing.ClosingInternalGameFrame;
+import robots.view.frame.closing.ClosingInternalLogFrame;
 
 import javax.swing.*;
 import java.io.File;
@@ -27,7 +27,7 @@ public class Saves {
         this.saveList = saveList;
     }
 
-    public Map<Class<?>, Optional<Object>> restore() {
+    private Map<Class<?>, Optional<Object>> restore() {
         return saveList.stream()
                 .collect(Collectors.toMap(Save::getSavedClass, Save::restore));
     }

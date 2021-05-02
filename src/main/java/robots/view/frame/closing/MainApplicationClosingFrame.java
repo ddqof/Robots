@@ -1,11 +1,8 @@
-package robots.view.frames;
+package robots.view.frame.closing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import robots.model.log.Logger;
 import robots.serialize.JsonSerializable;
-import robots.view.internal_frames.JInternalFrameClosing;
-import robots.view.menus.MainApplicationMenuBar;
+import robots.view.menubar.MainApplicationMenuBar;
 
 import javax.swing.*;
 import java.beans.PropertyVetoException;
@@ -15,12 +12,11 @@ import static robots.serialize.save.Saves.PATH;
 
 public class MainApplicationClosingFrame extends JFrameClosing {
     private final JDesktopPane desktopPane = new JDesktopPane();
-    private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit?";
-    private static final String CLOSING_DIALOG_TITLE = "Exit confirmation";
     private static final String MAIN_FRAME_CREATED = "Main window launched";
+    private static final String TITLE = "Robots Program";
 
     public MainApplicationClosingFrame() {
-        super(CLOSING_CONFIRM_MESSAGE, CLOSING_DIALOG_TITLE);
+        super(TITLE);
         setContentPane(desktopPane);
         setJMenuBar(new MainApplicationMenuBar(this));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -46,8 +42,7 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         setActionOnClose(
                 () -> {
                     if (!PATH.exists()) PATH.mkdir();
-                    ObjectWriter prettyPrinter = new ObjectMapper().writerWithDefaultPrettyPrinter();
-                    objectsToSave.forEach(x -> x.serialize(prettyPrinter));
+                    objectsToSave.forEach(JsonSerializable::serialize);
                 }
         );
     }

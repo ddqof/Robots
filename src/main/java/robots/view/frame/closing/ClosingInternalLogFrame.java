@@ -1,6 +1,5 @@
-package robots.view.internal_frames;
+package robots.view.frame.closing;
 
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.log.LogChangeListener;
@@ -16,16 +15,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-import static robots.view.internal_frames.JInternalFrameUtils.getEmptyFrame;
+import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
 public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, JsonSerializable {
     private final LogWindowSource logSource;
     private final TextArea logContent;
-    private static final String TITLE = "Work protocol";
-    private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit?";
-    private static final String CLOSING_DIALOG_TITLE = "Exit log window";
+    private static final String TITLE = "Logger";
     public static final File SAVES_FILE = new File(Saves.PATH, "logFrame" + Saves.JSON_EXTENSION);
 
     public static final int WIDTH = 1030;
@@ -42,7 +39,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     }
 
     public ClosingInternalLogFrame(LogWindowSource logSource, JInternalFrame internalFrame) {
-        super(internalFrame, TITLE, CLOSING_CONFIRM_MESSAGE, CLOSING_DIALOG_TITLE);
+        super(internalFrame, TITLE);
         setActionOnClose(() -> logSource.unregisterListener(this));
         this.logSource = logSource;
         this.logSource.registerListener(this);
@@ -70,7 +67,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     }
 
     @Override
-    public boolean serialize(ObjectWriter writer) {
-        return Save.storeObject(SAVES_FILE, this, writer);
+    public boolean serialize() {
+        return Save.storeObject(SAVES_FILE, this);
     }
 }

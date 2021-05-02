@@ -37,9 +37,9 @@ public class Save {
         }
     }
 
-    public static <T> boolean storeObject(File saveFile, T objectToSave, ObjectWriter writer) {
+    public static <T> boolean storeObject(File saveFile, T objectToSave) {
         try {
-            writer.writeValue(saveFile, objectToSave);
+            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(saveFile, objectToSave);
             return true;
         } catch (IOException e) {
             e.printStackTrace();

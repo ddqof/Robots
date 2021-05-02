@@ -1,11 +1,11 @@
-package robots.view.menus.menu_items;
+package robots.view.menubar.menu.theme;
 
 import javax.swing.*;
 
-public class ThemeMenuItem extends JMenuItem {
+class ThemeMenuItem extends JMenuItem {
 
-    public ThemeMenuItem(String schemeTitle, int alias, String systemLookAndFeelClassName) {
-        super(schemeTitle, alias);
+    public ThemeMenuItem(String schemeTitle, String systemLookAndFeelClassName) {
+        super(schemeTitle);
         addActionListener((event) -> {
             try {
                 UIManager.setLookAndFeel(systemLookAndFeelClassName);

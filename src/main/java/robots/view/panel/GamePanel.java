@@ -1,4 +1,4 @@
-package robots.view.panels;
+package robots.view.panel;
 
 import robots.model.game.Border;
 import robots.model.game.GameModel;

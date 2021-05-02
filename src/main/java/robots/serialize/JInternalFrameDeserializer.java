@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import robots.view.internal_frames.JInternalFrameUtils;
+import robots.view.frame.JInternalFrameUtils;
 
 import javax.swing.*;
 import java.io.IOException;

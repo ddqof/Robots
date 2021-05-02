@@ -3,7 +3,7 @@ package robots.serialize;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import robots.view.internal_frames.JInternalFrameClosing;
+import robots.view.frame.closing.JInternalFrameClosing;
 
 import java.io.IOException;
 

@@ -1,6 +1,5 @@
-package robots.view.internal_frames;
+package robots.view.frame.closing;
 
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.game.GameModel;
@@ -9,24 +8,22 @@ import robots.serialize.JInternalFrameSerializer;
 import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
-import robots.view.panels.GamePanel;
+import robots.view.panel.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
-import static robots.view.internal_frames.JInternalFrameUtils.getEmptyFrame;
+import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
 public class ClosingInternalGameFrame extends JInternalFrameClosing implements JsonSerializable {
     private static final String TITLE = "Game field";
-    private static final String CLOSING_CONFIRM_MESSAGE = "Do you want to exit game window?";
-    private static final String CLOSING_DIALOG_TITLE = "Exit game window?";
     public static final File SAVES_FILE = new File(Saves.PATH, "gameFrame" + Saves.JSON_EXTENSION);
 
-    public static final int X = 1000;
-    public static final int Y = 450;
+    private static final int X = 1000;
+    private static final int Y = 450;
 
     private final GameModel gameModel;
 
@@ -39,7 +36,7 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements J
     }
 
     public ClosingInternalGameFrame(GameModel gameModel, JInternalFrame internalFrame) {
-        super(internalFrame, TITLE, CLOSING_CONFIRM_MESSAGE, CLOSING_DIALOG_TITLE);
+        super(internalFrame, TITLE);
         this.gameModel = gameModel;
         GamePanel gamePanel = new GamePanel(gameModel);
         JPanel panel = new JPanel(new BorderLayout());
@@ -48,7 +45,7 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements J
     }
 
     @Override
-    public boolean serialize(ObjectWriter writer) {
-        return Save.storeObject(SAVES_FILE, this, writer);
+    public boolean serialize() {
+        return Save.storeObject(SAVES_FILE, this);
     }
 }

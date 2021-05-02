@@ -75,7 +75,7 @@ public class LogWindowSource implements JsonSerializable {
     }
 
     @Override
-    public boolean serialize(ObjectWriter writer) {
-        return Save.storeObject(SAVES_FILE, this, writer);
+    public boolean serialize() {
+        return Save.storeObject(SAVES_FILE, this);
     }
 }

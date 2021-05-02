@@ -1,9 +1,11 @@
-package robots.view.internal_frames;
+package robots.view.frame.closing;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class JInternalFrameClosing extends JInternalFrame {
     private final boolean isIcon;
@@ -14,30 +16,17 @@ public class JInternalFrameClosing extends JInternalFrame {
         return isIcon;
     }
 
-    public JInternalFrameClosing(
-            JInternalFrame internalFrame,
-            String title,
-            String closingConfirmMessage,
-            String closingDialogTitle) {
+    public JInternalFrameClosing(JInternalFrame internalFrame, String title) {
         this(
                 title,
                 internalFrame.isIcon(),
                 internalFrame.isVisible(),
                 internalFrame.getSize(),
-                internalFrame.getLocation(),
-                closingConfirmMessage,
-                closingDialogTitle
+                internalFrame.getLocation()
         );
     }
 
-    public JInternalFrameClosing(
-            String title,
-            boolean isIcon,
-            boolean isVisible,
-            Dimension size,
-            Point location,
-            String closingConfirmMessage,
-            String closingDialogTitle) {
+    public JInternalFrameClosing(String title, boolean isIcon, boolean isVisible, Dimension size, Point location) {
         super(title, true, true, true, true);
         setSize(size);
         setLocation(location);
@@ -46,8 +35,13 @@ public class JInternalFrameClosing extends JInternalFrame {
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
-                int result = JOptionPane.showConfirmDialog(JInternalFrameClosing.this,
-                        closingConfirmMessage, closingDialogTitle, JOptionPane.YES_NO_OPTION);
+                ResourceBundle bundle = ResourceBundle.getBundle("robots.bundle.frame.FrameLabelsBundle", Locale.getDefault());
+                int result = JOptionPane.showConfirmDialog(
+                        JInternalFrameClosing.this,
+                        String.format(bundle.getString("closingConfirmMessage"), title),
+                        String.format(bundle.getString("closingDialogTitle"), title),
+                        JOptionPane.YES_NO_OPTION
+                );
                 if (result == JOptionPane.YES_OPTION) {
                     JInternalFrameClosing.this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
                     actionOnClose.run();

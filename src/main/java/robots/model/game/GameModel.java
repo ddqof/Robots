@@ -1,7 +1,6 @@
 package robots.model.game;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
@@ -128,7 +127,7 @@ public class GameModel implements JsonSerializable {
     }
 
     @Override
-    public boolean serialize(ObjectWriter writer) {
-        return Save.storeObject(SAVES_FILE, this, writer);
+    public boolean serialize() {
+        return Save.storeObject(SAVES_FILE, this);
     }
 }

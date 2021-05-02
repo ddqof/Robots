@@ -6,10 +6,10 @@ import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
-import robots.view.frames.MainApplicationClosingFrame;
-import robots.view.internal_frames.ClosingInternalGameFrame;
-import robots.view.internal_frames.ClosingInternalLogFrame;
-import robots.view.panes.RestoreDialog;
+import robots.view.frame.closing.MainApplicationClosingFrame;
+import robots.view.frame.closing.ClosingInternalGameFrame;
+import robots.view.frame.closing.ClosingInternalLogFrame;
+import robots.view.pane.RestoreDialog;
 
 import javax.swing.*;
 import java.awt.*;

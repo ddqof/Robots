@@ -1,4 +1,4 @@
-package robots.view.internal_frames;
+package robots.view.frame;
 
 import robots.model.log.Logger;
 

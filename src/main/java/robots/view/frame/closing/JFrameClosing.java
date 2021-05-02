@@ -1,4 +1,4 @@
-package robots.view.frames;
+package robots.view.frame.closing;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -12,13 +12,17 @@ public class JFrameClosing extends JFrame {
         this.actionOnClose = actionOnClose;
     }
 
-    public JFrameClosing(String closingConfirmMessage, String closingDialogTitle) {
-        super();
+    public JFrameClosing(String title) {
+        super(title);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                int result = JOptionPane.showConfirmDialog(JFrameClosing.this,
-                        closingConfirmMessage, closingDialogTitle, JOptionPane.YES_NO_OPTION);
+                int result = JOptionPane.showConfirmDialog(
+                        JFrameClosing.this,
+                        String.format(ClosingFrameUtils.CLOSING_CONFIRM_MESSAGE, title),
+                        String.format(ClosingFrameUtils.CLOSING_DIALOG_TITLE, title),
+                        JOptionPane.YES_NO_OPTION
+                );
                 if (result == JOptionPane.YES_OPTION) {
                     actionOnClose.run();
                     JFrameClosing.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
