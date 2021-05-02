@@ -3,12 +3,15 @@ package robots.model.game;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Robot {
     private volatile double positionX;
     private volatile double positionY;
     private volatile double direction;
-    public static final double DEFAULT_DURATION = 10;
-    public static final double MAX_VELOCITY = 0.1;
+    public static final double DEFAULT_DURATION = 10; // don't touch it
+    public static final double MAX_VELOCITY = 0.1; // speed
     public static final double MAX_ANGULAR_VELOCITY = 0.001;
 
     public double getPositionX() {
@@ -17,14 +20,6 @@ public class Robot {
 
     public double getPositionY() {
         return positionY;
-    }
-
-    public void setPositionX(double positionX) {
-        this.positionX = positionX;
-    }
-
-    public void setPositionY(double positionY) {
-        this.positionY = positionY;
     }
 
     public double getDirection() {
@@ -54,7 +49,7 @@ public class Robot {
         return angularVelocity;
     }
 
-    public void move(Target target, int spaceHeight, int spaceWidth) {
+    public void move(Target target) {
         double velocity = MAX_VELOCITY;
         double angularVelocity = getAngularVelocity(target);
         double duration = DEFAULT_DURATION;
@@ -71,19 +66,7 @@ public class Robot {
         }
         positionX = newX;
         positionY = newY;
-        newDirection = asNormalizedRadians(resolveBorders(newDirection, spaceWidth, spaceHeight));
-        direction = newDirection;
-    }
-
-    private double resolveBorders(double direction, int width, int height) {
-        double resolvedDirection = direction;
-        if ((positionX <= 0) || (positionY >= height)) {
-            resolvedDirection += Math.PI;
-        }
-        if ((positionX >= width) || (positionY <= 0)) {
-            resolvedDirection -= Math.PI;
-        }
-        return resolvedDirection;
+        direction = angleTo(target.getPositionX(), target.getPositionY()) ;
     }
 
     public double getDistanceTo(double targetPositionX, double targetPositionY) {

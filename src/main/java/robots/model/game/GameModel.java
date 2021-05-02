@@ -1,67 +1,129 @@
 package robots.model.game;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
 import java.io.File;
+import java.util.*;
 
 public class GameModel implements JsonSerializable {
     public static final File SAVES_FILE = new File(Saves.PATH, "gameModel" + Saves.JSON_EXTENSION);
 
-    public static final double DEFAULT_ROBOT_POSITION_X = 50;
-    public static final double DEFAULT_ROBOT_POSITION_Y = 50;
-    public static final double DEFAULT_ROBOT_DIRECTION = Math.PI;
-    public static final int DEFAULT_TARGET_POSITION_X = 50;
-    public static final int DEFAULT_TARGET_POSITION_Y = 50;
+    public static final int WIDTH = 550;
+    public static final int HEIGHT = 550;
 
-    private final Robot robot;
-    private Target target;
+    private static final int STEP = 5;
+    private final Level level;
+    private Target currentlyTarget;
+    private final Stack<Target> path;
+    private boolean isGameOver;
+
 
     public GameModel() {
-        this(
-                new Robot(DEFAULT_ROBOT_POSITION_X, DEFAULT_ROBOT_POSITION_Y, DEFAULT_ROBOT_DIRECTION),
-                new Target(DEFAULT_TARGET_POSITION_X, DEFAULT_TARGET_POSITION_Y)
-        );
+        this(Levels.getLevel(1));
     }
 
     @JsonCreator
-    public GameModel(
-            @JsonProperty("robot") Robot robot,
-            @JsonProperty("target") Target target) {
-        this.robot = robot;
-        this.target = target;
+    public GameModel(Level level) {
+        this.level = level;
+        this.path = findPath(level.getFinalTarget());
+        this.currentlyTarget = path.pop();
+        this.isGameOver = false;
     }
 
-    public Robot getRobot() {
-        return robot;
+    public Level getLevel() {
+        return level;
     }
 
-    public Target getTarget() {
-        return target;
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
-    public void updateTarget(Target target) {
-        this.target = target;
+    public List<Border> getBorders() {
+        return new ArrayList<>(level.getBorders());
     }
 
-    public void moveRobot(int spaceHeight, int spaceWidth) {
-        if (robot.getDistanceTo(target.getPositionX(), target.getPositionY()) < 0.5) {
-            return;
+    private boolean isNotNearBorders(double positionX, double positionY) {
+        for (Border border : level.getBorders()) {
+            if (((border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
+                    && Math.abs(positionX - border.getStartX()) <= (double)STEP
+                    && positionY <= border.getStartY()
+                    && positionY >= border.getFinishY())
+                    || (border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
+                    && Math.abs(positionY - border.getStartY()) <= (double)STEP
+                    && positionX <= border.getFinishX()
+                    && positionX >= border.getStartX()
+                    || positionX < 0
+                    || positionY < 0
+                    || positionX > GameModel.WIDTH
+                    || positionY > GameModel.HEIGHT) {
+                return false;
+            }
         }
-        if (robot.getPositionX() > spaceWidth) {
-            robot.setPositionX(spaceWidth);
-        } else if (robot.getPositionX() < 0) {
-            robot.setPositionX(0);
-        } else if (robot.getPositionY() < 0) {
-            robot.setPositionY(0);
-        } else if (robot.getPositionY() > spaceHeight) {
-            robot.setPositionY(spaceHeight);
+        return true;
+    }
+
+    private ArrayList<Target> getNeighbours(Target target) {
+        ArrayList<Target> neighbours = new ArrayList<>();
+        int step = STEP;
+        if (isNotNearBorders(target.getPositionX() + step, target.getPositionY()))
+            neighbours.add(new Target(target.getPositionX() + step, target.getPositionY()));
+        if (isNotNearBorders(target.getPositionX() - step, target.getPositionY()))
+            neighbours.add(new Target(target.getPositionX() - step, target.getPositionY()));
+        if (isNotNearBorders(target.getPositionX(), target.getPositionY() + step))
+            neighbours.add(new Target(target.getPositionX(), target.getPositionY() + step));
+        if (isNotNearBorders(target.getPositionX(), target.getPositionY() - step))
+            neighbours.add(new Target(target.getPositionX(), target.getPositionY() - step));
+        return neighbours;
+    }
+
+    private double getDistanceBetween(Target t1, Target t2) {
+        double diffX = t1.getPositionX() - t2.getPositionX();
+        double diffY = t1.getPositionY() - t2.getPositionY();
+        return Math.sqrt(diffX * diffX + diffY * diffY);
+    }
+
+    private Stack<Target> findPath(Target finalTarget) {
+        Stack<Target> path = new Stack<>();
+        ArrayDeque<Target> q = new ArrayDeque<>();
+        HashSet<Target> visited = new HashSet<>();
+        HashMap<Target, Target> parent = new HashMap<>();
+        Target startTarget = new Target((int) level.getRobot().getPositionX(), (int) level.getRobot().getPositionY());
+        parent.put(startTarget, null);
+        q.addLast(startTarget);
+        visited.add(startTarget);
+        label: while (!q.isEmpty()) {
+            Target v = q.poll();
+            for (Target neighbour : getNeighbours(v)) {
+                if (!visited.contains(neighbour)) {
+                    visited.add(neighbour);
+                    q.addLast(neighbour);
+                    parent.put(neighbour, v);
+                    if (getDistanceBetween(neighbour, finalTarget) <= STEP && !finalTarget.equals(neighbour)) {
+                        parent.put(finalTarget, neighbour);
+                        break label;
+                    }
+                }
+            }
+        }
+        Target currentParent = parent.get(finalTarget);
+        while (currentParent != null) {
+            path.push(currentParent);
+            currentParent = parent.get(currentParent);
+        }
+        return path;
+    }
+
+    public void moveRobot() {
+        Robot robot = level.getRobot();
+        if (robot.getDistanceTo(currentlyTarget.getPositionX(), currentlyTarget.getPositionY()) < 1) {
+            if (!path.empty()) currentlyTarget = path.pop();
+            else isGameOver = true;
         } else {
-            robot.move(target, spaceHeight, spaceWidth);
+            robot.move(currentlyTarget);
         }
     }
 

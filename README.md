@@ -1,2 +1,8 @@
-# Robots
-The project to learn OO design concepts and MDI application development in Java
+# Bad Robots
+
+## Задачи
+- [ ] - Задача №1:
+  - [ ] - Добавить концепцию уровней
+    - [ ] - Зафиксировать стандарт построения уровней 
+    - [ ] - Сделать "нулевой" уровень
+  - [ ] - Реализовать алгоритм поиска пути у робота

@@ -2,32 +2,29 @@ package model.game;
 
 import org.junit.Assert;
 import org.junit.Test;
-import robots.model.game.GameModel;
-import robots.model.game.Robot;
-import robots.model.game.Target;
+import robots.model.game.*;
 
 public class ModelPinsRobotTest {
 
-    private GameModel createModelWithRobotMovedForOneStep(int robotPosX, int robotPosY, int borderWidth, int borderHeight) {
+    private GameModel createModelWithRobotMovedForOneStep() {
         GameModel model = new GameModel(
-                new Robot(robotPosX, robotPosY, Math.PI / 2),
-                new Target(100, 100)
+                Levels.getLevel(0)
         );
-        model.moveRobot(borderHeight, borderWidth);
+        model.moveRobot();
         return model;
     }
 
     @Test
     public void testModelPinsRobotToBorderWhenWidthDecreases() {
-        GameModel model = createModelWithRobotMovedForOneStep(40, 40, 30, 40);
-        Assert.assertEquals(30, model.getRobot().getPositionX(), 0);
-        Assert.assertEquals(40, model.getRobot().getPositionY(), 0);
+        GameModel model = createModelWithRobotMovedForOneStep();
+        Assert.assertEquals(30, model.getLevel().getRobot().getPositionX(), 0);
+        Assert.assertEquals(40, model.getLevel().getRobot().getPositionY(), 0);
     }
 
     @Test
     public void testModelPinsRobotToBorderWhenHeightDecreases() {
-        GameModel model = createModelWithRobotMovedForOneStep(40, 40, 40, 30);
-        Assert.assertEquals(40, model.getRobot().getPositionX(), 0);
-        Assert.assertEquals(30, model.getRobot().getPositionY(), 0);
+        GameModel model = createModelWithRobotMovedForOneStep();
+        Assert.assertEquals(40, model.getLevel().getRobot().getPositionX(), 0);
+        Assert.assertEquals(30, model.getLevel().getRobot().getPositionY(), 0);
     }
 }
