@@ -5,27 +5,27 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.awt.Component;
 
-public interface CloseableFrame {
+interface CloseableComponent {
+
+    void setCloseOperation(int op);
 
     default void handleClosing(
-            Component component,
+            CloseableComponent component,
             String frameTitle,
             Runnable finalization,
-            int actionOnFrameClose
+            int actionOnCloseSubmit
     ) {
         int result = JOptionPane.showConfirmDialog(
-                component,
+                (Component) component,
                 String.format("Are you sure you want to exit `%s`", frameTitle),
                 String.format("Exit `%s`?", frameTitle),
                 JOptionPane.YES_NO_OPTION
         );
         if (result == JOptionPane.YES_OPTION) {
             finalization.run();
-            if (actionOnFrameClose == JFrame.HIDE_ON_CLOSE) {
-                component.setVisible(false);
-            } else if (actionOnFrameClose == JFrameClosing.EXIT_ON_CLOSE) {
-                component.setEnabled(false);
-            }
+            component.setCloseOperation(actionOnCloseSubmit);
+        } else {
+            component.setCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         }
     }
 }

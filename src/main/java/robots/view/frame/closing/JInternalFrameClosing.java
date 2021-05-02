@@ -9,7 +9,7 @@ import javax.swing.event.InternalFrameEvent;
 import java.awt.Dimension;
 import java.awt.Point;
 
-public abstract class JInternalFrameClosing extends JInternalFrame implements JsonSerializable, CloseableFrame {
+public abstract class JInternalFrameClosing extends JInternalFrame implements JsonSerializable, CloseableComponent {
     private final boolean isIcon;
     private Runnable actionOnClose = () -> {
     };
@@ -37,8 +37,7 @@ public abstract class JInternalFrameClosing extends JInternalFrame implements Js
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
-                handleClosing(
-                        JInternalFrameClosing.this,
+                handleClosing(JInternalFrameClosing.this,
                         title, actionOnClose, JFrame.HIDE_ON_CLOSE);
             }
         });
@@ -46,5 +45,10 @@ public abstract class JInternalFrameClosing extends JInternalFrame implements Js
 
     public void setActionOnClose(Runnable action) {
         actionOnClose = action;
+    }
+
+    @Override
+    public void setCloseOperation(int op) {
+        this.setDefaultCloseOperation(op);
     }
 }
