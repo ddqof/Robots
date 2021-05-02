@@ -8,7 +8,7 @@ import robots.view.frame.closing.ClosingInternalLogFrame;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,14 +21,14 @@ public class Saves {
             "New instances for: %s and %s was created",
             ClosingInternalLogFrame.class, ClosingInternalGameFrame.class
     );
-    private final List<Save> saveList;
+    private final Save[] saves;
 
-    public Saves(List<Save> saveList) {
-        this.saveList = saveList;
+    public Saves(Save... saves) {
+        this.saves = saves;
     }
 
     private Map<Class<?>, Optional<Object>> restore() {
-        return saveList.stream()
+        return Arrays.stream(saves)
                 .collect(Collectors.toMap(Save::getSavedClass, Save::restore));
     }
 

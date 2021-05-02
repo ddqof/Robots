@@ -6,12 +6,14 @@ import robots.view.menubar.MainApplicationMenuBar;
 
 import javax.swing.*;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static robots.serialize.save.Saves.PATH;
 
 public class MainApplicationClosingFrame extends JFrameClosing {
     private final JDesktopPane desktopPane = new JDesktopPane();
+    private final List<JsonSerializable> attachedFrames = new ArrayList<>();
     private static final String MAIN_FRAME_CREATED = "Main window launched";
     private static final String TITLE = "Robots Program";
 
@@ -25,6 +27,7 @@ public class MainApplicationClosingFrame extends JFrameClosing {
 
     public <T extends JInternalFrameClosing> void addFrame(T frame) {
         desktopPane.add(frame);
+        attachedFrames.add(frame);
         if (frame.shouldBeRestoredAsIcon()) {
             try {
                 frame.setIcon(true);
@@ -38,11 +41,13 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         return String.format("Failed to set Icon status on %s", targetClass.getName());
     }
 
-    public void storeSerializableAtClose(List<JsonSerializable> objectsToSave) {
+    public void storeAttachedFramesAtClose() {
         setActionOnClose(
                 () -> {
-                    if (!PATH.exists()) PATH.mkdir();
-                    objectsToSave.forEach(JsonSerializable::serialize);
+                    if (!PATH.exists()) {
+                        PATH.mkdir();
+                    }
+                    attachedFrames.forEach(JsonSerializable::serialize);
                 }
         );
     }

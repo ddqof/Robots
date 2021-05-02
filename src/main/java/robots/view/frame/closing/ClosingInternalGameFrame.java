@@ -18,7 +18,7 @@ import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class ClosingInternalGameFrame extends JInternalFrameClosing implements JsonSerializable {
+public class ClosingInternalGameFrame extends JInternalFrameClosing {
     private static final String TITLE = "Game field";
     public static final File SAVES_FILE = new File(Saves.PATH, "gameFrame" + Saves.JSON_EXTENSION);
 
@@ -26,10 +26,6 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements J
     private static final int Y = 450;
 
     private final GameModel gameModel;
-
-    public GameModel getGameModel() {
-        return gameModel;
-    }
 
     public ClosingInternalGameFrame(GameModel gameModel) {
         this(gameModel, getEmptyFrame(GameModel.WIDTH, GameModel.HEIGHT, X, Y));
@@ -46,6 +42,6 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing implements J
 
     @Override
     public boolean serialize() {
-        return Save.storeObject(SAVES_FILE, this);
+        return Save.storeObject(SAVES_FILE, this) && gameModel.serialize();
     }
 }

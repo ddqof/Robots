@@ -13,7 +13,6 @@ import robots.view.pane.RestoreDialog;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class RobotsProgram {
     public static void main(String[] args) {
@@ -29,12 +28,10 @@ public class RobotsProgram {
             }
             Logger.init(userChoiceForRestore);
             Saves saves = new Saves(
-                    List.of(
-                            new Save(ClosingInternalGameFrame.SAVES_FILE, ClosingInternalGameFrame.class),
-                            new Save(ClosingInternalLogFrame.SAVES_FILE, ClosingInternalLogFrame.class),
-                            new Save(GameModel.SAVES_FILE, GameModel.class),
-                            new Save(LogWindowSource.SAVES_FILE, LogWindowSource.class)
-                    )
+                    new Save(ClosingInternalGameFrame.SAVES_FILE, ClosingInternalGameFrame.class),
+                    new Save(ClosingInternalLogFrame.SAVES_FILE, ClosingInternalLogFrame.class),
+                    new Save(GameModel.SAVES_FILE, GameModel.class),
+                    new Save(LogWindowSource.SAVES_FILE, LogWindowSource.class)
             );
             MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
             Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored =
@@ -45,7 +42,7 @@ public class RobotsProgram {
             mainFrame.addFrame(logFrame);
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
             mainFrame.setVisible(true);
-            mainFrame.storeSerializableAtClose(List.of(gameFrame, logFrame, gameFrame.getGameModel(), logFrame.getLogSource()));
+            mainFrame.storeAttachedFramesAtClose();
         });
     }
 }

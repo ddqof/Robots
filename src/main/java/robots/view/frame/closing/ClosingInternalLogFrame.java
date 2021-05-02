@@ -19,7 +19,7 @@ import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, JsonSerializable {
+public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener {
     private final LogWindowSource logSource;
     private final TextArea logContent;
     private static final String TITLE = "Logger";
@@ -68,6 +68,6 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
 
     @Override
     public boolean serialize() {
-        return Save.storeObject(SAVES_FILE, this);
+        return Save.storeObject(SAVES_FILE, this) && logSource.serialize();
     }
 }
