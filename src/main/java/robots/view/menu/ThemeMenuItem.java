@@ -1,4 +1,4 @@
-package robots.view.menubar.menu.theme;
+package robots.view.menu;
 
 import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
@@ -30,10 +30,10 @@ class ThemeMenuItem extends JMenuItem {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 BundleConfig.MENU_LABELS_BUNDLE_NAME, Locale.getDefault()
         );
-        if (getText().equals(LookAndFeelMenu.SYSTEM_THEME_TITLE)) {
-            setText(resourceBundle.getString("lookAndFeelSystemThemeMenuItemTitle"));
+        if (getText().equals(LookAndFeelMenu.SYSTEM_THEME_RESOURCE_KEY)) {
+            setText(resourceBundle.getString("SystemThemeMenuItemTitle"));
         } else {
-            setText(resourceBundle.getString("lookAndFeelCrossPlatformMenuItemTitle"));
+            setText(resourceBundle.getString("CrossPlatformMenuItemTitle"));
         }
     }
 }

@@ -27,7 +27,8 @@ import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener {
     private final LogWindowSource logSource;
     private final TextArea logContent;
-    public static final File SAVES_FILE = new File(Saves.PATH, "logFrame" + Saves.JSON_EXTENSION);
+    public static final File SAVES_FILE = new File(
+            Saves.PATH, String.format("logFrame.%s", Saves.JSON_EXTENSION));
     private static final String RESOURCE_KEY = "logFrameTitle";
 
     public static final int WIDTH = 1030;

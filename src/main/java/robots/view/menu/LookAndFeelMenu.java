@@ -1,4 +1,4 @@
-package robots.view.menubar.menu.theme;
+package robots.view.menu;
 
 import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
@@ -9,20 +9,19 @@ import java.awt.event.ActionEvent;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class LookAndFeelMenu extends JMenu {
-    public static final String SYSTEM_THEME_TITLE = "System theme";
-    public static final String CROSS_PLATFORM_THEME_TITLE = "Cross-platform theme";
+class LookAndFeelMenu extends JMenu {
+    public static final String SYSTEM_THEME_RESOURCE_KEY = "SystemThemeMenuItemTitle";
+    public static final String CROSS_PLATFORM_RESOURCE_KEY = "CrossPlatformMenuItemTitle";
     private static final String RESOURCE_KEY = "lookAndFeelMenuTitle";
 
-    public LookAndFeelMenu(int alias) {
-        super(ResourceBundle.getBundle(
-                BundleConfig.MENU_LABELS_BUNDLE_NAME).getString(RESOURCE_KEY));
+    public LookAndFeelMenu(ResourceBundle bundle, int alias) {
+        super(bundle.getString(RESOURCE_KEY));
         setMnemonic(alias);
         add(new ThemeMenuItem(
-                SYSTEM_THEME_TITLE,
+                bundle.getString(SYSTEM_THEME_RESOURCE_KEY),
                 UIManager.getSystemLookAndFeelClassName()));
         add(new ThemeMenuItem(
-                CROSS_PLATFORM_THEME_TITLE,
+                bundle.getString(CROSS_PLATFORM_RESOURCE_KEY),
                 UIManager.getCrossPlatformLookAndFeelClassName()));
         EventBusHolder.get().register(this);
     }

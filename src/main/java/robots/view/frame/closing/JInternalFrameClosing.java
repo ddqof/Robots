@@ -2,12 +2,10 @@ package robots.view.frame.closing;
 
 import robots.serialize.JsonSerializable;
 
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
+import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 
 public abstract class JInternalFrameClosing extends JInternalFrame implements JsonSerializable, CloseableComponent {
     private final boolean isIcon;

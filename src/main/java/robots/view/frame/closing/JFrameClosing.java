@@ -1,6 +1,6 @@
 package robots.view.frame.closing;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 

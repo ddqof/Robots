@@ -1,14 +1,10 @@
 package robots.view.frame.closing;
 
-import robots.BundleConfig;
+import robots.view.pane.Dialogs;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import java.awt.Component;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import javax.swing.*;
 
-interface CloseableComponent {
+public interface CloseableComponent {
 
     void setDefaultCloseOperation(int op);
 
@@ -19,15 +15,7 @@ interface CloseableComponent {
             Runnable finalization,
             int actionOnCloseSubmit
     ) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(
-                BundleConfig.DIALOGS_BUNDLE_NAME, Locale.getDefault());
-        int result = JOptionPane.showConfirmDialog(
-                (Component) component,
-                String.format(resourceBundle.getString("closingConfirmMessage"), getTitle()),
-                String.format(resourceBundle.getString("closingDialogTitle"), getTitle()),
-                JOptionPane.YES_NO_OPTION
-        );
-        if (result == JOptionPane.YES_OPTION) {
+        if (Dialogs.showCloseDialog(component) == JOptionPane.YES_OPTION) {
             finalization.run();
             component.setDefaultCloseOperation(actionOnCloseSubmit);
         } else {

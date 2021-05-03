@@ -5,13 +5,15 @@ import robots.BundleConfig;
 import robots.EventBusHolder;
 import robots.model.log.Logger;
 import robots.serialize.JsonSerializable;
-import robots.view.menubar.MainApplicationMenuBar;
+import robots.serialize.JsonSerializableLocale;
+import robots.view.menu.MainApplicationMenuBar;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static robots.serialize.save.Saves.PATH;
@@ -50,13 +52,14 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         return String.format("Failed to set Icon status on %s", targetClass.getName());
     }
 
-    public void storeAttachedFramesAtClose() {
+    public void dumpAtClose() {
         setActionOnClose(
                 () -> {
                     if (!PATH.exists()) {
                         PATH.mkdir();
                     }
                     attachedFrames.forEach(JsonSerializable::serialize);
+                    new JsonSerializableLocale(Locale.getDefault()).serialize();
                 }
         );
     }
