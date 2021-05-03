@@ -16,7 +16,7 @@ public class Border {
             @JsonProperty("startY") double yBottom,
             @JsonProperty("finishX") double xRight,
             @JsonProperty("finishY") double yTop,
-            @JsonProperty("side") Side side){
+            @JsonProperty("side") Side side) {
         this.startX = xLeft;
         this.startY = yBottom;
         this.finishX = xRight;

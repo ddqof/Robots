@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class JFrameClosing extends JFrame implements CloseableComponent{
+public class JFrameClosing extends JFrame implements CloseableComponent {
     private Runnable actionOnClose = () -> {
     };
 
@@ -18,15 +18,8 @@ public class JFrameClosing extends JFrame implements CloseableComponent{
             @Override
             public void windowClosing(WindowEvent e) {
                 JFrameClosing.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                handleClosing(
-                        JFrameClosing.this,
-                        title, actionOnClose, JFrame.EXIT_ON_CLOSE);
+                handleClosing(JFrameClosing.this, actionOnClose, JFrame.EXIT_ON_CLOSE);
             }
         });
-    }
-
-    @Override
-    public void setCloseOperation(int op) {
-        this.setDefaultCloseOperation(op);
     }
 }

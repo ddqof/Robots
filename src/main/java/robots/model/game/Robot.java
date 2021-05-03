@@ -3,9 +3,6 @@ package robots.model.game;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Robot {
     private volatile double positionX;
     private volatile double positionY;
@@ -66,7 +63,7 @@ public class Robot {
         }
         positionX = newX;
         positionY = newY;
-        direction = angleTo(target.getPositionX(), target.getPositionY()) ;
+        direction = angleTo(target.getPositionX(), target.getPositionY());
     }
 
     public double getDistanceTo(double targetPositionX, double targetPositionY) {

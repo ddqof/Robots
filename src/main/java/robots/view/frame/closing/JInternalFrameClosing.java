@@ -37,18 +37,12 @@ public abstract class JInternalFrameClosing extends JInternalFrame implements Js
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
-                handleClosing(JInternalFrameClosing.this,
-                        title, actionOnClose, JFrame.HIDE_ON_CLOSE);
+                handleClosing(JInternalFrameClosing.this, actionOnClose, JFrame.HIDE_ON_CLOSE);
             }
         });
     }
 
     public void setActionOnClose(Runnable action) {
         actionOnClose = action;
-    }
-
-    @Override
-    public void setCloseOperation(int op) {
-        this.setDefaultCloseOperation(op);
     }
 }

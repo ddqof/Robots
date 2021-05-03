@@ -2,25 +2,30 @@ package robots.view.frame.closing;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.eventbus.Subscribe;
+import robots.BundleConfig;
+import robots.EventBusHolder;
 import robots.model.game.GameModel;
 import robots.serialize.JInternalFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
-import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 import robots.view.panel.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
 public class ClosingInternalGameFrame extends JInternalFrameClosing {
-    private static final String TITLE = "Game field";
     public static final File SAVES_FILE = new File(Saves.PATH, "gameFrame" + Saves.JSON_EXTENSION);
+    private static final String RESOURCE_KEY = "gameFrameTitle";
 
     private static final int X = 1000;
     private static final int Y = 450;
@@ -32,16 +37,28 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
     }
 
     public ClosingInternalGameFrame(GameModel gameModel, JInternalFrame internalFrame) {
-        super(internalFrame, TITLE);
+        super(
+                internalFrame,
+                ResourceBundle.getBundle(
+                        BundleConfig.FRAME_LABELS_BUNDLE_NAME).getString(RESOURCE_KEY));
         this.gameModel = gameModel;
         GamePanel gamePanel = new GamePanel(gameModel);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);
+        EventBusHolder.get().register(this);
     }
 
     @Override
     public boolean serialize() {
         return Save.storeObject(SAVES_FILE, this) && gameModel.serialize();
+    }
+
+    @Subscribe
+    public void onLanguageUpdate(ActionEvent e) {
+        ResourceBundle labels = ResourceBundle.getBundle(
+                BundleConfig.FRAME_LABELS_BUNDLE_NAME, Locale.getDefault());
+        setTitle(labels.getString(RESOURCE_KEY));
+        revalidate();
     }
 }

@@ -60,7 +60,7 @@ public class Levels {
                 defaultBorders,
                 new Target((int) (GameModel.WIDTH / 2 + SPACE / 2), 0),
                 new Robot(0,
-                (double) GameModel.HEIGHT / 2, 0));
+                        (double) GameModel.HEIGHT / 2, 0));
     }
 
     public static Level getLevel(int num) {

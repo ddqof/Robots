@@ -1,16 +1,19 @@
 package robots.view.pane;
 
+import robots.BundleConfig;
+
 import javax.swing.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class RestoreDialog {
-    private static final String SAVES_FOUND_MESSAGE = "Would you like to restore your local saves?";
-    private static final String SAVES_FOUND_DIALOG_TITLE = "Saves found";
-
     public static int show() {
+        ResourceBundle dialogsBundle = ResourceBundle.getBundle(
+                BundleConfig.DIALOGS_BUNDLE_NAME, Locale.getDefault());
         return JOptionPane.showConfirmDialog(
                 null,
-                SAVES_FOUND_MESSAGE,
-                SAVES_FOUND_DIALOG_TITLE,
+                dialogsBundle.getString("savesFoundMessage"),
+                dialogsBundle.getString("savesFoundTitle"),
                 JOptionPane.YES_NO_OPTION);
     }
 }

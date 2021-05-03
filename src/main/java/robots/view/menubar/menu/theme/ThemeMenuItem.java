@@ -1,6 +1,13 @@
 package robots.view.menubar.menu.theme;
 
+import com.google.common.eventbus.Subscribe;
+import robots.BundleConfig;
+import robots.EventBusHolder;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 class ThemeMenuItem extends JMenuItem {
 
@@ -15,5 +22,18 @@ class ThemeMenuItem extends JMenuItem {
             }
             this.invalidate();
         });
+        EventBusHolder.get().register(this);
+    }
+
+    @Subscribe
+    private void onLanguageUpdate(ActionEvent e) {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle(
+                BundleConfig.MENU_LABELS_BUNDLE_NAME, Locale.getDefault()
+        );
+        if (getText().equals(LookAndFeelMenu.SYSTEM_THEME_TITLE)) {
+            setText(resourceBundle.getString("lookAndFeelSystemThemeMenuItemTitle"));
+        } else {
+            setText(resourceBundle.getString("lookAndFeelCrossPlatformMenuItemTitle"));
+        }
     }
 }

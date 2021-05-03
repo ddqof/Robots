@@ -1,5 +1,6 @@
 package robots.view.menubar;
 
+import robots.view.menubar.menu.language.LanguageMenu;
 import robots.view.menubar.menu.logging.LoggingMenu;
 import robots.view.menubar.menu.theme.LookAndFeelMenu;
 import robots.view.frame.closing.MainApplicationClosingFrame;
@@ -13,5 +14,6 @@ public class MainApplicationMenuBar extends JMenuBar {
         add(new ExitMenu(mainFrame, KeyEvent.VK_E));
         add(new LoggingMenu(KeyEvent.VK_S));
         add(new LookAndFeelMenu(KeyEvent.VK_V));
+        add(new LanguageMenu(KeyEvent.VK_L));
     }
 }
