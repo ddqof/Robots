@@ -10,9 +10,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 class ThemeMenuItem extends JMenuItem {
+    private final String resourceKey;
 
-    public ThemeMenuItem(String schemeTitle, String systemLookAndFeelClassName) {
-        super(schemeTitle);
+    public ThemeMenuItem(ResourceBundle bundle, String resourceKey, String systemLookAndFeelClassName) {
+        super(bundle.getString(resourceKey));
+        this.resourceKey = resourceKey;
         addActionListener((event) -> {
             try {
                 UIManager.setLookAndFeel(systemLookAndFeelClassName);
@@ -30,10 +32,6 @@ class ThemeMenuItem extends JMenuItem {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 BundleConfig.MENU_LABELS_BUNDLE_NAME, Locale.getDefault()
         );
-        if (getText().equals(LookAndFeelMenu.SYSTEM_THEME_RESOURCE_KEY)) {
-            setText(resourceBundle.getString("SystemThemeMenuItemTitle"));
-        } else {
-            setText(resourceBundle.getString("CrossPlatformMenuItemTitle"));
-        }
+        setText(resourceBundle.getString(resourceKey));
     }
 }

@@ -18,10 +18,12 @@ class LookAndFeelMenu extends JMenu {
         super(bundle.getString(RESOURCE_KEY));
         setMnemonic(alias);
         add(new ThemeMenuItem(
-                bundle.getString(SYSTEM_THEME_RESOURCE_KEY),
+                bundle,
+                SYSTEM_THEME_RESOURCE_KEY,
                 UIManager.getSystemLookAndFeelClassName()));
         add(new ThemeMenuItem(
-                bundle.getString(CROSS_PLATFORM_RESOURCE_KEY),
+                bundle,
+                CROSS_PLATFORM_RESOURCE_KEY,
                 UIManager.getCrossPlatformLookAndFeelClassName()));
         EventBusHolder.get().register(this);
     }
