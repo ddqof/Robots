@@ -1,15 +1,14 @@
 package robots.view.menu;
 
-import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
-import robots.EventBusHolder;
+import robots.locale.LocaleChangeListener;
+import robots.locale.LocaleListenersHolder;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-class LanguageMenu extends JMenu {
+class LanguageMenu extends JMenu implements LocaleChangeListener {
     private static final String RESOURCE_KEY = "langMenuTitle";
     private static final String RUSSIAN_LANG = "Русский";
     private static final String ENGLISH_LANG = "English";
@@ -20,20 +19,20 @@ class LanguageMenu extends JMenu {
         JMenuItem ruMenuItem = new JMenuItem(RUSSIAN_LANG);
         ruMenuItem.addActionListener(actionEvent -> {
             Locale.setDefault(new Locale("ru", "RU"));
-            EventBusHolder.get().post(actionEvent);
+            LocaleListenersHolder.updateLanguage();
         });
         JMenuItem enMenuItem = new JMenuItem(ENGLISH_LANG);
         enMenuItem.addActionListener(actionEvent -> {
             Locale.setDefault(new Locale("en", "US"));
-            EventBusHolder.get().post(actionEvent);
+            LocaleListenersHolder.updateLanguage();
         });
         add(ruMenuItem);
         add(enMenuItem);
-        EventBusHolder.get().register(this);
+        LocaleListenersHolder.register(this);
     }
 
-    @Subscribe
-    private void onLanguageUpdate(ActionEvent e) {
+    @Override
+    public void onLanguageUpdate() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 BundleConfig.MENU_LABELS_BUNDLE_NAME, Locale.getDefault()
         );

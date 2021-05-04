@@ -1,5 +1,6 @@
 package robots.view.frame.closing;
 
+import robots.locale.LocaleChangeListener;
 import robots.serialize.JsonSerializable;
 
 import javax.swing.*;
@@ -7,7 +8,8 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
 
-public abstract class JInternalFrameClosing extends JInternalFrame implements JsonSerializable, CloseableComponent {
+public abstract class JInternalFrameClosing extends JInternalFrame implements
+        JsonSerializable, CloseableComponent, LocaleChangeListener {
     private final boolean isIcon;
     private Runnable actionOnClose = () -> {
     };

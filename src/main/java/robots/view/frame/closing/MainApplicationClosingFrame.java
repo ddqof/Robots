@@ -1,15 +1,13 @@
 package robots.view.frame.closing;
 
-import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
-import robots.EventBusHolder;
+import robots.locale.LocaleListenersHolder;
 import robots.model.log.Logger;
 import robots.serialize.JsonSerializable;
 import robots.serialize.JsonSerializableLocale;
 import robots.view.menu.MainApplicationMenuBar;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         setJMenuBar(new MainApplicationMenuBar(this));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Logger.debug(MAIN_FRAME_CREATED);
-        EventBusHolder.get().register(this);
+        LocaleListenersHolder.register(this);
     }
 
     public <T extends JInternalFrameClosing> void addFrame(T frame) {
@@ -64,8 +62,8 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         );
     }
 
-    @Subscribe
-    private void onLanguageUpdate(ActionEvent e) {
+    @Override
+    public void onLanguageUpdate() {
         setTitle(
                 ResourceBundle.getBundle(BundleConfig.FRAME_LABELS_BUNDLE_NAME)
                         .getString(RESOURCE_KEY)

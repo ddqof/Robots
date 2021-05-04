@@ -1,15 +1,14 @@
 package robots.view.menu;
 
-import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
-import robots.EventBusHolder;
+import robots.locale.LocaleChangeListener;
+import robots.locale.LocaleListenersHolder;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-class LoggingMenu extends JMenu {
+class LoggingMenu extends JMenu implements LocaleChangeListener {
     private static final String LOG_MESSAGE = "New line";
     private static final String RESOURCE_KEY = "logMenuTitle";
 
@@ -17,11 +16,11 @@ class LoggingMenu extends JMenu {
         super(bundle.getString(RESOURCE_KEY));
         setMnemonic(alias);
         add(new LogMenuItem(LOG_MESSAGE));
-        EventBusHolder.get().register(this);
+        LocaleListenersHolder.register(this);
     }
 
-    @Subscribe
-    private void onLanguageUpdate(ActionEvent e) {
+    @Override
+    public void onLanguageUpdate() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 BundleConfig.MENU_LABELS_BUNDLE_NAME, Locale.getDefault()
         );

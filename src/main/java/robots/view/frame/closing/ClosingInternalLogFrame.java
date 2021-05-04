@@ -2,9 +2,9 @@ package robots.view.frame.closing;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
-import robots.EventBusHolder;
+import robots.locale.LocaleChangeListener;
+import robots.locale.LocaleListenersHolder;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
@@ -15,7 +15,6 @@ import robots.serialize.save.Saves;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -24,7 +23,7 @@ import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener {
+public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, LocaleChangeListener {
     private final LogWindowSource logSource;
     private final TextArea logContent;
     public static final File SAVES_FILE = new File(
@@ -54,7 +53,7 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         getContentPane().add(panel);
         updateLogContent();
         pack();
-        EventBusHolder.get().register(this);
+        LocaleListenersHolder.register(this);
     }
 
     private void updateLogContent() {
@@ -76,9 +75,8 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         return Save.storeObject(SAVES_FILE, this) && logSource.serialize();
     }
 
-
-    @Subscribe
-    public void onLanguageUpdate(ActionEvent e) {
+    @Override
+    public void onLanguageUpdate() {
         ResourceBundle labels = ResourceBundle.getBundle(
                 BundleConfig.FRAME_LABELS_BUNDLE_NAME, Locale.getDefault());
         setTitle(labels.getString(RESOURCE_KEY));

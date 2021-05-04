@@ -1,15 +1,14 @@
 package robots.view.menu;
 
-import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
-import robots.EventBusHolder;
+import robots.locale.LocaleChangeListener;
+import robots.locale.LocaleListenersHolder;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-class LookAndFeelMenu extends JMenu {
+class LookAndFeelMenu extends JMenu implements LocaleChangeListener {
     public static final String SYSTEM_THEME_RESOURCE_KEY = "SystemThemeMenuItemTitle";
     public static final String CROSS_PLATFORM_RESOURCE_KEY = "CrossPlatformMenuItemTitle";
     private static final String RESOURCE_KEY = "lookAndFeelMenuTitle";
@@ -25,11 +24,11 @@ class LookAndFeelMenu extends JMenu {
                 bundle,
                 CROSS_PLATFORM_RESOURCE_KEY,
                 UIManager.getCrossPlatformLookAndFeelClassName()));
-        EventBusHolder.get().register(this);
+        LocaleListenersHolder.register(this);
     }
 
-    @Subscribe
-    private void onLanguageUpdate(ActionEvent e) {
+    @Override
+    public void onLanguageUpdate() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 BundleConfig.MENU_LABELS_BUNDLE_NAME, Locale.getDefault()
         );

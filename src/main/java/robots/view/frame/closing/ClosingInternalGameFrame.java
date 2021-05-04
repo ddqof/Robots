@@ -2,9 +2,8 @@ package robots.view.frame.closing;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.eventbus.Subscribe;
 import robots.BundleConfig;
-import robots.EventBusHolder;
+import robots.locale.LocaleListenersHolder;
 import robots.model.game.GameModel;
 import robots.serialize.JInternalFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
@@ -14,7 +13,6 @@ import robots.view.panel.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -47,7 +45,7 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);
-        EventBusHolder.get().register(this);
+        LocaleListenersHolder.register(this);
     }
 
     @Override
@@ -55,8 +53,8 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
         return Save.storeObject(SAVES_FILE, this) && gameModel.serialize();
     }
 
-    @Subscribe
-    public void onLanguageUpdate(ActionEvent e) {
+    @Override
+    public void onLanguageUpdate() {
         ResourceBundle labels = ResourceBundle.getBundle(
                 BundleConfig.FRAME_LABELS_BUNDLE_NAME, Locale.getDefault());
         setTitle(labels.getString(RESOURCE_KEY));
