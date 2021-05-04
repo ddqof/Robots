@@ -1,5 +1,6 @@
 package robots;
 
+import org.javatuples.Pair;
 import robots.model.game.GameModel;
 import robots.model.log.LogWindowSource;
 import robots.model.log.Logger;
@@ -14,7 +15,6 @@ import robots.view.pane.Dialogs;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
-import java.util.Optional;
 
 public class RobotsProgram {
     public static void main(String[] args) {
@@ -37,20 +37,10 @@ public class RobotsProgram {
             }
             Logger.init(userChoiceForRestore);
             MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
-            ClosingInternalGameFrame gameFrame = new ClosingInternalGameFrame(new GameModel());
-            ClosingInternalLogFrame logFrame = new ClosingInternalLogFrame(Logger.getLogWindowSource());
-            if (userChoiceForRestore == JOptionPane.YES_OPTION) {
-                Optional<ClosingInternalGameFrame> optGameFrame = saves.restoreGameFrame();
-                if (optGameFrame.isPresent()) {
-                    gameFrame = optGameFrame.get();
-                }
-                Optional<ClosingInternalLogFrame> optLogFrame = saves.restoreLogFrame();
-                if (optLogFrame.isPresent()) {
-                    logFrame = optLogFrame.get();
-                }
-            }
-            mainFrame.addFrame(gameFrame);
-            mainFrame.addFrame(logFrame);
+            Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored =
+                    saves.restoreInternalFrames(userChoiceForRestore);
+            mainFrame.addFrame(restored.getValue0());
+            mainFrame.addFrame(restored.getValue1());
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
             mainFrame.setVisible(true);
             mainFrame.dumpAtClose();

@@ -29,7 +29,7 @@ public class Save {
                 return Optional.empty();
             }
         } catch (IOException e) {
-            if (Logger.getLogWindowSource() != null) {
+            if (Logger.exists()) {
                 Logger.error(String.format(RESTORING_FAILED_IO, savedClass.getName()));
             }
             return Optional.empty();
@@ -41,7 +41,9 @@ public class Save {
             new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(saveFile, objectToSave);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            if (Logger.exists()) {
+                Logger.error(e.getMessage());
+            }
             return false;
         }
     }

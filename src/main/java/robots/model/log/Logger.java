@@ -21,7 +21,8 @@ public final class Logger {
         }
     }
 
-    private Logger() {
+    public static boolean exists() {
+        return logWindowSource != null;
     }
 
     public static void debug(String message) {
