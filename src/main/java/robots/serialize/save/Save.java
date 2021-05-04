@@ -1,7 +1,6 @@
 package robots.serialize.save;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import robots.model.log.Logger;
 
 import java.io.File;

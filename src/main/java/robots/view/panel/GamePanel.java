@@ -1,5 +1,6 @@
 package robots.view.panel;
 
+import robots.BundleConfig;
 import robots.model.game.Border;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
@@ -11,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -72,7 +74,11 @@ public class GamePanel extends JPanel {
     }
 
     private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio) {
-        g.drawString("GAME OVER", (float) (GameModel.WIDTH * widthRatio / 2), (float) (GameModel.HEIGHT * heightRatio / 2));
+        g.drawString(
+                ResourceBundle.getBundle(BundleConfig.FRAME_LABELS_BUNDLE_NAME).getString("gameOverTitle"),
+                (float) (GameModel.WIDTH * widthRatio / 2),
+                (float) (GameModel.HEIGHT * heightRatio / 2)
+        );
     }
 
     private void drawRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {

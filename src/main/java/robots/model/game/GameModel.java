@@ -7,10 +7,15 @@ import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Stack;
 
 public class GameModel implements JsonSerializable {
-    public static final File SAVES_FILE = new File(Saves.PATH, "gameModel" + Saves.JSON_EXTENSION);
+    public static final File SAVES_FILE = new File(Saves.PATH,
+            String.format("gameModel.%s", Saves.JSON_EXTENSION));
 
     public static final int WIDTH = 550;
     public static final int HEIGHT = 550;

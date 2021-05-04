@@ -1,10 +1,12 @@
 package robots.view.frame.closing;
 
-import javax.swing.JFrame;
+import robots.locale.LocaleChangeListener;
+
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class JFrameClosing extends JFrame implements CloseableFrame {
+public abstract class JFrameClosing extends JFrame implements CloseableComponent, LocaleChangeListener {
     private Runnable actionOnClose = () -> {
     };
 
@@ -17,9 +19,8 @@ public class JFrameClosing extends JFrame implements CloseableFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                handleClosing(
-                        JFrameClosing.this,
-                        title, actionOnClose, JFrame.EXIT_ON_CLOSE);
+                JFrameClosing.this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                handleClosing(JFrameClosing.this, actionOnClose, JFrame.EXIT_ON_CLOSE);
             }
         });
     }
