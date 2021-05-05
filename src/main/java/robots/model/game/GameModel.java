@@ -7,11 +7,7 @@ import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 
 import java.io.File;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class GameModel implements JsonSerializable {
     public static final File SAVES_FILE = new File(Saves.PATH,
@@ -76,6 +72,10 @@ public class GameModel implements JsonSerializable {
     private ArrayList<Target> getNeighbours(Target target) {
         ArrayList<Target> neighbours = new ArrayList<>();
         int step = STEP;
+//        for (int x = target.getPositionX() - step; x <= target.getPositionX() + step; x += step)
+//            for (int y = target.getPositionY() + step; y >= target.getPositionY() - step; y -= step)
+//                if (isNotNearBorders(x, y) && !(x == target.getPositionX() && y == target.getPositionY()))
+//                    neighbours.add(new Target(x, y));
         if (isNotNearBorders(target.getPositionX() + step, target.getPositionY()))
             neighbours.add(new Target(target.getPositionX() + step, target.getPositionY()));
         if (isNotNearBorders(target.getPositionX() - step, target.getPositionY()))
@@ -84,6 +84,8 @@ public class GameModel implements JsonSerializable {
             neighbours.add(new Target(target.getPositionX(), target.getPositionY() + step));
         if (isNotNearBorders(target.getPositionX(), target.getPositionY() - step))
             neighbours.add(new Target(target.getPositionX(), target.getPositionY() - step));
+        if (isNotNearBorders(target.getPositionX(), target.getPositionY()))
+            neighbours.add(new Target(target.getPositionX(), target.getPositionY()));
         return neighbours;
     }
 
@@ -94,20 +96,19 @@ public class GameModel implements JsonSerializable {
     }
 
     private Stack<Target> findPath(Target finalTarget) {
-        Stack<Target> path = new Stack<>();
         ArrayDeque<Target> q = new ArrayDeque<>();
-        HashSet<Target> visited = new HashSet<>();
         HashMap<Target, Target> parent = new HashMap<>();
+
         Target startTarget = new Target((int) level.getRobot().getPositionX(), (int) level.getRobot().getPositionY());
+
         parent.put(startTarget, null);
         q.addLast(startTarget);
-        visited.add(startTarget);
+
         label:
         while (!q.isEmpty()) {
             Target v = q.poll();
             for (Target neighbour : getNeighbours(v)) {
-                if (!visited.contains(neighbour)) {
-                    visited.add(neighbour);
+                if (!parent.containsKey(neighbour)) {
                     q.addLast(neighbour);
                     parent.put(neighbour, v);
                     if (getDistanceBetween(neighbour, finalTarget) <= STEP && !finalTarget.equals(neighbour)) {
@@ -117,6 +118,11 @@ public class GameModel implements JsonSerializable {
                 }
             }
         }
+        return getPath(finalTarget, parent);
+    }
+
+    private Stack<Target> getPath(Target finalTarget, HashMap<Target, Target> parent) {
+        Stack<Target> path = new Stack<>();
         Target currentParent = parent.get(finalTarget);
         while (currentParent != null) {
             path.push(currentParent);

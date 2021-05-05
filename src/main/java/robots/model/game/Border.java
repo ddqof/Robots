@@ -13,8 +13,8 @@ public class Border {
     @JsonCreator
     public Border(
             @JsonProperty("startX") double xLeft,
-            @JsonProperty("startY") double yBottom,
             @JsonProperty("finishX") double xRight,
+            @JsonProperty("startY") double yBottom,
             @JsonProperty("finishY") double yTop,
             @JsonProperty("side") Side side) {
         this.startX = xLeft;
