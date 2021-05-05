@@ -9,7 +9,7 @@ import java.util.Stack;
 public class PathFinder {
     private final Level level;
     private final Target target;
-    private static final int STEP = 5;
+    public static final int STEP = 5;
 
     public PathFinder(Level level) {
         this.level = level;
@@ -46,8 +46,6 @@ public class PathFinder {
             neighbours.add(new Target(target.getPositionX(), target.getPositionY() + STEP));
         if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY() - STEP))
             neighbours.add(new Target(target.getPositionX(), target.getPositionY() - STEP));
-        if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY()))
-            neighbours.add(new Target(target.getPositionX(), target.getPositionY()));
         return neighbours;
     }
 
@@ -82,11 +80,12 @@ public class PathFinder {
 
     private Stack<Target> getPath(Target finalTarget, HashMap<Target, Target> parent) {
         Stack<Target> path = new Stack<>();
-        Target currentParent = parent.get(finalTarget);
+        Target currentParent = finalTarget;
         while (currentParent != null) {
             path.push(currentParent);
             currentParent = parent.get(currentParent);
         }
+        path.pop();
         return path;
     }
 }

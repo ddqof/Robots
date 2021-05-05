@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 public class LogWindowSourceTest {
     private LogWindowSource logWindowSource;
-    private LogLevel testLogLevel = LogLevel.Debug;
+    private final LogLevel testLogLevel = LogLevel.Debug;
 
     @Before
     public void setUp() {

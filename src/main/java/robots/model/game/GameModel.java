@@ -42,7 +42,7 @@ public class GameModel implements JsonSerializable {
 
 
     public GameModel() {
-        this(Levels.getLevel(1));
+        this(Levels.getLevel(2));
     }
 
 

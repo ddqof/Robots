@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Levels {
     private static final Map<Integer, Level> levels = getLevels();
-    private static final double SPACE = 50;
+    public static final double SPACE = 50;
 
     private static Map<Integer, Level> getLevels() {
         return Map.of(
@@ -86,7 +86,13 @@ public class Levels {
                         (double) GameModel.WIDTH / 2,
                         (double) GameModel.HEIGHT / 2 - SPACE / 2,
                         (double) GameModel.HEIGHT / 6,
-                        Side.LEFT)
+                        Side.LEFT),
+                new Border(
+                        (double) GameModel.WIDTH / 2 + SPACE,
+                        (double) GameModel.WIDTH / 2 + SPACE,
+                        (double) GameModel.HEIGHT / 1.1 + SPACE / 2, //делая коэфицент больше или меньше
+                        (double) GameModel.HEIGHT / 6, //можно наглядно показать как меняет свой путь робот
+                        Side.RIGHT)
         );
         return new Level(
                 defaultBorders,
