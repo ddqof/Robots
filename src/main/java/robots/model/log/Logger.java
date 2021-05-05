@@ -7,16 +7,14 @@ import javax.swing.*;
 import static robots.model.log.LogWindowSource.SAVES_FILE;
 
 public final class Logger {
-    private static LogWindowSource logWindowSource;
+    private static LogWindowSource logWindowSource = LogWindowSource.getDefaultSource();
 
-    public static void init(int restoreOption) {
+    public static void restore(int restoreOption) {
         if (logWindowSource == null) {
             if (restoreOption == JOptionPane.YES_OPTION) {
                 logWindowSource = (LogWindowSource) new Save(SAVES_FILE, LogWindowSource.class)
                         .restore()
                         .orElse(LogWindowSource.getDefaultSource());
-            } else {
-                logWindowSource = LogWindowSource.getDefaultSource();
             }
         }
     }

@@ -35,7 +35,7 @@ public class RobotsProgram {
             if (Saves.PATH.exists()) {
                 userChoiceForRestore = Dialogs.showRestoreDialog();
             }
-            Logger.init(userChoiceForRestore);
+            Logger.restore(userChoiceForRestore);
             MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
             Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored =
                     saves.restoreInternalFrames(userChoiceForRestore);
