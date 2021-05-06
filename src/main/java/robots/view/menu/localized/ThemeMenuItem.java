@@ -16,6 +16,5 @@ class ThemeMenuItem extends LocalizedMenuItem {
             }
             this.invalidate();
         });
-        LocaleListenersHolder.register(this);
     }
 }

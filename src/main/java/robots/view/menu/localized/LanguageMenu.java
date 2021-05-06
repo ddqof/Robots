@@ -25,6 +25,5 @@ class LanguageMenu extends LocalizedMenu {
         });
         add(ruMenuItem);
         add(enMenuItem);
-        LocaleListenersHolder.register(this);
     }
 }

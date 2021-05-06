@@ -10,6 +10,5 @@ class LoggingMenu extends LocalizedMenu {
         super(RESOURCE_KEY);
         setMnemonic(alias);
         add(new LogMenuItem(LOG_MESSAGE));
-        LocaleListenersHolder.register(this);
     }
 }

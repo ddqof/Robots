@@ -29,6 +29,5 @@ class ExitMenu extends LocalizedMenu {
             public void menuCanceled(MenuEvent e) {
             }
         });
-        LocaleListenersHolder.register(this);
     }
 }

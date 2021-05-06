@@ -26,7 +26,6 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         setJMenuBar(new MainApplicationMenuBar(this));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Logger.debug(MAIN_FRAME_CREATED);
-        LocaleListenersHolder.register(this);
     }
 
     public <T extends JInternalFrameClosing> void addFrame(T frame) {

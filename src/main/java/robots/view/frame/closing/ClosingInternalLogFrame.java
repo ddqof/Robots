@@ -47,7 +47,6 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         getContentPane().add(panel);
         updateLogContent();
         pack();
-        LocaleListenersHolder.register(this);
     }
 
     private void updateLogContent() {

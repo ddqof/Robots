@@ -39,7 +39,6 @@ public class ClosingInternalGameFrame extends JInternalFrameClosing {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);
-        LocaleListenersHolder.register(this);
     }
 
     @Override

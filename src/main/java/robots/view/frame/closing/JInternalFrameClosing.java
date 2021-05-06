@@ -2,6 +2,7 @@ package robots.view.frame.closing;
 
 import robots.BundleUtils;
 import robots.locale.LocaleChangeListener;
+import robots.locale.LocaleListenersHolder;
 import robots.serialize.JsonSerializable;
 
 import javax.swing.*;
@@ -45,6 +46,7 @@ public abstract class JInternalFrameClosing extends JInternalFrame implements
         setVisible(isVisible);
         this.isIcon = isIcon;
         this.resourceKey = resourceKey;
+        LocaleListenersHolder.register(this);
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {

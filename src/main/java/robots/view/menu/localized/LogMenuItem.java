@@ -9,6 +9,5 @@ class LogMenuItem extends LocalizedMenuItem {
     public LogMenuItem(String logMessage) {
         super(RESOURCE_KEY);
         addActionListener(event -> Logger.debug(logMessage));
-        LocaleListenersHolder.register(this);
     }
 }
