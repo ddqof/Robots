@@ -1,6 +1,6 @@
 package robots.view.pane;
 
-import robots.BundleConfig;
+import robots.BundleUtils;
 import robots.view.frame.closing.CloseableComponent;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class Dialogs {
 
     public static int showRestoreDialog() {
         ResourceBundle bundle = ResourceBundle.getBundle(
-                BundleConfig.DIALOGS_BUNDLE_NAME, Locale.getDefault());
+                BundleUtils.DIALOGS_BUNDLE_NAME, Locale.getDefault());
         return show(
                 null,
                 bundle.getString(SAVES_FOUND_MESSAGE_RESOURCE_KEY),
@@ -28,7 +28,7 @@ public class Dialogs {
 
     public static int showCloseDialog(CloseableComponent component) {
         ResourceBundle bundle = ResourceBundle.getBundle(
-                BundleConfig.DIALOGS_BUNDLE_NAME, Locale.getDefault());
+                BundleUtils.DIALOGS_BUNDLE_NAME, Locale.getDefault());
         return show(
                 (Component) component,
                 String.format(bundle.getString(CLOSING_CONFIRM_MESSAGE_RESOURCE_KEY), component.getTitle()),

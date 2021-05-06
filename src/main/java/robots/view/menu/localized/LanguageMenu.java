@@ -1,20 +1,17 @@
-package robots.view.menu;
+package robots.view.menu.localized;
 
-import robots.BundleConfig;
-import robots.locale.LocaleChangeListener;
 import robots.locale.LocaleListenersHolder;
 
 import javax.swing.*;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
-class LanguageMenu extends JMenu implements LocaleChangeListener {
+class LanguageMenu extends LocalizedMenu {
     private static final String RESOURCE_KEY = "langMenuTitle";
     private static final String RUSSIAN_LANG = "Русский";
     private static final String ENGLISH_LANG = "English";
 
-    public LanguageMenu(ResourceBundle bundle, int alias) {
-        super(bundle.getString(RESOURCE_KEY));
+    public LanguageMenu(int alias) {
+        super(RESOURCE_KEY);
         setMnemonic(alias);
         JMenuItem ruMenuItem = new JMenuItem(RUSSIAN_LANG);
         ruMenuItem.addActionListener(actionEvent -> {
@@ -29,13 +26,5 @@ class LanguageMenu extends JMenu implements LocaleChangeListener {
         add(ruMenuItem);
         add(enMenuItem);
         LocaleListenersHolder.register(this);
-    }
-
-    @Override
-    public void onLanguageUpdate() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(
-                BundleConfig.MENU_LABELS_BUNDLE_NAME, Locale.getDefault()
-        );
-        setText(resourceBundle.getString(RESOURCE_KEY));
     }
 }
