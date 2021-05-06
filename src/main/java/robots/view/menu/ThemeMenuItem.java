@@ -1,10 +1,8 @@
-package robots.view.menu.localized;
-
-import robots.locale.LocaleListenersHolder;
+package robots.view.menu;
 
 import javax.swing.*;
 
-class ThemeMenuItem extends LocalizedMenuItem {
+class ThemeMenuItem extends AbstractMenuItem {
     public ThemeMenuItem(String resourceKey, String systemLookAndFeelClassName) {
         super(resourceKey);
         addActionListener((event) -> {

@@ -1,11 +1,11 @@
-package robots.view.menu.localized;
+package robots.view.menu;
 
 import robots.locale.LocaleListenersHolder;
 
 import javax.swing.*;
 import java.util.Locale;
 
-class LanguageMenu extends LocalizedMenu {
+class LanguageMenu extends AbstractMenu {
     private static final String RESOURCE_KEY = "langMenuTitle";
     private static final String RUSSIAN_LANG = "Русский";
     private static final String ENGLISH_LANG = "English";

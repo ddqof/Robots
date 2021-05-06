@@ -1,8 +1,7 @@
-package robots.view.frame.closing;
+package robots.view.frame;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import robots.locale.LocaleListenersHolder;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
@@ -19,7 +18,7 @@ import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener {
+public class JInternalLogFrame extends AbstractJInternalFrame implements LogChangeListener {
     private final LogWindowSource logSource;
     private final TextArea logContent;
     public static final File SAVES_FILE = new File(
@@ -31,11 +30,11 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     public static final int X = 10;
     public static final int Y = 10;
 
-    public ClosingInternalLogFrame(LogWindowSource logSource) {
+    public JInternalLogFrame(LogWindowSource logSource) {
         this(logSource, getEmptyFrame(WIDTH, HEIGHT, X, Y));
     }
 
-    public ClosingInternalLogFrame(LogWindowSource logSource, JInternalFrame internalFrame) {
+    public JInternalLogFrame(LogWindowSource logSource, JInternalFrame internalFrame) {
         super(internalFrame, RESOURCE_KEY);
         setActionOnClose(() -> logSource.unregisterListener(this));
         this.logSource = logSource;

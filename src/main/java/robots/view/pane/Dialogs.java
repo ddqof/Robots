@@ -1,7 +1,7 @@
 package robots.view.pane;
 
 import robots.BundleUtils;
-import robots.view.frame.closing.CloseableComponent;
+import robots.view.frame.CloseableComponent;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,10 +1,9 @@
-package robots.view.frame.closing;
+package robots.view.frame;
 
-import robots.locale.LocaleListenersHolder;
 import robots.model.log.Logger;
 import robots.serialize.JsonSerializable;
 import robots.serialize.JsonSerializableLocale;
-import robots.view.menu.localized.MainApplicationMenuBar;
+import robots.view.menu.MainApplicationMenuBar;
 
 import javax.swing.*;
 import java.beans.PropertyVetoException;
@@ -14,7 +13,7 @@ import java.util.Locale;
 
 import static robots.serialize.save.Saves.PATH;
 
-public class MainApplicationClosingFrame extends JFrameClosing {
+public class MainApplicationClosingFrame extends AbstractJFrame {
     private final JDesktopPane desktopPane = new JDesktopPane();
     private final List<JsonSerializable> attachedFrames = new ArrayList<>();
     private static final String MAIN_FRAME_CREATED = "Main window launched";
@@ -28,7 +27,7 @@ public class MainApplicationClosingFrame extends JFrameClosing {
         Logger.debug(MAIN_FRAME_CREATED);
     }
 
-    public <T extends JInternalFrameClosing> void addFrame(T frame) {
+    public <T extends AbstractJInternalFrame> void addFrame(T frame) {
         desktopPane.add(frame);
         attachedFrames.add(frame);
         if (frame.shouldBeRestoredAsIcon()) {

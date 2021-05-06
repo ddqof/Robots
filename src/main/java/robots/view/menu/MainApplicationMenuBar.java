@@ -1,6 +1,6 @@
-package robots.view.menu.localized;
+package robots.view.menu;
 
-import robots.view.frame.closing.MainApplicationClosingFrame;
+import robots.view.frame.MainApplicationClosingFrame;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

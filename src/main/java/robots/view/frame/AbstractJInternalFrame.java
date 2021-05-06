@@ -1,4 +1,4 @@
-package robots.view.frame.closing;
+package robots.view.frame;
 
 import robots.BundleUtils;
 import robots.locale.LocaleChangeListener;
@@ -9,10 +9,8 @@ import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
-public abstract class JInternalFrameClosing extends JInternalFrame implements
+public abstract class AbstractJInternalFrame extends JInternalFrame implements
         JsonSerializable, CloseableComponent, LocaleChangeListener {
     private final boolean isIcon;
     private Runnable actionOnClose = () -> {
@@ -28,7 +26,7 @@ public abstract class JInternalFrameClosing extends JInternalFrame implements
         return isIcon;
     }
 
-    public JInternalFrameClosing(JInternalFrame internalFrame, String resourceKey) {
+    public AbstractJInternalFrame(JInternalFrame internalFrame, String resourceKey) {
         this(
                 BundleUtils.extractValue(BUNDLE_NAME, resourceKey),
                 internalFrame.isIcon(),
@@ -39,7 +37,7 @@ public abstract class JInternalFrameClosing extends JInternalFrame implements
         );
     }
 
-    public JInternalFrameClosing(String title, boolean isIcon, boolean isVisible, Dimension size, Point location, String resourceKey) {
+    public AbstractJInternalFrame(String title, boolean isIcon, boolean isVisible, Dimension size, Point location, String resourceKey) {
         super(title, true, true, true, true);
         setSize(size);
         setLocation(location);
@@ -50,7 +48,7 @@ public abstract class JInternalFrameClosing extends JInternalFrame implements
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameClosing(InternalFrameEvent e) {
-                handleClosing(JInternalFrameClosing.this, actionOnClose, JFrame.HIDE_ON_CLOSE);
+                handleClosing(AbstractJInternalFrame.this, actionOnClose, JFrame.HIDE_ON_CLOSE);
             }
         });
     }

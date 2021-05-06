@@ -1,9 +1,8 @@
-package robots.view.menu.localized;
+package robots.view.menu;
 
-import robots.locale.LocaleListenersHolder;
 import robots.model.log.Logger;
 
-class LogMenuItem extends LocalizedMenuItem {
+class LogMenuItem extends AbstractMenuItem {
     private static final String RESOURCE_KEY = "logMenuItemTitle";
 
     public LogMenuItem(String logMessage) {

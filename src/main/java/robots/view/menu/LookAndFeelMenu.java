@@ -1,11 +1,11 @@
-package robots.view.menu.localized;
+package robots.view.menu;
 
 import robots.locale.LocaleChangeListener;
 import robots.locale.LocaleListenersHolder;
 
 import javax.swing.*;
 
-class LookAndFeelMenu extends LocalizedMenu implements LocaleChangeListener {
+class LookAndFeelMenu extends AbstractMenu implements LocaleChangeListener {
     public static final String SYSTEM_THEME_RESOURCE_KEY = "SystemThemeMenuItemTitle";
     public static final String CROSS_PLATFORM_RESOURCE_KEY = "CrossPlatformMenuItemTitle";
     private static final String RESOURCE_KEY = "lookAndFeelMenuTitle";

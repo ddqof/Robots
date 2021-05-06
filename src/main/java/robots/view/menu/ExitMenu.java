@@ -1,13 +1,12 @@
-package robots.view.menu.localized;
+package robots.view.menu;
 
-import robots.locale.LocaleListenersHolder;
-import robots.view.frame.closing.MainApplicationClosingFrame;
+import robots.view.frame.MainApplicationClosingFrame;
 
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import java.awt.event.WindowEvent;
 
-class ExitMenu extends LocalizedMenu {
+class ExitMenu extends AbstractMenu {
     private static final String RESOURCE_KEY = "exitMenuTitle";
 
     public ExitMenu(MainApplicationClosingFrame frame, int alias) {

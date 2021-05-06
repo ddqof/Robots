@@ -1,8 +1,6 @@
-package robots.view.menu.localized;
+package robots.view.menu;
 
-import robots.locale.LocaleListenersHolder;
-
-class LoggingMenu extends LocalizedMenu {
+class LoggingMenu extends AbstractMenu {
     private static final String LOG_MESSAGE = "New line";
     private static final String RESOURCE_KEY = "logMenuTitle";
 
