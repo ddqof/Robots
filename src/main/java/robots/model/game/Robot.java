@@ -7,8 +7,8 @@ public class Robot {
     private volatile double positionX;
     private volatile double positionY;
     private volatile double direction;
-    public static final double DEFAULT_DURATION = 10; // don't touch it
-    public static final double MAX_VELOCITY = 0.1; // speed
+    public static final double DEFAULT_DURATION = 10;
+    public static final double MAX_VELOCITY = 0.1;
     public static final double MAX_ANGULAR_VELOCITY = 0.001;
 
     public double getPositionX() {

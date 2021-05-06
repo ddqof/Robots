@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class PathFinderTest {
-    private PathFinder pathFinder;
+    private Stack<Target> path;
     private Level level;
 
     @Before
@@ -23,12 +23,11 @@ public class PathFinderTest {
         Target target = new Target((int) Levels.SPACE * 2, GameModel.HEIGHT / 2);
         Robot robot = new Robot(0, (double) GameModel.HEIGHT / 2, 0);
         level = new Level(borders, target, robot);
-        pathFinder = new PathFinder(level);
+        path = new PathFinder(level).findPath();
     }
 
     @Test
     public void finalPathTargetNearFinish() {
-        Stack<Target> path = pathFinder.findPath();
         Target target = path.firstElement();
         Target finalTarget = level.getFinalTarget();
         Assert.assertEquals(target, finalTarget);
@@ -36,7 +35,6 @@ public class PathFinderTest {
 
     @Test
     public void robotTurnUp() {
-        Stack<Target> path = pathFinder.findPath();
         for (Target nextTarget : path){
             Assert.assertTrue(nextTarget.getPositionY() <= level.getRobot().getPositionY());
         }
