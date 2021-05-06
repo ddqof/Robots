@@ -39,9 +39,9 @@ public class Levels {
     private static Level getLevel1() {
         List<Border> defaultBorders = List.of(
                 new Border(
-                0, (double) GameModel.WIDTH / 2, (double) GameModel.HEIGHT / 2 - SPACE / 2,
+                        0, (double) GameModel.WIDTH / 2, (double) GameModel.HEIGHT / 2 - SPACE / 2,
                         (double) GameModel.HEIGHT / 2 - SPACE / 2,
-                Side.TOP),
+                        Side.TOP),
                 new Border(
                         0,
                         (double) GameModel.WIDTH / 2 + SPACE,
@@ -59,7 +59,7 @@ public class Levels {
                         (double) GameModel.WIDTH / 2 + SPACE, (double) GameModel.HEIGHT / 2 + SPACE / 2,
                         0,
                         Side.RIGHT)
-                );
+        );
         return new Level(
                 defaultBorders,
                 new Target((int) (GameModel.WIDTH / 2 + SPACE / 2), 0),
@@ -67,7 +67,7 @@ public class Levels {
                         (double) GameModel.HEIGHT / 2, 0));
     }
 
-    private static Level getLevel2(){
+    private static Level getLevel2() {
         List<Border> defaultBorders = List.of(
                 new Border(
                         0,
@@ -84,19 +84,61 @@ public class Levels {
                 new Border(
                         (double) GameModel.WIDTH / 2,
                         (double) GameModel.WIDTH / 2,
+                        (double) GameModel.HEIGHT / 1.7 + 3 * SPACE / 2,
+                        (double) GameModel.HEIGHT / 2 + SPACE / 2,
+                        Side.LEFT),
+                new Border(
+                        (double) GameModel.WIDTH / 2,
+                        (double) GameModel.WIDTH / 2,
                         (double) GameModel.HEIGHT / 2 - SPACE / 2,
-                        (double) GameModel.HEIGHT / 6,
+                        (double) GameModel.HEIGHT / 6 - SPACE,
                         Side.LEFT),
                 new Border(
                         (double) GameModel.WIDTH / 2 + SPACE,
                         (double) GameModel.WIDTH / 2 + SPACE,
-                        (double) GameModel.HEIGHT / 1.1 + SPACE / 2, //делая коэфицент больше или меньше
-                        (double) GameModel.HEIGHT / 6, //можно наглядно показать как меняет свой путь робот
-                        Side.RIGHT)
+                        (double) GameModel.HEIGHT / 1.7 + SPACE / 2,
+                        (double) GameModel.HEIGHT / 6,
+                        Side.RIGHT),
+                new Border(
+                        (double) GameModel.WIDTH / 2 + SPACE,
+                        (double) GameModel.WIDTH - SPACE,
+                        (double) GameModel.HEIGHT / 6,
+                        (double) GameModel.HEIGHT / 6,
+                        Side.BOTTOM),
+                new Border(
+                        (double) GameModel.WIDTH / 2 + SPACE,
+                        (double) GameModel.WIDTH - SPACE,
+                        (double) GameModel.HEIGHT / 1.7 + SPACE / 2,
+                        (double) GameModel.HEIGHT / 1.7 + SPACE / 2,
+                        Side.TOP),
+                new Border(
+                        (double) GameModel.WIDTH / 2,
+                        GameModel.WIDTH,
+                        (double) GameModel.HEIGHT / 6 - SPACE,
+                        (double) GameModel.HEIGHT / 6 - SPACE,
+                        Side.TOP),
+                new Border(
+                        (double) GameModel.WIDTH / 2,
+                        GameModel.WIDTH,
+                        (double) GameModel.HEIGHT / 1.7 + 3 * SPACE / 2,
+                        (double) GameModel.HEIGHT / 1.7 + 3 * SPACE / 2,
+                        Side.BOTTOM),
+                new Border(
+                        (double) GameModel.WIDTH - SPACE,
+                        (double) GameModel.WIDTH - SPACE,
+                        (double) GameModel.HEIGHT / 1.7 + SPACE / 2,
+                        (double) GameModel.HEIGHT / 6,
+                        Side.LEFT),
+                new Border(
+                        GameModel.WIDTH,
+                        GameModel.WIDTH,
+                        (double) GameModel.HEIGHT / 1.7 + 3 * SPACE / 2,
+                        (double) GameModel.HEIGHT / 6 - SPACE,
+                        Side.LEFT)
         );
         return new Level(
                 defaultBorders,
-                new Target(GameModel.WIDTH, GameModel.HEIGHT / 2),
+                new Target((int) (GameModel.WIDTH - SPACE / 2), GameModel.HEIGHT / 2),
                 new Robot(0,
                         (double) GameModel.HEIGHT / 2,
                         0
