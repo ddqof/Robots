@@ -1,4 +1,4 @@
-package robots.view.frame.closing;
+package robots.view.frame;
 
 import robots.view.pane.Dialogs;
 

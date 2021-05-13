@@ -1,6 +1,6 @@
 package robots.view.panel;
 
-import robots.BundleConfig;
+import robots.BundleUtils;
 import robots.model.game.Border;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
@@ -75,7 +75,7 @@ public class GamePanel extends JPanel {
 
     private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio) {
         g.drawString(
-                ResourceBundle.getBundle(BundleConfig.FRAME_LABELS_BUNDLE_NAME).getString("gameOverTitle"),
+                ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("gameOverTitle"),
                 (float) (GameModel.WIDTH * widthRatio / 2),
                 (float) (GameModel.HEIGHT * heightRatio / 2)
         );

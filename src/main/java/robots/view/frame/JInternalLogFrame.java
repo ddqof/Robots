@@ -1,10 +1,7 @@
-package robots.view.frame.closing;
+package robots.view.frame;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import robots.BundleConfig;
-import robots.locale.LocaleChangeListener;
-import robots.locale.LocaleListenersHolder;
 import robots.model.log.LogChangeListener;
 import robots.model.log.LogEntry;
 import robots.model.log.LogWindowSource;
@@ -16,14 +13,12 @@ import robots.serialize.save.Saves;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class ClosingInternalLogFrame extends JInternalFrameClosing implements LogChangeListener, LocaleChangeListener {
+public class JInternalLogFrame extends AbstractJInternalFrame implements LogChangeListener {
     private final LogWindowSource logSource;
     private final TextArea logContent;
     public static final File SAVES_FILE = new File(
@@ -35,14 +30,12 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     public static final int X = 10;
     public static final int Y = 10;
 
-    public ClosingInternalLogFrame(LogWindowSource logSource) {
+    public JInternalLogFrame(LogWindowSource logSource) {
         this(logSource, getEmptyFrame(WIDTH, HEIGHT, X, Y));
     }
 
-    public ClosingInternalLogFrame(LogWindowSource logSource, JInternalFrame internalFrame) {
-        super(internalFrame,
-                ResourceBundle.getBundle(
-                        BundleConfig.FRAME_LABELS_BUNDLE_NAME).getString(RESOURCE_KEY));
+    public JInternalLogFrame(LogWindowSource logSource, JInternalFrame internalFrame) {
+        super(internalFrame, RESOURCE_KEY);
         setActionOnClose(() -> logSource.unregisterListener(this));
         this.logSource = logSource;
         this.logSource.registerListener(this);
@@ -53,7 +46,6 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
         getContentPane().add(panel);
         updateLogContent();
         pack();
-        LocaleListenersHolder.register(this);
     }
 
     private void updateLogContent() {
@@ -73,13 +65,5 @@ public class ClosingInternalLogFrame extends JInternalFrameClosing implements Lo
     @Override
     public boolean serialize() {
         return Save.storeObject(SAVES_FILE, this) && logSource.serialize();
-    }
-
-    @Override
-    public void onLanguageUpdate() {
-        ResourceBundle labels = ResourceBundle.getBundle(
-                BundleConfig.FRAME_LABELS_BUNDLE_NAME, Locale.getDefault());
-        setTitle(labels.getString(RESOURCE_KEY));
-        revalidate();
     }
 }

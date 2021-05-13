@@ -4,9 +4,9 @@ import org.javatuples.Pair;
 import robots.model.game.GameModel;
 import robots.model.log.Logger;
 import robots.serialize.JsonSerializableLocale;
-import robots.view.frame.closing.ClosingInternalGameFrame;
-import robots.view.frame.closing.ClosingInternalLogFrame;
-import robots.view.frame.closing.JInternalFrameClosing;
+import robots.view.frame.AbstractJInternalFrame;
+import robots.view.frame.JInternalGameFrame;
+import robots.view.frame.JInternalLogFrame;
 
 import javax.swing.*;
 import java.io.File;
@@ -28,19 +28,19 @@ public class Saves {
                 .collect(Collectors.toMap(Save::getSavedClass, Save::restore));
     }
 
-    public Optional<ClosingInternalLogFrame> restoreLogFrame() {
+    public Optional<JInternalLogFrame> restoreLogFrame() {
         return retrievedSaves
-                .get(ClosingInternalLogFrame.class)
-                .map(logFrame -> new ClosingInternalLogFrame(
+                .get(JInternalLogFrame.class)
+                .map(logFrame -> new JInternalLogFrame(
                         Logger.getLogWindowSource(),
                         (JInternalFrame) logFrame
                 ));
     }
 
-    public Optional<ClosingInternalGameFrame> restoreGameFrame() {
+    public Optional<JInternalGameFrame> restoreGameFrame() {
         return retrievedSaves
-                .get(ClosingInternalGameFrame.class)
-                .map(gameFrame -> new ClosingInternalGameFrame(
+                .get(JInternalGameFrame.class)
+                .map(gameFrame -> new JInternalGameFrame(
                         (GameModel) retrievedSaves.get(GameModel.class).orElse(new GameModel()),
                         (JInternalFrame) gameFrame)
                 );
@@ -55,22 +55,22 @@ public class Saves {
                 );
     }
 
-    public Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restoreInternalFrames(int userOption) {
+    public Pair<JInternalGameFrame, JInternalLogFrame> restoreInternalFrames(int userOption) {
         return new Pair<>(
                 extractFromOptional(
                         restoreGameFrame(),
-                        new ClosingInternalGameFrame(new GameModel()),
-                        ClosingInternalGameFrame.class,
+                        new JInternalGameFrame(new GameModel()),
+                        JInternalGameFrame.class,
                         userOption),
                 extractFromOptional(
                         restoreLogFrame(),
-                        new ClosingInternalLogFrame(Logger.getLogWindowSource()),
-                        ClosingInternalLogFrame.class,
+                        new JInternalLogFrame(Logger.getLogWindowSource()),
+                        JInternalLogFrame.class,
                         userOption)
         );
     }
 
-    private static <T extends JInternalFrameClosing> T extractFromOptional(
+    private static <T extends AbstractJInternalFrame> T extractFromOptional(
             Optional<T> opt, T initValue, Class<T> tClass, int userOption) {
         T result = initValue;
         if (userOption == JOptionPane.YES_OPTION && opt.isPresent()) {

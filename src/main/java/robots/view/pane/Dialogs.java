@@ -1,12 +1,10 @@
 package robots.view.pane;
 
-import robots.BundleConfig;
-import robots.view.frame.closing.CloseableComponent;
+import robots.BundleUtils;
+import robots.view.frame.CloseableComponent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class Dialogs {
     private static final String YES_BUTTON_RESOURCE_KEY = "yesButtonText";
@@ -15,37 +13,31 @@ public class Dialogs {
     private static final String CLOSING_DIALOG_TITLE_RESOURCE_KEY = "closingDialogTitle";
     private static final String SAVES_FOUND_MESSAGE_RESOURCE_KEY = "savesFoundMessage";
     private static final String SAVES_FOUND_TITLE_RESOURCE_KEY = "savesFoundTitle";
+    private static final String BUNDLE_NAME = BundleUtils.DIALOGS_BUNDLE_NAME;
 
     public static int showRestoreDialog() {
-        ResourceBundle bundle = ResourceBundle.getBundle(
-                BundleConfig.DIALOGS_BUNDLE_NAME, Locale.getDefault());
         return show(
                 null,
-                bundle.getString(SAVES_FOUND_MESSAGE_RESOURCE_KEY),
-                bundle.getString(SAVES_FOUND_TITLE_RESOURCE_KEY),
-                bundle);
+                BundleUtils.extractValue(BUNDLE_NAME, SAVES_FOUND_MESSAGE_RESOURCE_KEY),
+                BundleUtils.extractValue(BUNDLE_NAME, SAVES_FOUND_TITLE_RESOURCE_KEY));
     }
 
     public static int showCloseDialog(CloseableComponent component) {
-        ResourceBundle bundle = ResourceBundle.getBundle(
-                BundleConfig.DIALOGS_BUNDLE_NAME, Locale.getDefault());
         return show(
                 (Component) component,
-                String.format(bundle.getString(CLOSING_CONFIRM_MESSAGE_RESOURCE_KEY), component.getTitle()),
-                String.format(bundle.getString(CLOSING_DIALOG_TITLE_RESOURCE_KEY), component.getTitle()),
-                bundle
+                String.format(BundleUtils.extractValue(
+                        BUNDLE_NAME, CLOSING_CONFIRM_MESSAGE_RESOURCE_KEY),
+                        component.getTitle()),
+                String.format(BundleUtils.extractValue(
+                        BUNDLE_NAME, CLOSING_DIALOG_TITLE_RESOURCE_KEY),
+                        component.getTitle())
         );
     }
 
-    private static int show(
-            Component parentComponent,
-            String message,
-            String title,
-            ResourceBundle bundle
-    ) {
+    private static int show(Component parentComponent, String message, String title) {
         String[] options = {
-                bundle.getString(YES_BUTTON_RESOURCE_KEY),
-                bundle.getString(NO_BUTTON_RESOURCE_KEY)
+                BundleUtils.extractValue(BUNDLE_NAME, YES_BUTTON_RESOURCE_KEY),
+                BundleUtils.extractValue(BUNDLE_NAME, NO_BUTTON_RESOURCE_KEY)
         };
         return JOptionPane.showOptionDialog(
                 parentComponent,

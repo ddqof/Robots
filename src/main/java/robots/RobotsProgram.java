@@ -7,9 +7,9 @@ import robots.model.log.Logger;
 import robots.serialize.JsonSerializableLocale;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
-import robots.view.frame.closing.ClosingInternalGameFrame;
-import robots.view.frame.closing.ClosingInternalLogFrame;
-import robots.view.frame.closing.MainApplicationClosingFrame;
+import robots.view.frame.JInternalGameFrame;
+import robots.view.frame.JInternalLogFrame;
+import robots.view.frame.MainApplicationClosingFrame;
 import robots.view.pane.Dialogs;
 
 import javax.swing.*;
@@ -26,8 +26,8 @@ public class RobotsProgram {
         SwingUtilities.invokeLater(() -> {
             int userChoiceForRestore = JOptionPane.NO_OPTION;
             Saves saves = new Saves(
-                    new Save(ClosingInternalGameFrame.SAVES_FILE, ClosingInternalGameFrame.class),
-                    new Save(ClosingInternalLogFrame.SAVES_FILE, ClosingInternalLogFrame.class),
+                    new Save(JInternalGameFrame.SAVES_FILE, JInternalGameFrame.class),
+                    new Save(JInternalLogFrame.SAVES_FILE, JInternalLogFrame.class),
                     new Save(GameModel.SAVES_FILE, GameModel.class),
                     new Save(LogWindowSource.SAVES_FILE, LogWindowSource.class),
                     new Save(JsonSerializableLocale.SAVES_FILE, JsonSerializableLocale.class));
@@ -37,7 +37,7 @@ public class RobotsProgram {
             }
             Logger.restore(userChoiceForRestore);
             MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
-            Pair<ClosingInternalGameFrame, ClosingInternalLogFrame> restored =
+            Pair<JInternalGameFrame, JInternalLogFrame> restored =
                     saves.restoreInternalFrames(userChoiceForRestore);
             mainFrame.addFrame(restored.getValue0());
             mainFrame.addFrame(restored.getValue1());
