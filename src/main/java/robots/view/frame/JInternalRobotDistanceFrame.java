@@ -18,50 +18,51 @@ import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
 @JsonSerialize(using = JInternalFrameSerializer.class)
 @JsonDeserialize(using = JInternalFrameDeserializer.class)
-public class JInternalRobotCoordsFrame extends AbstractJInternalFrame implements Observer {
-    private static final int X = 1100;
+public class JInternalRobotDistanceFrame extends AbstractJInternalFrame implements Observer {
+    private static final int X = 1340;
     private static final int Y = 200;
-    private static final int WIDTH = 200;
+    private static final int WIDTH = 230;
     private static final int HEIGHT = 90;
-    private static final String TITLE_RESOURCE_KEY = "robotPositionLabel";
+    private static final String TITLE_RESOURCE_KEY = "robotDistanceToFinalLabel";
     private final GameModel gameModel;
-    private final JLabel robotPosLabel;
+    private final JLabel robotDistLabel;
     public static final File SAVES_FILE = new File(Saves.PATH,
-            String.format("coordsFrame.%s", Saves.JSON_EXTENSION));
+            String.format("distanceFrame.%s", Saves.JSON_EXTENSION));
 
     public static JInternalFrame getDefaultEmptyFrame() {
         return getEmptyFrame(WIDTH, HEIGHT, X, Y);
     }
 
-    public JInternalRobotCoordsFrame(JInternalFrame internalFrame, GameModel gameModel) {
+    public JInternalRobotDistanceFrame(JInternalFrame internalFrame, GameModel gameModel) {
         super(internalFrame, TITLE_RESOURCE_KEY);
         this.gameModel = gameModel;
-
-        this.robotPosLabel = new JLabel(getRobotInfoString());
-        JPanel panel = new JPanel();
-        panel.add(robotPosLabel);
-        add(panel);
         this.gameModel.registerObs(this);
-        setActionOnClose(() -> this.gameModel.unregisterObs(JInternalRobotCoordsFrame.this));
+        robotDistLabel = new JLabel(getRobotDistanceToFinal());
+        JPanel panel = new JPanel();
+        panel.add(robotDistLabel);
+        add(panel);
+        setActionOnClose(() -> this.gameModel.unregisterObs(JInternalRobotDistanceFrame.this));
     }
 
-    public JInternalRobotCoordsFrame(GameModel gameModel) {
-        this(getDefaultEmptyFrame(), gameModel);
-    }
 
-    private String getRobotInfoString() {
+    private String getRobotDistanceToFinal() {
         Robot robot = gameModel.getLevel().getRobot();
-        return String.format("(%f, %f)", robot.getPositionX(), robot.getPositionY());
+        Target finalTarget = gameModel.getLevel().getFinalTarget();
+        return Double.toString(robot.getDistanceTo(finalTarget.getPositionX(), finalTarget.getPositionY()));
     }
 
-    @Override
-    public void onUpdate() {
-        robotPosLabel.setText(getRobotInfoString());
-        revalidate();
+    public JInternalRobotDistanceFrame(GameModel gameModel) {
+        this(getDefaultEmptyFrame(), gameModel);
     }
 
     @Override
     public boolean serialize() {
         return Save.storeObject(SAVES_FILE, this);
+    }
+
+    @Override
+    public void onUpdate() {
+        robotDistLabel.setText(getRobotDistanceToFinal());
+        revalidate();
     }
 }

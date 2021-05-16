@@ -9,6 +9,7 @@ import robots.serialize.save.Saves;
 import robots.view.frame.JInternalGameFrame;
 import robots.view.frame.JInternalLogFrame;
 import robots.view.frame.JInternalRobotCoordsFrame;
+import robots.view.frame.JInternalRobotDistanceFrame;
 import robots.view.frame.MainApplicationClosingFrame;
 import robots.view.dialog.Dialogs;
 
@@ -31,17 +32,20 @@ public class RobotsProgram {
                 new Save(GameModel.SAVES_FILE, GameModel.class),
                 new Save(LogWindowSource.SAVES_FILE, LogWindowSource.class),
                 new Save(JsonSerializableLocale.SAVES_FILE, JsonSerializableLocale.class),
-                new Save(JInternalRobotCoordsFrame.SAVES_FILE, JInternalRobotCoordsFrame.class)
+                new Save(JInternalRobotCoordsFrame.SAVES_FILE, JInternalRobotCoordsFrame.class),
+                new Save(JInternalRobotDistanceFrame.SAVES_FILE, JInternalRobotDistanceFrame.class)
         );
         saves.restoreLocale().ifPresent(Locale::setDefault);
         MainApplicationClosingFrame mainFrame = new MainApplicationClosingFrame();
         GameModel gameModel = saves.restoreGameModel();
         JInternalGameFrame gameFrame = new JInternalGameFrame(gameModel, saves.restoreGameEmptyFrame());
         JInternalLogFrame logFrame = new JInternalLogFrame(Logger.getLogWindowSource(), saves.restoreLogEmptyFrame());
-        JInternalRobotCoordsFrame infoFrame = new JInternalRobotCoordsFrame(saves.restoreCoordsFrame(), gameModel);
+        JInternalRobotCoordsFrame coordsFrame = new JInternalRobotCoordsFrame(saves.restoreCoordsFrame(), gameModel);
+        JInternalRobotDistanceFrame distanceFrame = new JInternalRobotDistanceFrame(saves.restoreDistanceFrame(), gameModel);
         mainFrame.addFrame(gameFrame);
         mainFrame.addFrame(logFrame);
-        mainFrame.addFrame(infoFrame);
+        mainFrame.addFrame(coordsFrame);
+        mainFrame.addFrame(distanceFrame);
         EventQueue.invokeLater(() -> {
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
             mainFrame.setVisible(true);

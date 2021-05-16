@@ -8,11 +8,9 @@ import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
 import robots.view.Observer;
 
-import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,7 +30,7 @@ public class GameModel implements JsonSerializable {
     private final ScheduledExecutorService executor =
             Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
-    private final List<Observer> observers = new ArrayList<>();
+    private final Set<Observer> observers = new HashSet<>();
 
     @JsonGetter("currentTarget")
     public Target getCurrentTarget() {
@@ -94,6 +92,10 @@ public class GameModel implements JsonSerializable {
 
     public void registerObs(Observer obs) {
         observers.add(obs);
+    }
+
+    public void unregisterObs(Observer obs) {
+        observers.remove(obs);
     }
 
     public void start() {

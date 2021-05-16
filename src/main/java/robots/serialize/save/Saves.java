@@ -5,6 +5,7 @@ import robots.serialize.JsonSerializableLocale;
 import robots.view.frame.JInternalGameFrame;
 import robots.view.frame.JInternalLogFrame;
 import robots.view.frame.JInternalRobotCoordsFrame;
+import robots.view.frame.JInternalRobotDistanceFrame;
 
 import javax.swing.*;
 import java.io.File;
@@ -65,6 +66,16 @@ public class Saves {
                     .orElse(JInternalRobotCoordsFrame.getDefaultEmptyFrame());
         } else {
             return JInternalRobotCoordsFrame.getDefaultEmptyFrame();
+        }
+    }
+
+    public JInternalFrame restoreDistanceFrame() {
+        if (userChoice == JOptionPane.YES_OPTION) {
+            return (JInternalFrame) retrievedSaves
+                    .get(JInternalRobotDistanceFrame.class)
+                    .orElse(JInternalRobotDistanceFrame.getDefaultEmptyFrame());
+        } else {
+            return JInternalRobotDistanceFrame.getDefaultEmptyFrame();
         }
     }
 
