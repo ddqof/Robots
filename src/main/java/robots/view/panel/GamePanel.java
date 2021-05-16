@@ -5,6 +5,7 @@ import robots.model.game.Border;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
+import robots.view.Observer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,30 +14,12 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class GamePanel extends JPanel {
-
-    private static final String TIMER_NAME = "Events generator";
+public class GamePanel extends JPanel implements Observer {
     private final GameModel gameModel;
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
-        Timer timer = new Timer(TIMER_NAME, true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                EventQueue.invokeLater(GamePanel.this::repaint);
-            }
-        }, 0, 50);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                GamePanel.this.gameModel.moveRobot();
-                repaint();
-            }
-        }, 0, 10);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -123,5 +106,10 @@ public class GamePanel extends JPanel {
             g.drawLine(x1, y1, x2, y2);
             g.drawLine(x1 + 1, y1 + 1, x2 + 1, y2 + 1);
         }
+    }
+
+    @Override
+    public void onUpdate() {
+        EventQueue.invokeLater(this::repaint);
     }
 }
