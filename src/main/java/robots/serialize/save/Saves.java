@@ -22,13 +22,15 @@ public class Saves {
     public static final String NEW_INSTANCE_CREATED = "New instance was created: %s";
     public static final String INSTANCE_RESTORED = "Instance was restored: %s";
     private final Map<Class<?>, Optional<Object>> retrievedSaves;
+    private final int userChoice;
 
-    public Saves(Save... saves) {
+    public Saves(int userChoice, Save... saves) {
         this.retrievedSaves = Arrays.stream(saves)
                 .collect(Collectors.toMap(Save::getSavedClass, Save::restore));
+        this.userChoice = userChoice;
     }
 
-    public Optional<JInternalLogFrame> restoreLogFrame() {
+    private Optional<JInternalLogFrame> restoreLogFrame() {
         return retrievedSaves
                 .get(JInternalLogFrame.class)
                 .map(logFrame -> new JInternalLogFrame(
@@ -37,7 +39,7 @@ public class Saves {
                 ));
     }
 
-    public Optional<JInternalGameFrame> restoreGameFrame() {
+    private Optional<JInternalGameFrame> restoreGameFrame() {
         return retrievedSaves
                 .get(JInternalGameFrame.class)
                 .map(gameFrame -> new JInternalGameFrame(
@@ -55,32 +57,17 @@ public class Saves {
                 );
     }
 
-    public Pair<JInternalGameFrame, JInternalLogFrame> restoreInternalFrames(int userOption) {
+    public Pair<JInternalGameFrame, JInternalLogFrame> restoreInternalFrames() {
         return new Pair<>(
-                extractFromOptional(
-                        restoreGameFrame(),
-                        new JInternalGameFrame(new GameModel()),
-                        JInternalGameFrame.class,
-                        userOption),
-                extractFromOptional(
-                        restoreLogFrame(),
-                        new JInternalLogFrame(Logger.getLogWindowSource()),
-                        JInternalLogFrame.class,
-                        userOption)
+                getOrDefault(restoreGameFrame(), new JInternalGameFrame(new GameModel())),
+                getOrDefault(restoreLogFrame(), new JInternalLogFrame(Logger.getLogWindowSource()))
         );
     }
 
-    private static <T extends AbstractJInternalFrame> T extractFromOptional(
-            Optional<T> opt, T initValue, Class<T> tClass, int userOption) {
-        T result = initValue;
-        if (userOption == JOptionPane.YES_OPTION && opt.isPresent()) {
-            result = opt.get();
-        }
-        if (result == initValue) {
-            Logger.debug(String.format(NEW_INSTANCE_CREATED, tClass.getName()));
-        } else {
-            Logger.debug(String.format(INSTANCE_RESTORED, tClass.getName()));
-        }
+    private <T extends AbstractJInternalFrame> T getOrDefault(Optional<T> opt, T initialValue) {
+        T result = userChoice == JOptionPane.YES_OPTION ? opt.orElse(initialValue) : initialValue;
+        String logMsg = result == initialValue ? NEW_INSTANCE_CREATED : INSTANCE_RESTORED;
+        Logger.debug(String.format(logMsg, initialValue.getClass().getName()));
         return result;
     }
 }

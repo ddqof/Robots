@@ -23,15 +23,11 @@ public class Save {
 
     public Optional<Object> restore() {
         try {
-            if (saveFile.exists()) {
-                return Optional.of(new ObjectMapper().readValue(saveFile, savedClass));
-            } else {
-                return Optional.empty();
-            }
+            return saveFile.exists()
+                    ? Optional.of(new ObjectMapper().readValue(saveFile, savedClass))
+                    : Optional.empty();
         } catch (IOException e) {
-            if (Logger.exists()) {
-                Logger.error(String.format(RESTORING_FAILED_IO, savedClass.getName()));
-            }
+            Logger.error(String.format(RESTORING_FAILED_IO, savedClass.getName()));
             return Optional.empty();
         }
     }
@@ -41,9 +37,7 @@ public class Save {
             new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(saveFile, objectToSave);
             return true;
         } catch (IOException e) {
-            if (Logger.exists()) {
-                Logger.error(e.getMessage());
-            }
+            Logger.error(e.getMessage());
             return false;
         }
     }
