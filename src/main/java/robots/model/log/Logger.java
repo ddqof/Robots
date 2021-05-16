@@ -11,6 +11,10 @@ public final class Logger {
                 .orElse(LogWindowSource.getDefaultSource());
     }
 
+    public static void reset() {
+        logWindowSource.clear();
+    }
+
     public static void debug(String message) {
         logWindowSource.append(LogLevel.Debug, getMessageWithDate(message));
     }

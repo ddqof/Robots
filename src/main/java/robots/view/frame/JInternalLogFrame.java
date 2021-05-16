@@ -25,10 +25,10 @@ public class JInternalLogFrame extends AbstractJInternalFrame implements LogChan
             Saves.PATH, String.format("logFrame.%s", Saves.JSON_EXTENSION));
     private static final String RESOURCE_KEY = "logFrameTitle";
 
-    public static final int WIDTH = 1030;
-    public static final int HEIGHT = 400;
-    public static final int X = 10;
-    public static final int Y = 10;
+    private static final int WIDTH = 1030;
+    private static final int HEIGHT = 400;
+    private static final int X = 10;
+    private static final int Y = 10;
 
     public JInternalLogFrame(LogWindowSource logSource) {
         this(logSource, getEmptyFrame(WIDTH, HEIGHT, X, Y));

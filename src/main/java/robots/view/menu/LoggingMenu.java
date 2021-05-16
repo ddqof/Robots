@@ -8,5 +8,6 @@ class LoggingMenu extends AbstractMenu {
         super(RESOURCE_KEY);
         setMnemonic(alias);
         add(new PushLogMenuItem(LOG_MESSAGE));
+        add(new ResetLogMenuItem());
     }
 }
