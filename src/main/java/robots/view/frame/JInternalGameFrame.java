@@ -25,12 +25,12 @@ public class JInternalGameFrame extends AbstractJInternalFrame {
     private static final int Y = 450;
     private final GameModel gameModel;
 
-    public GameModel getGameModel() {
-        return gameModel;
+    public static JInternalFrame getDefaultFrame() {
+        return getEmptyFrame(GameModel.WIDTH, GameModel.HEIGHT, X, Y);
     }
 
     public JInternalGameFrame(GameModel gameModel) {
-        this(gameModel, getEmptyFrame(GameModel.WIDTH, GameModel.HEIGHT, X, Y));
+        this(gameModel, getDefaultFrame());
     }
 
     public JInternalGameFrame(GameModel gameModel, JInternalFrame internalFrame) {

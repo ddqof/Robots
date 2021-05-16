@@ -30,8 +30,12 @@ public class JInternalLogFrame extends AbstractJInternalFrame implements LogChan
     private static final int X = 10;
     private static final int Y = 10;
 
+    public static JInternalFrame getDefaultEmptyFrame() {
+        return getEmptyFrame(WIDTH, HEIGHT, X, Y);
+    }
+
     public JInternalLogFrame(LogWindowSource logSource) {
-        this(logSource, getEmptyFrame(WIDTH, HEIGHT, X, Y));
+        this(logSource, getDefaultEmptyFrame());
     }
 
     public JInternalLogFrame(LogWindowSource logSource, JInternalFrame internalFrame) {

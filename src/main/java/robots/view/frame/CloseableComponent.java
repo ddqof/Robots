@@ -1,6 +1,6 @@
 package robots.view.frame;
 
-import robots.view.pane.Dialogs;
+import robots.view.dialog.Dialogs;
 
 import javax.swing.*;
 

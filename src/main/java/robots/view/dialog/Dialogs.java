@@ -1,4 +1,4 @@
-package robots.view.pane;
+package robots.view.dialog;
 
 import robots.BundleUtils;
 import robots.view.frame.CloseableComponent;

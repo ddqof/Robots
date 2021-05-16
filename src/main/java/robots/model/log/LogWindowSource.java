@@ -11,7 +11,6 @@ import robots.serialize.save.Saves;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
@@ -76,7 +75,7 @@ public class LogWindowSource implements JsonSerializable {
     }
 
     private void notifyListeners() {
-        Arrays.stream(activeListeners).forEach(LogChangeListener::onLogChanged);
+        listeners.forEach(LogChangeListener::onLogChanged);
     }
 
 
