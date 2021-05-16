@@ -32,7 +32,7 @@ public class JInternalFrameDeserializer extends StdDeserializer<JInternalFrame> 
                     xNode.intValue(),
                     yNode.intValue(),
                     widthNode.intValue(),
-                    widthNode.intValue()
+                    heightNode.intValue()
             );
         }
     }

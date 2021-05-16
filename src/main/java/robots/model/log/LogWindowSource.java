@@ -11,6 +11,7 @@ import robots.serialize.save.Saves;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 
@@ -38,7 +39,7 @@ public class LogWindowSource implements JsonSerializable {
     }
 
     @JsonCreator
-    public LogWindowSource(@JsonProperty("messages") CircularFifoQueue<LogEntry> messages) {
+    public LogWindowSource(@JsonProperty(MESSAGES_FIELD_NAME) CircularFifoQueue<LogEntry> messages) {
         this.messages = QueueUtils.synchronizedQueue(messages);
         listeners = new ArrayList<>();
     }
@@ -65,12 +66,20 @@ public class LogWindowSource implements JsonSerializable {
                 this.activeListeners = listeners.toArray(new LogChangeListener[0]);
             }
         }
-        for (LogChangeListener listener : activeListeners) {
-            listener.onLogChanged();
-        }
+        notifyListeners();
     }
 
-    public Iterable<LogEntry> all() {
+    public void clear() {
+        messages.clear();
+        notifyListeners();
+    }
+
+    private void notifyListeners() {
+        listeners.forEach(LogChangeListener::onLogChanged);
+    }
+
+
+    public Collection<LogEntry> all() {
         return messages;
     }
 

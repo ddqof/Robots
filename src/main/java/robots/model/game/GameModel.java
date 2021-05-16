@@ -6,9 +6,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
+import robots.view.Observer;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameModel implements JsonSerializable {
     public static final File SAVES_FILE = new File(Saves.PATH,
@@ -21,6 +27,10 @@ public class GameModel implements JsonSerializable {
     private Target currentTarget;
     private final Stack<Target> path;
     private boolean isGameOver;
+    private final ScheduledExecutorService executor =
+            Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+
+    private final Set<Observer> observers = new HashSet<>();
 
     @JsonGetter("currentTarget")
     public Target getCurrentTarget() {
@@ -44,7 +54,6 @@ public class GameModel implements JsonSerializable {
     public GameModel() {
         this(Levels.getLevel(2));
     }
-
 
     @JsonCreator
     public GameModel(
@@ -78,6 +87,25 @@ public class GameModel implements JsonSerializable {
         } else {
             robot.move(currentTarget);
         }
+        observers.forEach(Observer::onUpdate);
+    }
+
+    public void registerObs(Observer obs) {
+        observers.add(obs);
+    }
+
+    public void unregisterObs(Observer obs) {
+        observers.remove(obs);
+    }
+
+    public void start() {
+        executor.scheduleWithFixedDelay(
+                () -> {
+                    if (!isGameOver) {
+                        moveRobot();
+                    }
+                }, 0, 10, TimeUnit.MILLISECONDS
+        );
     }
 
     @Override

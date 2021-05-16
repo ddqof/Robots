@@ -21,20 +21,23 @@ public class JInternalGameFrame extends AbstractJInternalFrame {
     public static final File SAVES_FILE = new File(Saves.PATH,
             String.format("gameFrame.%s", Saves.JSON_EXTENSION));
     private static final String RESOURCE_KEY = "gameFrameTitle";
-
     private static final int X = 1000;
     private static final int Y = 450;
-
     private final GameModel gameModel;
 
+    public static JInternalFrame getDefaultFrame() {
+        return getEmptyFrame(GameModel.WIDTH, GameModel.HEIGHT, X, Y);
+    }
+
     public JInternalGameFrame(GameModel gameModel) {
-        this(gameModel, getEmptyFrame(GameModel.WIDTH, GameModel.HEIGHT, X, Y));
+        this(gameModel, getDefaultFrame());
     }
 
     public JInternalGameFrame(GameModel gameModel, JInternalFrame internalFrame) {
         super(internalFrame, RESOURCE_KEY);
         this.gameModel = gameModel;
         GamePanel gamePanel = new GamePanel(gameModel);
+        this.gameModel.registerObs(gamePanel);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(gamePanel, BorderLayout.CENTER);
         getContentPane().add(panel);

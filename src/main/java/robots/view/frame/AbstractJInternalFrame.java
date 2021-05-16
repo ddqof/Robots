@@ -15,8 +15,8 @@ public abstract class AbstractJInternalFrame extends JInternalFrame implements
     private final boolean isIcon;
     private Runnable actionOnClose = () -> {
     };
-    private static final String BUNDLE_NAME = BundleUtils.FRAME_LABELS_BUNDLE_NAME;
-    private final String resourceKey;
+    public static final String BUNDLE_NAME = BundleUtils.FRAME_LABELS_BUNDLE_NAME;
+    private final String titleResourceKey;
 
     public void setActionOnClose(Runnable action) {
         actionOnClose = action;
@@ -37,13 +37,20 @@ public abstract class AbstractJInternalFrame extends JInternalFrame implements
         );
     }
 
-    public AbstractJInternalFrame(String title, boolean isIcon, boolean isVisible, Dimension size, Point location, String resourceKey) {
+    public AbstractJInternalFrame(
+            String title,
+            boolean isIcon,
+            boolean isVisible,
+            Dimension size,
+            Point location,
+            String resourceKey
+    ) {
         super(title, true, true, true, true);
         setSize(size);
         setLocation(location);
         setVisible(isVisible);
         this.isIcon = isIcon;
-        this.resourceKey = resourceKey;
+        this.titleResourceKey = resourceKey;
         LocaleListenersHolder.register(this);
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
@@ -53,10 +60,9 @@ public abstract class AbstractJInternalFrame extends JInternalFrame implements
         });
     }
 
-
     @Override
     public void onLanguageUpdate() {
-        setTitle(BundleUtils.extractValue(BUNDLE_NAME, resourceKey));
+        setTitle(BundleUtils.extractValue(BUNDLE_NAME, titleResourceKey));
         revalidate();
     }
 }

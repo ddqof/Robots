@@ -1,12 +1,11 @@
 package robots.serialize.save;
 
-import org.javatuples.Pair;
 import robots.model.game.GameModel;
-import robots.model.log.Logger;
 import robots.serialize.JsonSerializableLocale;
-import robots.view.frame.AbstractJInternalFrame;
 import robots.view.frame.JInternalGameFrame;
 import robots.view.frame.JInternalLogFrame;
+import robots.view.frame.JInternalRobotCoordsFrame;
+import robots.view.frame.JInternalRobotDistanceFrame;
 
 import javax.swing.*;
 import java.io.File;
@@ -22,28 +21,62 @@ public class Saves {
     public static final String NEW_INSTANCE_CREATED = "New instance was created: %s";
     public static final String INSTANCE_RESTORED = "Instance was restored: %s";
     private final Map<Class<?>, Optional<Object>> retrievedSaves;
+    private final int userChoice;
 
-    public Saves(Save... saves) {
+    public Saves(int userChoice, Save... saves) {
         this.retrievedSaves = Arrays.stream(saves)
                 .collect(Collectors.toMap(Save::getSavedClass, Save::restore));
+        this.userChoice = userChoice;
     }
 
-    public Optional<JInternalLogFrame> restoreLogFrame() {
-        return retrievedSaves
-                .get(JInternalLogFrame.class)
-                .map(logFrame -> new JInternalLogFrame(
-                        Logger.getLogWindowSource(),
-                        (JInternalFrame) logFrame
-                ));
+    public GameModel restoreGameModel() {
+        if (userChoice == JOptionPane.YES_OPTION) {
+            return (GameModel) retrievedSaves
+                    .get(GameModel.class)
+                    .orElse(new GameModel());
+        } else {
+            return new GameModel();
+        }
     }
 
-    public Optional<JInternalGameFrame> restoreGameFrame() {
-        return retrievedSaves
-                .get(JInternalGameFrame.class)
-                .map(gameFrame -> new JInternalGameFrame(
-                        (GameModel) retrievedSaves.get(GameModel.class).orElse(new GameModel()),
-                        (JInternalFrame) gameFrame)
-                );
+    public JInternalFrame restoreGameEmptyFrame() {
+        if (userChoice == JOptionPane.YES_OPTION) {
+            return (JInternalFrame) retrievedSaves
+                    .get(JInternalGameFrame.class)
+                    .orElse(JInternalGameFrame.getDefaultFrame());
+        } else {
+            return JInternalGameFrame.getDefaultFrame();
+        }
+    }
+
+    public JInternalFrame restoreLogEmptyFrame() {
+        if (userChoice == JOptionPane.YES_OPTION) {
+            return (JInternalFrame) retrievedSaves
+                    .get(JInternalLogFrame.class)
+                    .orElse(JInternalLogFrame.getDefaultEmptyFrame());
+        } else {
+            return JInternalLogFrame.getDefaultEmptyFrame();
+        }
+    }
+
+    public JInternalFrame restoreCoordsFrame() {
+        if (userChoice == JOptionPane.YES_OPTION) {
+            return (JInternalFrame) retrievedSaves
+                    .get(JInternalRobotCoordsFrame.class)
+                    .orElse(JInternalRobotCoordsFrame.getDefaultEmptyFrame());
+        } else {
+            return JInternalRobotCoordsFrame.getDefaultEmptyFrame();
+        }
+    }
+
+    public JInternalFrame restoreDistanceFrame() {
+        if (userChoice == JOptionPane.YES_OPTION) {
+            return (JInternalFrame) retrievedSaves
+                    .get(JInternalRobotDistanceFrame.class)
+                    .orElse(JInternalRobotDistanceFrame.getDefaultEmptyFrame());
+        } else {
+            return JInternalRobotDistanceFrame.getDefaultEmptyFrame();
+        }
     }
 
     public Optional<Locale> restoreLocale() {
@@ -53,34 +86,5 @@ public class Saves {
                         ((JsonSerializableLocale) jsonLocale).getLanguage(),
                         ((JsonSerializableLocale) jsonLocale).getCountry())
                 );
-    }
-
-    public Pair<JInternalGameFrame, JInternalLogFrame> restoreInternalFrames(int userOption) {
-        return new Pair<>(
-                extractFromOptional(
-                        restoreGameFrame(),
-                        new JInternalGameFrame(new GameModel()),
-                        JInternalGameFrame.class,
-                        userOption),
-                extractFromOptional(
-                        restoreLogFrame(),
-                        new JInternalLogFrame(Logger.getLogWindowSource()),
-                        JInternalLogFrame.class,
-                        userOption)
-        );
-    }
-
-    private static <T extends AbstractJInternalFrame> T extractFromOptional(
-            Optional<T> opt, T initValue, Class<T> tClass, int userOption) {
-        T result = initValue;
-        if (userOption == JOptionPane.YES_OPTION && opt.isPresent()) {
-            result = opt.get();
-        }
-        if (result == initValue) {
-            Logger.debug(String.format(NEW_INSTANCE_CREATED, tClass.getName()));
-        } else {
-            Logger.debug(String.format(INSTANCE_RESTORED, tClass.getName()));
-        }
-        return result;
     }
 }

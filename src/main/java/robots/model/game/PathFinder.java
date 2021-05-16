@@ -11,6 +11,10 @@ public class PathFinder {
     private final Target target;
     public static final int STEP = 5;
 
+    public Target getFinalTarget() {
+        return target;
+    }
+
     public PathFinder(Level level) {
         this.level = level;
         this.target = level.getFinalTarget();

@@ -7,6 +7,7 @@ class LoggingMenu extends AbstractMenu {
     public LoggingMenu(int alias) {
         super(RESOURCE_KEY);
         setMnemonic(alias);
-        add(new LogMenuItem(LOG_MESSAGE));
+        add(new PushLogMenuItem(LOG_MESSAGE));
+        add(new ResetLogMenuItem());
     }
 }
