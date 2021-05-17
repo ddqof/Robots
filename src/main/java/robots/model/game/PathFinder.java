@@ -1,10 +1,6 @@
 package robots.model.game;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class PathFinder {
     private final Level level;
@@ -22,14 +18,18 @@ public class PathFinder {
 
     private boolean isNotNearBorders(List<Border> borders, double positionX, double positionY) {
         for (Border border : borders) {
-            if (((border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
-                    && Math.abs(positionX - border.getStartX()) <= (double) STEP
-                    && positionY <= border.getStartY()
-                    && positionY >= border.getFinishY())
-                    || (border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
-                    && Math.abs(positionY - border.getStartY()) <= (double) STEP
-                    && positionX <= border.getFinishX()
-                    && positionX >= border.getStartX()
+            if ((
+                    (border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
+                            && Math.abs(positionX - border.getStartX()) <= (double) STEP
+                            && positionY <= border.getStartY()
+                            && positionY >= border.getFinishY()
+            ) ||
+                    (
+                            (border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
+                                    && Math.abs(positionY - border.getStartY()) <= (double) STEP
+                                    && positionX <= border.getFinishX()
+                                    && positionX >= border.getStartX()
+                    )
                     || positionX < 0
                     || positionY < 0
                     || positionX > GameModel.WIDTH

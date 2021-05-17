@@ -9,11 +9,7 @@ import robots.serialize.save.Saves;
 import robots.view.Observer;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +37,36 @@ public class GameModel implements JsonSerializable {
     private final List<Turret> turrets = new LinkedList<>();
 
     public void addTurret(Turret t) {
-        turrets.add(t);
+        double x = t.getX();
+        double y = t.getY();
+        int c = 0;
+        for (Border border : level.getBorders()) {
+            if (!(border.getSide() == Side.LEFT &&
+                    x < border.getStartX() &&
+                    y <= border.getStartY() &&
+                    y >= border.getFinishY()
+                    ||
+                    border.getSide() == Side.RIGHT &&
+                            x > border.getStartX() &&
+                            y <= border.getStartY() &&
+                            y >= border.getFinishY()
+                    ||
+                    border.getSide() == Side.BOTTOM &&
+                            y > border.getStartY() &&
+                            x <= border.getFinishX() &&
+                            x >= border.getStartX()
+                    ||
+                    border.getSide() == Side.TOP &&
+                            y < border.getStartY() &&
+                            x <= border.getFinishX() &&
+                            x >= border.getStartX()
+            )) {
+                c++;
+            }
+        }
+        if (c != level.getBorders().size())
+            turrets.add(t); // накринжевал
+
     }
 
     @JsonGetter("currentTarget")
@@ -64,7 +89,7 @@ public class GameModel implements JsonSerializable {
 
 
     public GameModel() {
-        this(Levels.getLevel(2));
+        this(Levels.getLevel(1));
     }
 
     @JsonCreator
