@@ -22,7 +22,9 @@ public class Levels {
                         (double) GameModel.HEIGHT / 2 - SPACE / 2,
                         Side.TOP),
                 new Border(
-                        0, GameModel.WIDTH, (double) GameModel.HEIGHT / 2 + SPACE / 2,
+                        0,
+                        GameModel.WIDTH,
+                        (double) GameModel.HEIGHT / 2 + SPACE / 2,
                         (double) GameModel.HEIGHT / 2 + SPACE / 2,
                         Side.BOTTOM)
 

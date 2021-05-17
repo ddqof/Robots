@@ -17,7 +17,7 @@ public class Turret {
     }
 
     public Turret(double x, double y) {
-        this(x, y, 50, 5, 1000);
+        this(x, y, 50, 200, 1000);
     }
 
     public double getX() {

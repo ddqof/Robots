@@ -20,10 +20,12 @@ public class GameModel implements JsonSerializable {
 
     public static final int WIDTH = 550;
     public static final int HEIGHT = 550;
+    private int currentLevel;
 
-    private final Level level;
+
+    private Level level;
     private Target currentTarget;
-    private final Stack<Target> path;
+    private Stack<Target> path;
     private boolean isGameOver;
     private final ScheduledExecutorService executor =
             Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
@@ -34,7 +36,19 @@ public class GameModel implements JsonSerializable {
         return turrets;
     }
 
-    private final List<Turret> turrets = new LinkedList<>();
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
+        this.level = Levels.getLevel(currentLevel);
+        this.path = new PathFinder(this.level).findPath();
+        this.currentTarget = this.path.pop();
+        this.turrets = new LinkedList<>();
+    }
+
+    private List<Turret> turrets = new LinkedList<>();
 
     public void addTurret(Turret t) {
         double x = t.getX();
@@ -90,7 +104,7 @@ public class GameModel implements JsonSerializable {
 
 
     public GameModel() {
-        this(Levels.getLevel(1));
+        this(Levels.getLevel(0));
     }
 
     @JsonCreator
@@ -125,6 +139,9 @@ public class GameModel implements JsonSerializable {
         } else {
             robot.move(currentTarget);
             turrets.forEach(x -> x.dealDamage(robot));
+            if (robot.getHp() <= 0) {
+                setCurrentLevel(getCurrentLevel() + 1);
+            }
         }
         observers.forEach(Observer::onUpdate);
     }
