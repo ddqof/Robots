@@ -62,6 +62,7 @@ public class GamePanel extends JPanel implements Observer {
             drawRobot(g2d, gameModel.getLevel().getRobot(), widthRatio, heightRatio);
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
             drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
+            drawTurrets(g2d, gameModel.getTurrets(), widthRatio, heightRatio);
         }
     }
 
@@ -127,6 +128,21 @@ public class GamePanel extends JPanel implements Observer {
             int y2 = round(border.getFinishY() * heightRatio);
             g.drawLine(x1, y1, x2, y2);
             g.drawLine(x1 + 1, y1 + 1, x2 + 1, y2 + 1);
+        }
+    }
+
+    private void drawTurrets(Graphics2D g, List<Turret> turrets, double widthRatio, double heightRatio){
+        AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
+        g.setTransform(t);
+        for (Turret turret: turrets) {
+            g.setColor(Color.RED);
+            int x = round(turret.getX() * widthRatio);
+            int y = round(turret.getY() * heightRatio);
+            int targetWidth = round(10 * widthRatio);
+            int targetHeight = round(10 * heightRatio);
+            fillOval(g, x, y, targetWidth, targetHeight);
+            g.setColor(Color.BLACK);
+            drawOval(g, x, y, targetWidth, targetHeight);
         }
     }
 

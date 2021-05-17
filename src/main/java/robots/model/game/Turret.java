@@ -5,7 +5,7 @@ public class Turret {
     private final double damage;
     private final double x;
     private final double y;
-    private final double timeout; // милисекунды
+    private final double timeout; // миллисекунды
     private double lastShotTime = 0;
 
     public double getRange() {
@@ -20,6 +20,14 @@ public class Turret {
         this(x, y, 50, 5, 1000);
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
     public Turret(double x, double y, double range, double damage, double timeout) {
         this.range = range;
         this.damage = damage;
@@ -29,7 +37,8 @@ public class Turret {
     }
 
     public void dealDamage(Robot robot) {
-        if (robot.getDistanceTo(x, y) <= range && (lastShotTime == 0 || System.currentTimeMillis() - lastShotTime > timeout)) {
+        if (robot.getDistanceTo(x, y) <= range &&
+                (lastShotTime == 0 || System.currentTimeMillis() - lastShotTime > timeout)) {
             robot.setHp(robot.getHp() - damage);
             lastShotTime = System.currentTimeMillis();
         }

@@ -34,6 +34,10 @@ public class GameModel implements JsonSerializable {
 
     private final Set<Observer> observers = new HashSet<>();
 
+    public List<Turret> getTurrets() {
+        return turrets;
+    }
+
     private final List<Turret> turrets = new LinkedList<>();
 
     public void addTurret(Turret t) {
