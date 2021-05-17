@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Robot {
-    private volatile double positionX;
-    private volatile double positionY;
-    private volatile double direction;
+    private double positionX;
+    private double positionY;
+    private double direction;
+    private double hp;
+
     public static final double DEFAULT_DURATION = 10;
     public static final double MAX_VELOCITY = 0.1;
     public static final double MAX_ANGULAR_VELOCITY = 0.001;
@@ -23,15 +25,29 @@ public class Robot {
         return direction;
     }
 
+    public double getHp() {
+        return hp;
+    }
+
+    public void setHp(double hp) {
+        this.hp = hp;
+    }
 
     @JsonCreator
     public Robot(
             @JsonProperty("positionX") double startPositionX,
             @JsonProperty("positionY") double startPositionY,
-            @JsonProperty("direction") double direction) {
-        positionX = startPositionX;
-        positionY = startPositionY;
+            @JsonProperty("direction") double direction,
+            @JsonProperty("hp") int hp
+    ) {
+        this.positionX = startPositionX;
+        this.positionY = startPositionY;
         this.direction = direction;
+        this.hp = hp;
+    }
+
+    public Robot(double x, double y, double direction) {
+        this(x, y, direction, 100);
     }
 
     private double getAngularVelocity(Target target) {

@@ -10,6 +10,8 @@ import robots.view.Observer;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.Executors;
@@ -31,6 +33,12 @@ public class GameModel implements JsonSerializable {
             Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
     private final Set<Observer> observers = new HashSet<>();
+
+    private final List<Turret> turrets = new LinkedList<>();
+
+    public void addTurret(Turret t) {
+        turrets.add(t);
+    }
 
     @JsonGetter("currentTarget")
     public Target getCurrentTarget() {
@@ -86,6 +94,7 @@ public class GameModel implements JsonSerializable {
             else isGameOver = true;
         } else {
             robot.move(currentTarget);
+            turrets.forEach(x -> x.dealDamage(robot));
         }
         observers.forEach(Observer::onUpdate);
     }

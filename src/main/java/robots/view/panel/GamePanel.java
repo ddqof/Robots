@@ -5,24 +5,40 @@ import robots.model.game.Border;
 import robots.model.game.GameModel;
 import robots.model.game.Robot;
 import robots.model.game.Target;
+import robots.model.game.Turret;
 import robots.view.Observer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class GamePanel extends JPanel implements Observer {
     private final GameModel gameModel;
+    private final Turret turretForShow = new Turret();
+    private Point mousePosition;
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                Point p = e.getPoint();
+                gameModel.addTurret(new Turret(p.x, p.y));
+            }
+        });
+        addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+                mousePosition = mouseEvent.getPoint();
             }
         });
         setDoubleBuffered(true);
@@ -35,6 +51,11 @@ public class GamePanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
         double widthRatio = d.width / (double) GameModel.WIDTH;
         double heightRatio = d.height / (double) GameModel.HEIGHT;
+        if (mousePosition != null) {
+            //drawing range of turret
+            int diam = (int) (turretForShow.getRange() * 2);
+            drawOval(g, mousePosition.x, mousePosition.y, diam, diam);
+        }
         if (gameModel.isGameOver())
             drawGameOver(g2d, widthRatio, heightRatio);
         else {
@@ -57,6 +78,7 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio) {
+        System.out.println(gameModel.getLevel().getRobot().getHp());
         g.drawString(
                 ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("gameOverTitle"),
                 (float) (GameModel.WIDTH * widthRatio / 2),
