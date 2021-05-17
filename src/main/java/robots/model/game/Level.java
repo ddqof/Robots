@@ -9,15 +9,23 @@ public class Level {
     private final List<Border> borders;
     private final Target finalTarget;
     private final Robot robot;
+    private final int turretsCount;
+
+
+    public int getTurretsCount() {
+        return turretsCount;
+    }
 
     @JsonCreator
     public Level(
             @JsonProperty("borders") List<Border> borders,
             @JsonProperty("target") Target target,
-            @JsonProperty("robot") Robot robot) {
+            @JsonProperty("robot") Robot robot,
+            @JsonProperty("turretsCount") int turretsCount) {
         this.borders = borders;
         this.finalTarget = target;
         this.robot = robot;
+        this.turretsCount = turretsCount;
     }
 
     public Robot getRobot() {

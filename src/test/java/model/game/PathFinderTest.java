@@ -22,7 +22,7 @@ public class PathFinderTest {
                 Side.RIGHT));
         Target target = new Target((int) Levels.SPACE * 2, GameModel.HEIGHT / 2);
         Robot robot = new Robot(0, (double) GameModel.HEIGHT / 2, 0);
-        level = new Level(borders, target, robot);
+        level = new Level(borders, target, robot, 0);
         path = new PathFinder(level).findPath();
     }
 

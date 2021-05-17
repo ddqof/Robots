@@ -63,6 +63,7 @@ public class GamePanel extends JPanel implements Observer {
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
             drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
             drawTurrets(g2d, gameModel.getTurrets(), widthRatio, heightRatio);
+            drawTurretCount(g2d, widthRatio, heightRatio);
         }
     }
 
@@ -144,6 +145,15 @@ public class GamePanel extends JPanel implements Observer {
             g.setColor(Color.BLACK);
             drawOval(g, x, y, targetWidth, targetHeight);
         }
+    }
+
+    public void drawTurretCount(Graphics2D g, double widthRatio, double heightRatio){
+        g.drawString(
+                ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("availableTurretsCountTitle")
+                + " " + (gameModel.getLevel().getTurretsCount() - gameModel.getTurrets().size()),
+                (float) (0),
+                (float) (10)
+        );
     }
 
     @Override

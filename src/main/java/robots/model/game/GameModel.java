@@ -40,6 +40,7 @@ public class GameModel implements JsonSerializable {
         double x = t.getX();
         double y = t.getY();
         int c = 0;
+        if (level.getTurretsCount() <= turrets.size()) return;
         for (Border border : level.getBorders()) {
             if (!(border.getSide() == Side.LEFT &&
                     x < border.getStartX() &&

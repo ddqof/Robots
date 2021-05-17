@@ -32,7 +32,8 @@ public class Levels {
                 new Target(GameModel.WIDTH, GameModel.HEIGHT / 2),
                 new Robot(0,
                         (double) GameModel.HEIGHT / 2,
-                        0)
+                        0),
+                2
         );
     }
 
@@ -64,7 +65,9 @@ public class Levels {
                 defaultBorders,
                 new Target((int) (GameModel.WIDTH / 2 + SPACE / 2), 0),
                 new Robot(0,
-                        (double) GameModel.HEIGHT / 2, 0));
+                        (double) GameModel.HEIGHT / 2, 0),
+                1
+        );
     }
 
     private static Level getLevel2() {
@@ -141,8 +144,8 @@ public class Levels {
                 new Target((int) (GameModel.WIDTH - SPACE / 2), GameModel.HEIGHT / 2),
                 new Robot(0,
                         (double) GameModel.HEIGHT / 2,
-                        0
-                )
+                        0),
+                1
         );
     }
 
