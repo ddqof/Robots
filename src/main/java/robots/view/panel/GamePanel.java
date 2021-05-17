@@ -15,21 +15,31 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GamePanel extends JPanel implements Observer {
     private final GameModel gameModel;
-    private final Turret sampleTurret = new Turret();
     private Point mousePosition;
     private int delay = 0;
+    private int currentTurretType = 0;
+    private final Map<Integer, Color> turretTypeToColors = Map.of(
+            Turret.RAPID_FIRE, Color.BLACK,
+            Turret.BURST_DAMAGE, Color.RED,
+            Turret.RANDOM_BONUS, Color.CYAN
+    );
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Point p = e.getPoint();
-                gameModel.addTurret(new Turret(p.x, p.y));
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    currentTurretType = ++currentTurretType % 3;
+                } else if (e.getButton() == MouseEvent.BUTTON1) {
+                    Point p = e.getPoint();
+                    gameModel.addTurret(Turret.ofType(currentTurretType, p.x, p.y));
+                }
             }
         });
         addMouseMotionListener(new MouseMotionListener() {
@@ -53,8 +63,13 @@ public class GamePanel extends JPanel implements Observer {
         double widthRatio = d.width / (double) GameModel.WIDTH;
         double heightRatio = d.height / (double) GameModel.HEIGHT;
         if (mousePosition != null && !gameModel.isGameOver()) {
-            int diam = (int) (sampleTurret.getRange() * 2);
-            drawOval(g, mousePosition.x, mousePosition.y, diam, diam);
+            if (currentTurretType == Turret.RANDOM_BONUS) {
+                g.drawString("?", mousePosition.x, mousePosition.y);
+            } else {
+                int diam = (int) (Turret.DEFAULT_RANGE * 2);
+                g.setColor(turretTypeToColors.get(currentTurretType));
+                drawOval(g, mousePosition.x, mousePosition.y, diam, diam);
+            }
         }
         if (gameModel.isGameOver())
             drawGameOver(g2d, widthRatio, heightRatio);
@@ -146,7 +161,7 @@ public class GamePanel extends JPanel implements Observer {
         AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
         g.setTransform(t);
         for (Turret turret: turrets) {
-            g.setColor(Color.RED);
+            g.setColor(turretTypeToColors.get(turret.getType()));
             int x = round(turret.getX() * widthRatio);
             int y = round(turret.getY() * heightRatio);
             int targetWidth = round(10 * widthRatio);
