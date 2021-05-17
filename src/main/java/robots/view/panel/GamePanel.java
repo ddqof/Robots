@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements Observer {
     private final GameModel gameModel;
     private final Turret sampleTurret = new Turret();
     private Point mousePosition;
+    private int delay = 0;
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
@@ -89,7 +90,7 @@ public class GamePanel extends JPanel implements Observer {
     private void drawRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
         int robotCenterX = round(robot.getPositionX() * widthRatio);
         int robotCenterY = round(robot.getPositionY() * heightRatio);
-        int robotWirth = round(30 * widthRatio);
+        int robotWidth = round(30 * widthRatio);
         int robotHeight = round(10 * heightRatio);
         int eyeWidth = round(5 * widthRatio);
         int eyeHeight = round(5 * heightRatio);
@@ -97,13 +98,24 @@ public class GamePanel extends JPanel implements Observer {
         AffineTransform t = AffineTransform.getRotateInstance(robot.getDirection(), robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);
-        fillOval(g, robotCenterX, robotCenterY, robotWirth, robotHeight);
+        fillOval(g, robotCenterX, robotCenterY, robotWidth, robotHeight);
         g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX, robotCenterY, robotWirth, robotHeight);
+        drawOval(g, robotCenterX, robotCenterY, robotWidth, robotHeight);
         g.setColor(Color.WHITE);
         fillOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
         g.setColor(Color.BLACK);
         drawOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
+
+        //это нужно для рендера момента получения роботом урона
+        //если поставить delay = 1, то это будет почти незаметно
+        //то есть это отобразиться всего лишь на одной отрисовке,
+        //поэтому тут сделано 5
+        delay = gameModel.wasRobotDamaged() ? 5 : delay;
+        if (delay > 0) {
+            g.setColor(Color.RED);
+            fillOval(g, robotCenterX, robotCenterY, robotHeight, robotHeight);
+            delay--;
+        }
     }
 
     private void drawTarget(Graphics2D g, Target target, double widthRatio, double heightRatio) {

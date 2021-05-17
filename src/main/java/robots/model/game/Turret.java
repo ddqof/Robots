@@ -36,11 +36,13 @@ public class Turret {
         this.timeout = timeout;
     }
 
-    public void dealDamage(Robot robot) {
+    public boolean dealDamage(Robot robot) {
         if (robot.getDistanceTo(x, y) <= range &&
                 (lastShotTime == 0 || System.currentTimeMillis() - lastShotTime > timeout)) {
             robot.setHp(robot.getHp() - damage);
             lastShotTime = System.currentTimeMillis();
+            return true;
         }
+        return false;
     }
 }
