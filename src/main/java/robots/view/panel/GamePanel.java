@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 public class GamePanel extends JPanel implements Observer {
     private final GameModel gameModel;
-    private final Turret turretForShow = new Turret();
+    private final Turret sampleTurret = new Turret();
     private Point mousePosition;
 
     public GamePanel(GameModel gameModel) {
@@ -51,9 +51,8 @@ public class GamePanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
         double widthRatio = d.width / (double) GameModel.WIDTH;
         double heightRatio = d.height / (double) GameModel.HEIGHT;
-        if (mousePosition != null) {
-            //drawing range of turret
-            int diam = (int) (turretForShow.getRange() * 2);
+        if (mousePosition != null && !gameModel.isGameOver()) {
+            int diam = (int) (sampleTurret.getRange() * 2);
             drawOval(g, mousePosition.x, mousePosition.y, diam, diam);
         }
         if (gameModel.isGameOver())
@@ -80,7 +79,6 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio) {
-        System.out.println(gameModel.getLevel().getRobot().getHp());
         g.drawString(
                 ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("gameOverTitle"),
                 (float) (GameModel.WIDTH * widthRatio / 2),
