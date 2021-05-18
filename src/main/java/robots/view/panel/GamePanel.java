@@ -1,11 +1,8 @@
 package robots.view.panel;
 
 import robots.BundleUtils;
-import robots.model.game.Border;
-import robots.model.game.GameModel;
 import robots.model.game.Robot;
-import robots.model.game.Target;
-import robots.model.game.Turret;
+import robots.model.game.*;
 import robots.view.Observer;
 
 import javax.swing.*;
@@ -38,7 +35,7 @@ public class GamePanel extends JPanel implements Observer {
                     currentTurretType = ++currentTurretType % 3;
                 } else if (e.getButton() == MouseEvent.BUTTON1) {
                     Point p = e.getPoint();
-                    gameModel.addTurret(Turret.ofType(currentTurretType, p.x, p.y));
+                    gameModel.addTurret(Turret.ofType(currentTurretType, p.x, p.y)); //todo with ratio
                 }
             }
         });
@@ -68,7 +65,7 @@ public class GamePanel extends JPanel implements Observer {
             } else {
                 int diam = (int) (Turret.DEFAULT_RANGE * 2);
                 g.setColor(turretTypeToColors.get(currentTurretType));
-                drawOval(g, mousePosition.x, mousePosition.y, diam, diam);
+                drawOval(g, mousePosition.x, mousePosition.y,  (int)(diam * widthRatio), (int)(diam * heightRatio));
             }
         }
         if (gameModel.isGameOver())
@@ -157,10 +154,10 @@ public class GamePanel extends JPanel implements Observer {
         }
     }
 
-    private void drawTurrets(Graphics2D g, List<Turret> turrets, double widthRatio, double heightRatio){
+    private void drawTurrets(Graphics2D g, List<Turret> turrets, double widthRatio, double heightRatio) {
         AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
         g.setTransform(t);
-        for (Turret turret: turrets) {
+        for (Turret turret : turrets) {
             g.setColor(turretTypeToColors.get(turret.getType()));
             int x = round(turret.getX() * widthRatio);
             int y = round(turret.getY() * heightRatio);
@@ -172,10 +169,10 @@ public class GamePanel extends JPanel implements Observer {
         }
     }
 
-    public void drawTurretCount(Graphics2D g, double widthRatio, double heightRatio){
+    public void drawTurretCount(Graphics2D g, double widthRatio, double heightRatio) {
         g.drawString(
                 ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("availableTurretsCountTitle")
-                + " " + (gameModel.getLevel().getTurretsCount() - gameModel.getTurrets().size()),
+                        + " " + (gameModel.getLevel().getTurretsCount() - gameModel.getTurrets().size()),
                 (float) (0),
                 (float) (10)
         );

@@ -62,31 +62,7 @@ public class GameModel implements JsonSerializable {
         double y = t.getY();
         int c = 0;
         if (level.getTurretsCount() <= turrets.size()) return;
-        for (Border border : level.getBorders()) {
-            if (!(border.getSide() == Side.LEFT &&
-                    x < border.getStartX() &&
-                    y <= border.getStartY() &&
-                    y >= border.getFinishY()
-                    ||
-                    border.getSide() == Side.RIGHT &&
-                            x > border.getStartX() &&
-                            y <= border.getStartY() &&
-                            y >= border.getFinishY()
-                    ||
-                    border.getSide() == Side.BOTTOM &&
-                            y > border.getStartY() &&
-                            x <= border.getFinishX() &&
-                            x >= border.getStartX()
-                    ||
-                    border.getSide() == Side.TOP &&
-                            y < border.getStartY() &&
-                            x <= border.getFinishX() &&
-                            x >= border.getStartX()
-            )) {
-                c++;
-            }
-        }
-        if (c != level.getBorders().size())
+        if (PathFinder.isNotNearBorders(level.getBorders(), x, y, (int)(Levels.SPACE / 2)))
             turrets.add(t); // накринжевал
 
     }

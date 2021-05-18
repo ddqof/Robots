@@ -3,7 +3,7 @@ package robots.model.game;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Turret {
-    public static final double DEFAULT_RANGE = 50;
+    public static final double DEFAULT_RANGE = 75;
 
     public static final int RAPID_FIRE = 0; //высокая скоротрельность, низкий урон
     public static final int BURST_DAMAGE = 1; //низкая скорострельность, высокий урон

@@ -16,17 +16,17 @@ public class PathFinder {
         this.target = level.getFinalTarget();
     }
 
-    private boolean isNotNearBorders(List<Border> borders, double positionX, double positionY) {
+    public static boolean isNotNearBorders(List<Border> borders, double positionX, double positionY, int step) {
         for (Border border : borders) {
             if ((
                     (border.getSide() == Side.LEFT || border.getSide() == Side.RIGHT)
-                            && Math.abs(positionX - border.getStartX()) <= (double) STEP
+                            && Math.abs(positionX - border.getStartX()) <= (double) step
                             && positionY <= border.getStartY()
                             && positionY >= border.getFinishY()
             ) ||
                     (
                             (border.getSide() == Side.TOP || border.getSide() == Side.BOTTOM)
-                                    && Math.abs(positionY - border.getStartY()) <= (double) STEP
+                                    && Math.abs(positionY - border.getStartY()) <= (double) step
                                     && positionX <= border.getFinishX()
                                     && positionX >= border.getStartX()
                     )
@@ -42,13 +42,13 @@ public class PathFinder {
 
     private ArrayList<Target> getNeighbours(List<Border> borders, Target target) {
         ArrayList<Target> neighbours = new ArrayList<>();
-        if (isNotNearBorders(borders, target.getPositionX() + STEP, target.getPositionY()))
+        if (isNotNearBorders(borders, target.getPositionX() + STEP, target.getPositionY(), STEP))
             neighbours.add(new Target(target.getPositionX() + STEP, target.getPositionY()));
-        if (isNotNearBorders(borders, target.getPositionX() - STEP, target.getPositionY()))
+        if (isNotNearBorders(borders, target.getPositionX() - STEP, target.getPositionY(), STEP))
             neighbours.add(new Target(target.getPositionX() - STEP, target.getPositionY()));
-        if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY() + STEP))
+        if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY() + STEP, STEP))
             neighbours.add(new Target(target.getPositionX(), target.getPositionY() + STEP));
-        if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY() - STEP))
+        if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY() - STEP, STEP))
             neighbours.add(new Target(target.getPositionX(), target.getPositionY() - STEP));
         return neighbours;
     }
