@@ -126,7 +126,7 @@ public class GameModel implements JsonSerializable {
                     .anyMatch(b -> b.equals(true));
             if (robot.getHp() <= 0) {
                 currentLevel = currentLevel + 1;
-                if (currentLevel <= Levels.levelsCount()) {
+                if (currentLevel <= Levels.levelsCount() - 1) {
                     updateLevel(currentLevel);
                 } else {
                     state = State.ROBOT_LOST;
