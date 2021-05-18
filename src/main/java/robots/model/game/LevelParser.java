@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class LevelParser {
+    private static final int levelFileHeight = GameModel.HEIGHT / 10;
+    private static final int levelFileWight = GameModel.WIDTH / 10;
+
+
     public static Tile[][] parse(int levelNumber) throws IOException {
         if (levelNumber < 0 || levelNumber > 3) {
             throw new IllegalArgumentException(
@@ -16,22 +20,22 @@ public class LevelParser {
         Path levelPath = Paths.get("levels", String.format("%d.txt", levelNumber));
         System.out.println(levelPath.toAbsolutePath());
         List<String> lines = Files.readAllLines(levelPath);
-        if (lines.size() != GameModel.HEIGHT) {
+        if (lines.size() != levelFileHeight) {
             throw new IllegalStateException(
-                    String.format("File height should be equals: %d", GameModel.HEIGHT)
+                    String.format("File height should be equals: %d", levelFileHeight)
             );
         }
         lines.forEach(x -> {
-            if (x.length() != GameModel.WIDTH) {
+            if (x.length() != levelFileWight) {
                 throw new IllegalStateException(
-                        String.format("Each line of file should contains %d symbols", GameModel.WIDTH)
+                        String.format("Each line of file should contains %d symbols", levelFileWight)
                 );
             }
         });
         Tile[][] result = new Tile[GameModel.WIDTH][GameModel.HEIGHT];
         for (int i = 0; i < GameModel.HEIGHT; i++) {
             for (int j = 0; j < GameModel.WIDTH; j++) {
-                char currentChar = lines.get(i).charAt(j);
+                char currentChar = lines.get(i / 10).charAt(j / 10);
                 Tile value;
                 if (currentChar == '1') {
                     value = Tile.ROBOT;
@@ -50,10 +54,5 @@ public class LevelParser {
             }
         }
         return result;
-    }
-
-    public static void main(String[] args) throws IOException {
-        var res = parse(0);
-        var s = "a";
     }
 }
