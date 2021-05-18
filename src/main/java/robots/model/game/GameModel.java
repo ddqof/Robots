@@ -18,8 +18,8 @@ public class GameModel implements JsonSerializable {
     public static final File SAVES_FILE = new File(Saves.PATH,
             String.format("gameModel.%s", Saves.JSON_EXTENSION));
 
-    public static final int WIDTH = 550;
-    public static final int HEIGHT = 550;
+    public static final int WIDTH = 55;
+    public static final int HEIGHT = 55;
     private int currentLevel;
 
     private Level level;
