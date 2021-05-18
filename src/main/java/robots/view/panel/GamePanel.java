@@ -15,20 +15,31 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GamePanel extends JPanel implements Observer {
     private final GameModel gameModel;
-    private final Turret turretForShow = new Turret();
     private Point mousePosition;
+    private int delay = 0;
+    private int currentTurretType = 0;
+    private final Map<Integer, Color> turretTypeToColors = Map.of(
+            Turret.RAPID_FIRE, Color.BLACK,
+            Turret.BURST_DAMAGE, Color.RED,
+            Turret.RANDOM_BONUS, Color.CYAN
+    );
 
     public GamePanel(GameModel gameModel) {
         this.gameModel = gameModel;
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Point p = e.getPoint();
-                gameModel.addTurret(new Turret(p.x, p.y));
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    currentTurretType = ++currentTurretType % 3;
+                } else if (e.getButton() == MouseEvent.BUTTON1) {
+                    Point p = e.getPoint();
+                    gameModel.addTurret(Turret.ofType(currentTurretType, p.x, p.y));
+                }
             }
         });
         addMouseMotionListener(new MouseMotionListener() {
@@ -51,10 +62,14 @@ public class GamePanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
         double widthRatio = d.width / (double) GameModel.WIDTH;
         double heightRatio = d.height / (double) GameModel.HEIGHT;
-        if (mousePosition != null) {
-            //drawing range of turret
-            int diam = (int) (turretForShow.getRange() * 2);
-            drawOval(g, mousePosition.x, mousePosition.y, diam, diam);
+        if (mousePosition != null && !gameModel.isGameOver()) {
+            if (currentTurretType == Turret.RANDOM_BONUS) {
+                g.drawString("?", mousePosition.x, mousePosition.y);
+            } else {
+                int diam = (int) (Turret.DEFAULT_RANGE * 2);
+                g.setColor(turretTypeToColors.get(currentTurretType));
+                drawOval(g, mousePosition.x, mousePosition.y, diam, diam);
+            }
         }
         if (gameModel.isGameOver())
             drawGameOver(g2d, widthRatio, heightRatio);
@@ -80,7 +95,6 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio) {
-        System.out.println(gameModel.getLevel().getRobot().getHp());
         g.drawString(
                 ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("gameOverTitle"),
                 (float) (GameModel.WIDTH * widthRatio / 2),
@@ -91,7 +105,7 @@ public class GamePanel extends JPanel implements Observer {
     private void drawRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
         int robotCenterX = round(robot.getPositionX() * widthRatio);
         int robotCenterY = round(robot.getPositionY() * heightRatio);
-        int robotWirth = round(30 * widthRatio);
+        int robotWidth = round(30 * widthRatio);
         int robotHeight = round(10 * heightRatio);
         int eyeWidth = round(5 * widthRatio);
         int eyeHeight = round(5 * heightRatio);
@@ -99,13 +113,24 @@ public class GamePanel extends JPanel implements Observer {
         AffineTransform t = AffineTransform.getRotateInstance(robot.getDirection(), robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(Color.MAGENTA);
-        fillOval(g, robotCenterX, robotCenterY, robotWirth, robotHeight);
+        fillOval(g, robotCenterX, robotCenterY, robotWidth, robotHeight);
         g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX, robotCenterY, robotWirth, robotHeight);
+        drawOval(g, robotCenterX, robotCenterY, robotWidth, robotHeight);
         g.setColor(Color.WHITE);
         fillOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
         g.setColor(Color.BLACK);
         drawOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
+
+        //это нужно для рендера момента получения роботом урона
+        //если поставить delay = 1, то это будет почти незаметно
+        //то есть это отобразиться всего лишь на одной отрисовке,
+        //поэтому тут сделано 5
+        delay = gameModel.wasRobotDamaged() ? 5 : delay;
+        if (delay > 0) {
+            g.setColor(Color.RED);
+            fillOval(g, robotCenterX, robotCenterY, robotHeight, robotHeight);
+            delay--;
+        }
     }
 
     private void drawTarget(Graphics2D g, Target target, double widthRatio, double heightRatio) {
@@ -136,7 +161,7 @@ public class GamePanel extends JPanel implements Observer {
         AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
         g.setTransform(t);
         for (Turret turret: turrets) {
-            g.setColor(Color.RED);
+            g.setColor(turretTypeToColors.get(turret.getType()));
             int x = round(turret.getX() * widthRatio);
             int y = round(turret.getY() * heightRatio);
             int targetWidth = round(10 * widthRatio);

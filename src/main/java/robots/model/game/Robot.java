@@ -9,7 +9,7 @@ public class Robot {
     private double direction;
     private double hp;
 
-    public static final double DEFAULT_DURATION = 10;
+    public static final double DEFAULT_DURATION = 5;
     public static final double MAX_VELOCITY = 0.1;
     public static final double MAX_ANGULAR_VELOCITY = 0.001;
 

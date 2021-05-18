@@ -27,10 +27,17 @@ public class GameModel implements JsonSerializable {
     private Target currentTarget;
     private Stack<Target> path;
     private boolean isGameOver;
+
+    private boolean wasRobotDamaged = false;
+
     private final ScheduledExecutorService executor =
             Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
     private final Set<Observer> observers = new HashSet<>();
+
+    public boolean wasRobotDamaged() {
+        return wasRobotDamaged;
+    }
 
     public List<Turret> getTurrets() {
         return turrets;
@@ -136,9 +143,12 @@ public class GameModel implements JsonSerializable {
         if (robot.getDistanceTo(currentTarget.getPositionX(), currentTarget.getPositionY()) < 1) {
             if (!path.empty()) currentTarget = path.pop();
             else isGameOver = true;
+            wasRobotDamaged = false;
         } else {
             robot.move(currentTarget);
-            turrets.forEach(x -> x.dealDamage(robot));
+            wasRobotDamaged = turrets.stream()
+                    .map(turret -> turret.dealDamage(robot))
+                    .anyMatch(b -> b.equals(true));
             if (robot.getHp() <= 0) {
                 setCurrentLevel(getCurrentLevel() + 1);
             }
