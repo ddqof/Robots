@@ -59,18 +59,21 @@ public class GamePanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
         double widthRatio = d.width / (double) GameModel.WIDTH;
         double heightRatio = d.height / (double) GameModel.HEIGHT;
-        if (mousePosition != null && !gameModel.isGameOver()) {
+        GameModel.State state = gameModel.getState();
+        if (mousePosition != null && (state == GameModel.State.RUNNING)) {
             if (currentTurretType == Turret.RANDOM_BONUS) {
                 g.drawString("?", mousePosition.x, mousePosition.y);
             } else {
                 int diam = (int) (Turret.DEFAULT_RANGE * 2);
                 g.setColor(turretTypeToColors.get(currentTurretType));
-                drawOval(g, mousePosition.x, mousePosition.y,  (int)(diam * widthRatio), (int)(diam * heightRatio));
+                drawOval(g, mousePosition.x, mousePosition.y, (int) (diam * widthRatio), (int) (diam * heightRatio));
             }
         }
-        if (gameModel.isGameOver())
-            drawGameOver(g2d, widthRatio, heightRatio);
-        else {
+        if (state == GameModel.State.ROBOT_WIN) {
+            drawGameOver(g2d, widthRatio, heightRatio, "youLostTitle");
+        } else if (state == GameModel.State.ROBOT_LOST) {
+            drawGameOver(g2d, widthRatio, heightRatio, "youWonTitle");
+        } else {
             drawRobot(g2d, gameModel.getLevel().getRobot(), widthRatio, heightRatio);
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
             drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
@@ -91,9 +94,9 @@ public class GamePanel extends JPanel implements Observer {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
 
-    private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio) {
+    private void drawGameOver(Graphics2D g, double widthRatio, double heightRatio, String key) {
         g.drawString(
-                ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("gameOverTitle"),
+                ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString(key),
                 (float) (GameModel.WIDTH * widthRatio / 2),
                 (float) (GameModel.HEIGHT * heightRatio / 2)
         );

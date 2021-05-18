@@ -154,4 +154,8 @@ public class Levels {
     public static Level getLevel(int num) {
         return levels.get(num);
     }
+
+    public static int levelsCount() {
+        return levels.size();
+    }
 }

@@ -22,11 +22,14 @@ public class GameModel implements JsonSerializable {
     public static final int HEIGHT = 550;
     private int currentLevel;
 
-
     private Level level;
     private Target currentTarget;
     private Stack<Target> path;
-    private boolean isGameOver;
+    private State state;
+
+    public enum State {
+        STOPPED, RUNNING, ROBOT_WIN, ROBOT_LOST
+    }
 
     private boolean wasRobotDamaged = false;
 
@@ -39,16 +42,15 @@ public class GameModel implements JsonSerializable {
         return wasRobotDamaged;
     }
 
+    public State getState() {
+        return state;
+    }
+
     public List<Turret> getTurrets() {
         return turrets;
     }
 
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
+    public void updateLevel(int currentLevel) {
         this.level = Levels.getLevel(currentLevel);
         this.path = new PathFinder(this.level).findPath();
         this.currentTarget = this.path.pop();
@@ -60,7 +62,6 @@ public class GameModel implements JsonSerializable {
     public void addTurret(Turret t) {
         double x = t.getX();
         double y = t.getY();
-        int c = 0;
         if (level.getTurretsCount() <= turrets.size()) return;
         if (PathFinder.isNotNearBorders(level.getBorders(), x, y, (int)(Levels.SPACE / 2)))
             turrets.add(t); // накринжевал
@@ -81,11 +82,6 @@ public class GameModel implements JsonSerializable {
         return level;
     }
 
-    public boolean isGameOver() {
-        return isGameOver;
-    }
-
-
     public GameModel() {
         this(Levels.getLevel(0));
     }
@@ -93,32 +89,35 @@ public class GameModel implements JsonSerializable {
     @JsonCreator
     public GameModel(
             @JsonProperty("level") Level level,
-            @JsonProperty("gameOver") boolean isGameOver,
+            @JsonProperty("state") State state,
             @JsonProperty("path") Stack<Target> path,
             @JsonProperty("currentTarget") Target currentTarget) {
         this.level = level;
         this.path = path;
         this.currentTarget = currentTarget;
-        this.isGameOver = isGameOver;
+        this.state = state;
     }
 
     public GameModel(Level level) {
-        this(level, false);
+        this(level, State.STOPPED);
     }
 
-    public GameModel(Level level, boolean isGameOver, Stack<Target> path) {
-        this(level, isGameOver, path, path.pop());
+    public GameModel(Level level, State state, Stack<Target> path) {
+        this(level, state, path, path.pop());
     }
 
-    public GameModel(Level level, boolean isGameOver) {
-        this(level, isGameOver, new PathFinder(level).findPath());
+    public GameModel(Level level, State state) {
+        this(level, state, new PathFinder(level).findPath());
     }
 
     public void moveRobot() {
         Robot robot = level.getRobot();
         if (robot.getDistanceTo(currentTarget.getPositionX(), currentTarget.getPositionY()) < 1) {
-            if (!path.empty()) currentTarget = path.pop();
-            else isGameOver = true;
+            if (!path.empty()) {
+                currentTarget = path.pop();
+            } else {
+                state = State.ROBOT_WIN;
+            }
             wasRobotDamaged = false;
         } else {
             robot.move(currentTarget);
@@ -126,7 +125,12 @@ public class GameModel implements JsonSerializable {
                     .map(turret -> turret.dealDamage(robot))
                     .anyMatch(b -> b.equals(true));
             if (robot.getHp() <= 0) {
-                setCurrentLevel(getCurrentLevel() + 1);
+                currentLevel = currentLevel + 1;
+                if (currentLevel <= Levels.levelsCount()) {
+                    updateLevel(currentLevel);
+                } else {
+                    state = State.ROBOT_LOST;
+                }
             }
         }
         observers.forEach(Observer::onUpdate);
@@ -141,9 +145,10 @@ public class GameModel implements JsonSerializable {
     }
 
     public void start() {
+        state = State.RUNNING;
         executor.scheduleWithFixedDelay(
                 () -> {
-                    if (!isGameOver) {
+                    if (state == State.RUNNING) {
                         moveRobot();
                     }
                 }, 0, 10, TimeUnit.MILLISECONDS
