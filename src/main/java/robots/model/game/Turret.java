@@ -22,7 +22,7 @@ public class Turret extends LiveEntity {
             case RAPID_FIRE:
                 return new Turret(x, y, 50, DEFAULT_RANGE, 5, 100, RAPID_FIRE);
             case BURST_DAMAGE:
-                return new Turret(x, y, 50, DEFAULT_RANGE, 20, 1000, BURST_DAMAGE);
+                return new Turret(x, y, 50, DEFAULT_RANGE, 40, 1000, BURST_DAMAGE);
             case RANDOM_BONUS:
                 double range = ThreadLocalRandom.current().nextDouble(maxRange);
                 double timeout = ThreadLocalRandom.current().nextDouble(maxTimeout);

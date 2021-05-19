@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements Observer {
             drawGameOver(g2d, widthRatio, heightRatio, "youWonTitle");
         } else if (state == GameModel.State.RUNNING) {
             drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
-            gameModel.getLevel().getRobots().forEach(x -> drawRobot(g2d, x, widthRatio, heightRatio));
+            gameModel.getActiveRobots().forEach(x -> drawRobot(g2d, x, widthRatio, heightRatio));
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
             drawTurrets(g2d, gameModel.getTurrets(), widthRatio, heightRatio);
             drawTurretCount(g2d, widthRatio, heightRatio);

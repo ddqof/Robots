@@ -7,6 +7,7 @@ public class Robot extends LiveEntity {
     public static final int DEFAULT = 0;//стандартный робот, который не умеет стрелять
     public static final int DAMAGE_DEALER = 1;//робот, который умеет стрелять
     public static final int HEAVY = 2;//робот, который имеет много хп, но идет медленно
+    private static int count = 0;
 
     public static final double DEFAULT_DURATION = 10;
     public static final double MAX_VELOCITY = 0.1;
@@ -14,9 +15,14 @@ public class Robot extends LiveEntity {
 
     private double direction;
     private final int type;
+    private final int id;
     private final double duration;
     private Stack<Target> path;
     private Target currentTarget;
+
+    public int getId() {
+        return id;
+    }
 
     public void setPath(Stack<Target> path) {
         this.path = path;
@@ -33,11 +39,11 @@ public class Robot extends LiveEntity {
     public static Robot ofType(int type, double x, double y, Stack<Target> path) {
         switch (type) {
             case DEFAULT:
-                return new Robot(x, y, 100, type, path);
+                return new Robot(x, y, 10, type, path);
             case DAMAGE_DEALER:
-                return new Robot(x, y, 15, 0, 50, 20, 75, 1000, type, path);
+                return new Robot(x, y, 15, 0, 20, 20, 75, 1000, type, path);
             case HEAVY:
-                return new Robot(x, y, 300, 5, type, path);
+                return new Robot(x, y, 30, 5, type, path);
             default:
                 throw new IllegalArgumentException("Illegal type of robot was passed");
         }
@@ -69,6 +75,7 @@ public class Robot extends LiveEntity {
         this.type = type;
         this.path = path;
         this.currentTarget = this.path.pop();
+        this.id = count++;
     }
 
 
@@ -125,5 +132,16 @@ public class Robot extends LiveEntity {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), direction, type, duration, path, currentTarget);
+    }
+
+    public String str(GameEntity entity) {
+        return String.format(
+                "Robot %d: hp=%f, pos=(%f, %f), dist=%f",
+                id,
+                getHp(),
+                getX(),
+                getY(),
+                getDistanceTo(entity)
+        );
     }
 }

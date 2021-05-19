@@ -29,7 +29,7 @@ public class LiveEntity extends GameEntity {
 
     public boolean dealDamage(LiveEntity entity) {
         boolean isReadyForDeal = System.currentTimeMillis() - lastDealTime > restTime;
-        if (getDistanceTo(entity) <= viewRange && isReadyForDeal) {
+        if (getDistanceTo(entity) <= viewRange && isReadyForDeal && entity.hp > 0) {
             entity.hp = entity.hp - damage;
             lastDealTime = System.currentTimeMillis();
             return true;

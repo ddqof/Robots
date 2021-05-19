@@ -4,6 +4,7 @@ import robots.model.game.GameModel;
 import robots.model.log.LogWindowSource;
 import robots.view.frame.JInternalGameFrame;
 import robots.view.frame.JInternalLogFrame;
+import robots.view.frame.JInternalRobotInfoFrame;
 import robots.view.frame.MainApplicationClosingFrame;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class RobotsProgram {
         GameModel gameModel = new GameModel();
         mainFrame.addFrame(new JInternalGameFrame(gameModel));
         mainFrame.addFrame(new JInternalLogFrame(new LogWindowSource(100)));
+        mainFrame.addFrame(new JInternalRobotInfoFrame(gameModel));
         EventQueue.invokeLater(() -> {
             mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
             mainFrame.setVisible(true);

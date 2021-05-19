@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class GameModel implements JsonSerializable {
     public static final File SAVES_FILE = new File(Saves.PATH,
@@ -25,9 +24,12 @@ public class GameModel implements JsonSerializable {
     public static final int HEIGHT = 550;
     private int currentLevel;
     private List<Robot> damagedRobots = new ArrayList<>();
+    private List<Robot> activeRobots = new ArrayList<>();
     private List<Turret> turrets = new LinkedList<>();
     private Level level;
     private State state;
+
+    private final Set<Observer> observers = new HashSet<>();
 
     public enum State {
         STOPPED, RUNNING, ROBOTS_WON, ROBOT_LOST
@@ -36,7 +38,9 @@ public class GameModel implements JsonSerializable {
     private final ScheduledExecutorService executor =
             Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
-    private final Set<Observer> observers = new HashSet<>();
+    public List<Robot> getActiveRobots() {
+        return activeRobots;
+    }
 
     public Level getLevel() {
         return level;
@@ -55,7 +59,7 @@ public class GameModel implements JsonSerializable {
     }
 
     public GameModel() {
-        this(Levels.getLevel(2));
+        this(Levels.getLevel(0));
     }
 
     public GameModel(Level level) {
@@ -83,10 +87,11 @@ public class GameModel implements JsonSerializable {
 
     }
 
-    public void update(List<Robot> robots) {
+    public void update() {
         boolean isRobotsAlive = false;
         damagedRobots = new ArrayList<>();
-        for (Robot robot : robots) {
+        List<Robot> dead = new ArrayList<>();
+        for (Robot robot : activeRobots) {
             boolean isTargetReached = robot.move();
             if (isTargetReached) {
                 state = State.ROBOTS_WON;
@@ -97,8 +102,13 @@ public class GameModel implements JsonSerializable {
                     damagedRobots.add(robot);
                 }
             }
-            if (robot.getHp() > 0) isRobotsAlive = true;
+            if (robot.getHp() > 0) {
+                isRobotsAlive = true;
+            } else {
+                dead.add(robot);
+            }
         }
+        activeRobots.removeAll(dead);
         if (!isRobotsAlive) {
             currentLevel = currentLevel + 1;
             if (currentLevel <= Levels.levelsCount() - 1) {
@@ -106,6 +116,7 @@ public class GameModel implements JsonSerializable {
             } else {
                 state = State.ROBOT_LOST;
             }
+            activeRobots = new ArrayList<>(level.getRobots());
         }
         observers.forEach(Observer::onUpdate);
     }
@@ -123,7 +134,8 @@ public class GameModel implements JsonSerializable {
         state = State.RUNNING;
         int robotsCount = getLevel().getRobots().size();
         for (int i = 1; i <= robotsCount; i++) {
-            ScheduledFuture<?> task = scheduleRobots(getLevel().getRobots().subList(0, i));
+            activeRobots = new ArrayList<>(getLevel().getRobots().subList(0, i));
+            ScheduledFuture<?> task = scheduleRobots();
             if (i < robotsCount) {
                 Thread.sleep(1000);
                 task.cancel(false);
@@ -131,11 +143,15 @@ public class GameModel implements JsonSerializable {
         }
     }
 
-    private ScheduledFuture<?> scheduleRobots(List<Robot> robots) {
+    private ScheduledFuture<?> scheduleRobots() {
         return executor.scheduleWithFixedDelay(
                 () -> {
-                    if (state == State.RUNNING) {
-                        update(robots);
+                    try {
+                        if (state == State.RUNNING) {
+                            update();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }, 0, 10, TimeUnit.MILLISECONDS
         );
