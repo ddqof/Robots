@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 public class GamePanel extends JPanel implements Observer {
     private final GameModel gameModel;
     private Point mousePosition;
-    private int delay = 0;
     private int currentTurretType = 0;
     private final Map<Integer, Color> turretTypeToColors = Map.of(
             Turret.RAPID_FIRE, Color.BLACK,
@@ -66,9 +65,9 @@ public class GamePanel extends JPanel implements Observer {
         } else if (state == GameModel.State.ROBOT_LOST) {
             drawGameOver(g2d, widthRatio, heightRatio, "youWonTitle");
         } else if (state == GameModel.State.RUNNING) {
+            drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
             gameModel.getLevel().getRobots().forEach(x -> drawRobot(g2d, x, widthRatio, heightRatio));
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
-            drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
             drawTurrets(g2d, gameModel.getTurrets(), widthRatio, heightRatio);
             drawTurretCount(g2d, widthRatio, heightRatio);
         }
@@ -104,29 +103,63 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
+        if (robot.getType() == Robot.DEFAULT)
+            drawDefaultRobot(g, robot, widthRatio, heightRatio);
+        else if (robot.getType() == Robot.DAMAGE_DEALER)
+            drawDamagingRobot(g, robot, widthRatio, heightRatio);
+        else if (robot.getType() == Robot.HEAVY)
+            drawHeavyRobot(g, robot, widthRatio, heightRatio);
+    }
+
+    private void drawSomeRobot(Graphics2D g,
+                               Robot robot,
+                               double widthSize,
+                               double heighSize,
+                               double eyeSize,
+                               Color mainColor,
+                               Color eyeColor,
+                               double widthRatio,
+                               double heightRatio) {
         int robotCenterX = round(robot.getX() * widthRatio);
         int robotCenterY = round(robot.getY() * heightRatio);
-        int robotWidth = round(30 * widthRatio);
-        int robotHeight = round(10 * heightRatio);
-        int eyeWidth = round(5 * widthRatio);
-        int eyeHeight = round(5 * heightRatio);
-        int eyeOffset = round(10 * widthRatio);
+        int robotWidth = round(widthSize * widthRatio);
+        int robotHeight = round(heighSize * heightRatio);
+        int eyeWidth = round(eyeSize * widthRatio);
+        int eyeHeight = round(eyeSize * heightRatio);
+        int eyeOffset = round(5 * widthRatio);
         AffineTransform t = AffineTransform.getRotateInstance(robot.getDirection(), robotCenterX, robotCenterY);
         g.setTransform(t);
-        g.setColor(Color.MAGENTA);
+        g.setColor(mainColor);
         fillOval(g, robotCenterX, robotCenterY, robotWidth, robotHeight);
         g.setColor(Color.BLACK);
         drawOval(g, robotCenterX, robotCenterY, robotWidth, robotHeight);
-        g.setColor(Color.WHITE);
+        g.setColor(eyeColor);
         fillOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
         g.setColor(Color.BLACK);
         drawOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
+
+        g.drawString(robot.getHp() + "" ,robotCenterX, robotCenterY - robotHeight);
 
         //отросивка нанесения урона (она будет всего один такт, то есть почти незаметна)
         if (gameModel.getDamagedRobots().contains(robot)) {
             g.setColor(Color.RED);
             fillOval(g, robotCenterX, robotCenterY, robotHeight, robotHeight);
+            fillOval(g, robotCenterX, robotCenterY, robotHeight, robotHeight);
         }
+
+    }
+
+    private void drawHeavyRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
+        drawSomeRobot(g, robot, 30, 30, 10, Color.BLUE, Color.GRAY, widthRatio, heightRatio);
+    }
+
+    private void drawDamagingRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
+        drawSomeRobot(g, robot, 15, 5, 4, Color.ORANGE, Color.CYAN, widthRatio, heightRatio);
+    }
+
+
+    private void drawDefaultRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
+        drawSomeRobot(g, robot, 30, 10, 5, Color.MAGENTA, Color.WHITE, widthRatio, heightRatio);
     }
 
     private void drawTarget(Graphics2D g, Target target, double widthRatio, double heightRatio) {
@@ -142,7 +175,9 @@ public class GamePanel extends JPanel implements Observer {
         drawOval(g, x, y, targetWidth, targetHeight);
     }
 
-    private void drawBorders(Graphics g, List<Border> borders, double widthRatio, double heightRatio) {
+    private void drawBorders(Graphics2D g, List<Border> borders, double widthRatio, double heightRatio) {
+        AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
+        g.setTransform(t);
         for (Border border : borders) {
             int x1 = round(border.getStartX() * widthRatio);
             int x2 = round(border.getFinishX() * widthRatio);
@@ -160,7 +195,7 @@ public class GamePanel extends JPanel implements Observer {
                 else if (border.getSide() == Side.RIGHT)
                     g.drawLine(x1 + i, y1, x2 + i, y2);
 
-                g.setColor(Color.BLACK);
+            g.setColor(Color.BLACK);
         }
     }
 
