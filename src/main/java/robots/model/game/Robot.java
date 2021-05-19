@@ -1,58 +1,80 @@
 package robots.model.game;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
+import java.util.Stack;
 
-public class Robot {
-    private double positionX;
-    private double positionY;
-    private double direction;
-    private double hp;
+public class Robot extends LiveEntity {
+    public static final int DEFAULT = 0;//стандартный робот, который не умеет стрелять
+    public static final int DAMAGE_DEALER = 1;//робот, который умеет стрелять
+    public static final int HEAVY = 2;//робот, который имеет много хп, но идет медленно
 
-    public static final double DEFAULT_DURATION = 5;
+    public static final double DEFAULT_DURATION = 10;
     public static final double MAX_VELOCITY = 0.1;
     public static final double MAX_ANGULAR_VELOCITY = 0.001;
 
-    public double getPositionX() {
-        return positionX;
+    private double direction;
+    private final int type;
+    private final double duration;
+    private Stack<Target> path;
+    private Target currentTarget;
+
+    public void setPath(Stack<Target> path) {
+        this.path = path;
     }
 
-    public double getPositionY() {
-        return positionY;
+    public int getType() {
+        return type;
     }
 
     public double getDirection() {
         return direction;
     }
 
-    public double getHp() {
-        return hp;
+    public static Robot ofType(int type, double x, double y, Stack<Target> path) {
+        switch (type) {
+            case DEFAULT:
+                return new Robot(x, y, 100, type, path);
+            case DAMAGE_DEALER:
+                return new Robot(x, y, 15, 0, 50, 20, 75, 1000, type, path);
+            case HEAVY:
+                return new Robot(x, y, 300, 5, type, path);
+            default:
+                throw new IllegalArgumentException("Illegal type of robot was passed");
+        }
     }
 
-    public void setHp(double hp) {
-        this.hp = hp;
+    private Robot(double x, double y, double hp, int type, Stack<Target> path) {
+        this(x, y, hp, DEFAULT_DURATION, type, path);
     }
 
-    @JsonCreator
-    public Robot(
-            @JsonProperty("positionX") double startPositionX,
-            @JsonProperty("positionY") double startPositionY,
-            @JsonProperty("direction") double direction,
-            @JsonProperty("hp") int hp
+    private Robot(double x, double y, double hp, double duration, int type, Stack<Target> path) {
+        this(x, y, duration, 0, hp, 0, 0, Long.MAX_VALUE, type, path);
+    }
+
+    private Robot(
+            double x,
+            double y,
+            double duration,
+            double direction,
+            double hp,
+            double damage,
+            double range,
+            long timeout,
+            int type,
+            Stack<Target> path
     ) {
-        this.positionX = startPositionX;
-        this.positionY = startPositionY;
+        super(x, y, damage, hp, range, timeout);
+        this.duration = duration;
         this.direction = direction;
-        this.hp = hp;
+        this.type = type;
+        this.path = path;
+        this.currentTarget = this.path.pop();
     }
 
-    public Robot(double x, double y, double direction) {
-        this(x, y, direction, 100);
-    }
 
-    private double getAngularVelocity(Target target) {
+    private double getAngularVelocity(GameEntity entity) {
         double angularVelocity = 0;
-        double angleToTarget = angleTo(target.getPositionX(), target.getPositionY());
+        double angleToTarget = angleTo(entity.getX(), entity.getY());
         if (angleToTarget > direction) {
             angularVelocity = MAX_ANGULAR_VELOCITY;
         }
@@ -62,43 +84,46 @@ public class Robot {
         return angularVelocity;
     }
 
-    public void move(Target target) {
-        double velocity = MAX_VELOCITY;
-        double angularVelocity = getAngularVelocity(target);
-        double duration = DEFAULT_DURATION;
-        double newDirection = direction + angularVelocity * duration;
-        double newX = positionX + velocity / angularVelocity *
-                (Math.sin(newDirection) - Math.sin(direction));
-        if (!Double.isFinite(newX)) {
-            newX = positionX + velocity * duration * Math.cos(direction);
+    public boolean move() {
+        if (getDistanceTo(currentTarget) < 1) {
+            if (!path.empty()) {
+                currentTarget = path.pop();
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            double velocity = MAX_VELOCITY;
+            double angularVelocity = getAngularVelocity(currentTarget);
+            double newDirection = direction + angularVelocity * duration;
+            double newX = getX() + velocity / angularVelocity *
+                    (Math.sin(newDirection) - Math.sin(direction));
+            if (!Double.isFinite(newX)) {
+                newX = getX() + velocity * duration * Math.cos(direction);
+            }
+            double newY = getY() - velocity / angularVelocity *
+                    (Math.cos(newDirection) - Math.cos(direction));
+            if (!Double.isFinite(newY)) {
+                newY = getY() + velocity * duration * Math.sin(direction);
+            }
+            setX(newX);
+            setY(newY);
+            direction = angleTo(currentTarget);
+            return false;
         }
-        double newY = positionY - velocity / angularVelocity *
-                (Math.cos(newDirection) - Math.cos(direction));
-        if (!Double.isFinite(newY)) {
-            newY = positionY + velocity * duration * Math.sin(direction);
-        }
-        positionX = newX;
-        positionY = newY;
-        direction = angleTo(target.getPositionX(), target.getPositionY());
     }
 
-    public double getDistanceTo(double targetPositionX, double targetPositionY) {
-        double diffX = positionX - targetPositionX;
-        double diffY = positionY - targetPositionY;
-        return Math.sqrt(diffX * diffX + diffY * diffY);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Robot robot = (Robot) o;
+        return Double.compare(robot.direction, direction) == 0 && type == robot.type && Double.compare(robot.duration, duration) == 0 && path.equals(robot.path) && currentTarget.equals(robot.currentTarget);
     }
 
-    public double angleTo(double targetPositionX, double targetPositionY) {
-        double diffX = targetPositionX - positionX;
-        double diffY = targetPositionY - positionY;
-        return asNormalizedRadians(Math.atan2(diffY, diffX));
-    }
-
-    private static double asNormalizedRadians(double angle) {
-        while (angle < 0)
-            angle += 2 * Math.PI;
-        while (angle >= 2 * Math.PI)
-            angle -= 2 * Math.PI;
-        return angle;
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), direction, type, duration, path, currentTarget);
     }
 }

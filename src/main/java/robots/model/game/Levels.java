@@ -2,6 +2,7 @@ package robots.model.game;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class Levels {
     private static final Map<Integer, Level> levels = getLevels();
@@ -12,6 +13,18 @@ public class Levels {
                 0, getLevel0(),
                 1, getLevel1(),
                 2, getLevel2()
+        );
+    }
+
+    private static List<Robot> getDefaultRobotsPack(List<Border> borders, Target target) {
+        double x = 0;
+        double y = (double) GameModel.HEIGHT / 2;
+        PathFinder pathFinder = new PathFinder(borders, target);
+        Stack<Target> path = pathFinder.findPath(new GameEntity(x, y));
+        return List.of(
+                Robot.ofType(Robot.DEFAULT, x, y, path),
+                Robot.ofType(Robot.HEAVY, x, y, path),
+                Robot.ofType(Robot.DAMAGE_DEALER, x, y, path)
         );
     }
 
@@ -29,13 +42,12 @@ public class Levels {
                         Side.BOTTOM)
 
         );
+        Target target = new Target(GameModel.WIDTH, GameModel.HEIGHT / 2);
         return new Level(
                 defaultBorders,
-                new Target(GameModel.WIDTH, GameModel.HEIGHT / 2),
-                new Robot(0,
-                        (double) GameModel.HEIGHT / 2,
-                        0),
-                2
+                target,
+                2,
+                getDefaultRobotsPack(defaultBorders, target)
         );
     }
 
@@ -63,12 +75,12 @@ public class Levels {
                         0,
                         Side.RIGHT)
         );
+        Target target = new Target((int) (GameModel.WIDTH / 2 + SPACE / 2), 0);
         return new Level(
                 defaultBorders,
-                new Target((int) (GameModel.WIDTH / 2 + SPACE / 2), 0),
-                new Robot(0,
-                        (double) GameModel.HEIGHT / 2, 0),
-                1
+                target,
+                2,
+                getDefaultRobotsPack(defaultBorders, target)
         );
     }
 
@@ -141,13 +153,12 @@ public class Levels {
                         (double) GameModel.HEIGHT / 6 - SPACE,
                         Side.RIGHT)
         );
+        Target target = new Target((int) (GameModel.WIDTH - SPACE / 2), GameModel.HEIGHT / 2);
         return new Level(
                 defaultBorders,
-                new Target((int) (GameModel.WIDTH - SPACE / 2), GameModel.HEIGHT / 2),
-                new Robot(0,
-                        (double) GameModel.HEIGHT / 2,
-                        0),
-                1
+                target,
+                2,
+                getDefaultRobotsPack(defaultBorders, target)
         );
     }
 

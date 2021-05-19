@@ -61,12 +61,12 @@ public class GamePanel extends JPanel implements Observer {
         double heightRatio = d.height / (double) GameModel.HEIGHT;
         GameModel.State state = gameModel.getState();
 
-        if (state == GameModel.State.ROBOT_WIN) {
+        if (state == GameModel.State.ROBOTS_WON) {
             drawGameOver(g2d, widthRatio, heightRatio, "youLostTitle");
         } else if (state == GameModel.State.ROBOT_LOST) {
             drawGameOver(g2d, widthRatio, heightRatio, "youWonTitle");
-        } else {
-            drawRobot(g2d, gameModel.getLevel().getRobot(), widthRatio, heightRatio);
+        } else if (state == GameModel.State.RUNNING) {
+            gameModel.getLevel().getRobots().forEach(x -> drawRobot(g2d, x, widthRatio, heightRatio));
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
             drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
             drawTurrets(g2d, gameModel.getTurrets(), widthRatio, heightRatio);
@@ -104,8 +104,8 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawRobot(Graphics2D g, Robot robot, double widthRatio, double heightRatio) {
-        int robotCenterX = round(robot.getPositionX() * widthRatio);
-        int robotCenterY = round(robot.getPositionY() * heightRatio);
+        int robotCenterX = round(robot.getX() * widthRatio);
+        int robotCenterY = round(robot.getY() * heightRatio);
         int robotWidth = round(30 * widthRatio);
         int robotHeight = round(10 * heightRatio);
         int eyeWidth = round(5 * widthRatio);
@@ -122,15 +122,10 @@ public class GamePanel extends JPanel implements Observer {
         g.setColor(Color.BLACK);
         drawOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
 
-        //это нужно для рендера момента получения роботом урона
-        //если поставить delay = 1, то это будет почти незаметно
-        //то есть это отобразиться всего лишь на одной отрисовке,
-        //поэтому тут сделано 5
-        delay = gameModel.wasRobotDamaged() ? 5 : delay;
-        if (delay > 0) {
+        //отросивка нанесения урона (она будет всего один такт, то есть почти незаметна)
+        if (gameModel.getDamagedRobots().contains(robot)) {
             g.setColor(Color.RED);
             fillOval(g, robotCenterX, robotCenterY, robotHeight, robotHeight);
-            delay--;
         }
     }
 
@@ -138,8 +133,8 @@ public class GamePanel extends JPanel implements Observer {
         AffineTransform t = AffineTransform.getRotateInstance(0, 0, 0);
         g.setTransform(t);
         g.setColor(Color.GREEN);
-        int x = round(target.getPositionX() * widthRatio);
-        int y = round(target.getPositionY() * heightRatio);
+        int x = round(target.getX() * widthRatio);
+        int y = round(target.getY() * heightRatio);
         int targetWidth = round(5 * widthRatio);
         int targetHeight = round(5 * heightRatio);
         fillOval(g, x, y, targetWidth, targetHeight);

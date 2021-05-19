@@ -1,9 +1,13 @@
 package robots.model.game;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Stack;
 
 public class PathFinder {
-    private final Level level;
+    private final List<Border> borders;
     private final Target target;
     public static final int STEP = 5;
 
@@ -11,9 +15,9 @@ public class PathFinder {
         return target;
     }
 
-    public PathFinder(Level level) {
-        this.level = level;
-        this.target = level.getFinalTarget();
+    public PathFinder(List<Border> borders, Target finalTarget) {
+        this.borders = borders;
+        this.target = finalTarget;
     }
 
     public static boolean isNotNearBorders(List<Border> borders, double positionX, double positionY, int step) {
@@ -42,33 +46,37 @@ public class PathFinder {
 
     private ArrayList<Target> getNeighbours(List<Border> borders, Target target) {
         ArrayList<Target> neighbours = new ArrayList<>();
-        if (isNotNearBorders(borders, target.getPositionX() + STEP, target.getPositionY(), STEP))
-            neighbours.add(new Target(target.getPositionX() + STEP, target.getPositionY()));
-        if (isNotNearBorders(borders, target.getPositionX() - STEP, target.getPositionY(), STEP))
-            neighbours.add(new Target(target.getPositionX() - STEP, target.getPositionY()));
-        if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY() + STEP, STEP))
-            neighbours.add(new Target(target.getPositionX(), target.getPositionY() + STEP));
-        if (isNotNearBorders(borders, target.getPositionX(), target.getPositionY() - STEP, STEP))
-            neighbours.add(new Target(target.getPositionX(), target.getPositionY() - STEP));
+        if (isNotNearBorders(borders, target.getX() + STEP, target.getY(), STEP))
+            neighbours.add(new Target(target.getX() + STEP, target.getY()));
+        if (isNotNearBorders(borders, target.getX() - STEP, target.getY(), STEP))
+            neighbours.add(new Target(target.getX() - STEP, target.getY()));
+        if (isNotNearBorders(borders, target.getX(), target.getY() + STEP, STEP))
+            neighbours.add(new Target(target.getX(), target.getY() + STEP));
+        if (isNotNearBorders(borders, target.getX(), target.getY() - STEP, STEP))
+            neighbours.add(new Target(target.getX(), target.getY() - STEP));
         return neighbours;
     }
 
     private double getDistanceBetween(Target t1, Target t2) {
-        double diffX = t1.getPositionX() - t2.getPositionX();
-        double diffY = t1.getPositionY() - t2.getPositionY();
+        double diffX = t1.getX() - t2.getX();
+        double diffY = t1.getY() - t2.getY();
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 
-    public Stack<Target> findPath() {
+    public Stack<Target> findPath(GameEntity entity) {
+        return findPath((int) entity.getX(), (int) entity.getY());
+    }
+
+    public Stack<Target> findPath(int startX, int startY) {
         ArrayDeque<Target> q = new ArrayDeque<>();
         HashMap<Target, Target> parent = new HashMap<>();
-        Target startTarget = new Target((int) level.getRobot().getPositionX(), (int) level.getRobot().getPositionY());
+        Target startTarget = new Target(startX, startY);
         parent.put(startTarget, null);
         q.addLast(startTarget);
         label:
         while (!q.isEmpty()) {
             Target v = q.poll();
-            for (Target neighbour : getNeighbours(level.getBorders(), v)) {
+            for (Target neighbour : getNeighbours(borders, v)) {
                 if (!parent.containsKey(neighbour)) {
                     q.addLast(neighbour);
                     parent.put(neighbour, v);

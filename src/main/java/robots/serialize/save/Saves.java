@@ -4,7 +4,7 @@ import robots.model.game.GameModel;
 import robots.serialize.JsonSerializableLocale;
 import robots.view.frame.JInternalGameFrame;
 import robots.view.frame.JInternalLogFrame;
-import robots.view.frame.JInternalRobotInfoFrame;
+//import robots.view.frame.JInternalRobotInfoFrame;
 
 import javax.swing.*;
 import java.io.File;
@@ -58,15 +58,15 @@ public class Saves {
         }
     }
 
-    public JInternalFrame restoreCoordsFrame() {
-        if (userChoice == JOptionPane.YES_OPTION) {
-            return (JInternalFrame) retrievedSaves
-                    .get(JInternalRobotInfoFrame.class)
-                    .orElse(JInternalRobotInfoFrame.getDefaultEmptyFrame());
-        } else {
-            return JInternalRobotInfoFrame.getDefaultEmptyFrame();
-        }
-    }
+//    public JInternalFrame restoreCoordsFrame() {
+//        if (userChoice == JOptionPane.YES_OPTION) {
+//            return (JInternalFrame) retrievedSaves
+//                    .get(JInternalRobotInfoFrame.class)
+//                    .orElse(JInternalRobotInfoFrame.getDefaultEmptyFrame());
+//        } else {
+//            return JInternalRobotInfoFrame.getDefaultEmptyFrame();
+//        }
+//    }
 
     public Optional<Locale> restoreLocale() {
         return retrievedSaves
