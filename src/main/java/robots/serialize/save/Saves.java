@@ -4,8 +4,7 @@ import robots.model.game.GameModel;
 import robots.serialize.JsonSerializableLocale;
 import robots.view.frame.JInternalGameFrame;
 import robots.view.frame.JInternalLogFrame;
-import robots.view.frame.JInternalRobotCoordsFrame;
-import robots.view.frame.JInternalRobotDistanceFrame;
+import robots.view.frame.JInternalRobotInfoFrame;
 
 import javax.swing.*;
 import java.io.File;
@@ -62,20 +61,10 @@ public class Saves {
     public JInternalFrame restoreCoordsFrame() {
         if (userChoice == JOptionPane.YES_OPTION) {
             return (JInternalFrame) retrievedSaves
-                    .get(JInternalRobotCoordsFrame.class)
-                    .orElse(JInternalRobotCoordsFrame.getDefaultEmptyFrame());
+                    .get(JInternalRobotInfoFrame.class)
+                    .orElse(JInternalRobotInfoFrame.getDefaultEmptyFrame());
         } else {
-            return JInternalRobotCoordsFrame.getDefaultEmptyFrame();
-        }
-    }
-
-    public JInternalFrame restoreDistanceFrame() {
-        if (userChoice == JOptionPane.YES_OPTION) {
-            return (JInternalFrame) retrievedSaves
-                    .get(JInternalRobotDistanceFrame.class)
-                    .orElse(JInternalRobotDistanceFrame.getDefaultEmptyFrame());
-        } else {
-            return JInternalRobotDistanceFrame.getDefaultEmptyFrame();
+            return JInternalRobotInfoFrame.getDefaultEmptyFrame();
         }
     }
 
