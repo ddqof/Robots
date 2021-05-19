@@ -139,7 +139,7 @@ public class Levels {
                         GameModel.WIDTH,
                         (double) GameModel.HEIGHT / 1.7 + 3 * SPACE / 2,
                         (double) GameModel.HEIGHT / 6 - SPACE,
-                        Side.LEFT)
+                        Side.RIGHT)
         );
         return new Level(
                 defaultBorders,

@@ -55,20 +55,12 @@ public class GamePanel extends JPanel implements Observer {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Dimension d = getSize();
         Graphics2D g2d = (Graphics2D) g;
+        Dimension d = getSize();
         double widthRatio = d.width / (double) GameModel.WIDTH;
         double heightRatio = d.height / (double) GameModel.HEIGHT;
         GameModel.State state = gameModel.getState();
-        if (mousePosition != null && (state == GameModel.State.RUNNING)) {
-            if (currentTurretType == Turret.RANDOM_BONUS) {
-                g.drawString("?", mousePosition.x, mousePosition.y);
-            } else {
-                int diam = (int) (Turret.DEFAULT_RANGE * 2);
-                g.setColor(turretTypeToColors.get(currentTurretType));
-                drawOval(g, mousePosition.x, mousePosition.y, (int) (diam * widthRatio), (int) (diam * heightRatio));
-            }
-        }
+
         if (state == GameModel.State.ROBOT_WIN) {
             drawGameOver(g2d, widthRatio, heightRatio, "youLostTitle");
         } else if (state == GameModel.State.ROBOT_LOST) {
@@ -79,6 +71,15 @@ public class GamePanel extends JPanel implements Observer {
             drawBorders(g2d, gameModel.getLevel().getBorders(), widthRatio, heightRatio);
             drawTurrets(g2d, gameModel.getTurrets(), widthRatio, heightRatio);
             drawTurretCount(g2d, widthRatio, heightRatio);
+        }
+        if (mousePosition != null && (state == GameModel.State.RUNNING)) {
+            if (currentTurretType == Turret.RANDOM_BONUS) {
+                g.drawString("?", mousePosition.x, mousePosition.y);
+            } else {
+                int diam = (int) (Turret.DEFAULT_RANGE * 2);
+                g.setColor(turretTypeToColors.get(currentTurretType));
+                drawOval(g, mousePosition.x, mousePosition.y, (int) (diam * widthRatio), (int) (diam * heightRatio));
+            }
         }
     }
 
@@ -152,8 +153,19 @@ public class GamePanel extends JPanel implements Observer {
             int x2 = round(border.getFinishX() * widthRatio);
             int y1 = round(border.getStartY() * heightRatio);
             int y2 = round(border.getFinishY() * heightRatio);
+            g.setColor(Color.YELLOW);
             g.drawLine(x1, y1, x2, y2);
-            g.drawLine(x1 + 1, y1 + 1, x2 + 1, y2 + 1);
+            for (int i = 0; i < 25; i++)
+                if (border.getSide() == Side.BOTTOM)
+                    g.drawLine(x1, y1 + i, x2, y2 + i);
+                else if (border.getSide() == Side.TOP)
+                    g.drawLine(x1, y1 - i, x2, y2 - i);
+                else if (border.getSide() == Side.LEFT)
+                    g.drawLine(x1 - i, y1, x2 - i, y2);
+                else if (border.getSide() == Side.RIGHT)
+                    g.drawLine(x1 + i, y1, x2 + i, y2);
+
+                g.setColor(Color.BLACK);
         }
     }
 
