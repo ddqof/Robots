@@ -140,7 +140,7 @@ public class GamePanel extends JPanel implements Observer {
 
         g.drawString(robot.getHp() + "" ,robotCenterX, robotCenterY - robotHeight);
 
-        //отросивка нанесения урона (она будет всего один такт, то есть почти незаметна)
+        //отросивка нанесения урона (она будет всего один (два) такт, то есть почти незаметна)
         if (gameModel.getDamagedRobots().contains(robot)) {
             g.setColor(Color.RED);
             fillOval(g, robotCenterX, robotCenterY, robotHeight, robotHeight);

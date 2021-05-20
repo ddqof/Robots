@@ -40,7 +40,7 @@ public class Robot extends LiveEntity {
             case DEFAULT:
                 return new Robot(x, y, 10, type, path);
             case DAMAGE_DEALER:
-                return new Robot(x, y, 15, 0, 20, 20, 75, 1000, type, path);
+                return new Robot(x, y, 10, 0, 20, 20, 75, 1000, type, path);
             case HEAVY:
                 return new Robot(x, y, 30, 5, type, path);
             default:
@@ -92,7 +92,6 @@ public class Robot extends LiveEntity {
             setX(newX);
             setY(newY);
             direction = angleTo(currentTarget);
-            System.out.println(direction);
             return false;
         }
     }

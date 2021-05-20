@@ -43,7 +43,6 @@ public class GameEntity {
     public double angleTo(double x, double y) {
         double diffX = x - this.x;
         double diffY = y - this.y;
-        System.out.println(diffX + " " + diffY );
         return Math.atan2(diffY, diffX);
     }
 
