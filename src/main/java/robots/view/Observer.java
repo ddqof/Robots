@@ -1,5 +1,5 @@
 package robots.view;
 
 public interface Observer {
-    void onUpdate();
+    void onModelUpdate(boolean isLevelChanged);
 }

@@ -3,6 +3,7 @@ package robots.view.frame;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import robots.model.game.GameModel;
+import robots.model.game.Levels;
 import robots.model.game.Robot;
 import robots.serialize.JInternalFrameDeserializer;
 import robots.serialize.JInternalFrameSerializer;
@@ -12,8 +13,11 @@ import robots.view.Observer;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static robots.view.frame.JInternalFrameUtils.getEmptyFrame;
 
@@ -25,10 +29,12 @@ public class JInternalRobotInfoFrame extends AbstractJInternalFrame implements O
     private static final int WIDTH = 550;
     private static final int HEIGHT = 130;
     private static final String TITLE_RESOURCE_KEY = "robotInfoLabel";
-    private final GameModel gameModel;
-    private final Map<Integer, JLabel> robotInfoLabels = new HashMap<>();
     public static final File SAVES_FILE = new File(Saves.PATH,
             String.format("robotInfoFrame.%s", Saves.JSON_EXTENSION));
+
+    private final GameModel gameModel;
+    private final JPanel panel;
+    private final Map<Integer, JLabel> robotInfoLabels = new HashMap<>();
 
     public static JInternalFrame getDefaultEmptyFrame() {
         return getEmptyFrame(WIDTH, HEIGHT, X, Y);
@@ -37,16 +43,19 @@ public class JInternalRobotInfoFrame extends AbstractJInternalFrame implements O
     public JInternalRobotInfoFrame(JInternalFrame internalFrame, GameModel gameModel) {
         super(internalFrame, TITLE_RESOURCE_KEY);
         this.gameModel = gameModel;
-        JPanel panel = new JPanel();
-        for (Robot robot : gameModel.getLevel().getRobots()) {
+        this.panel = new JPanel();
+        for (Robot robot : Levels.ALL_ROBOTS) {
             JLabel label = new JLabel(robot.str(gameModel.getLevel().getFinalTarget()));
+            if (!gameModel.getLevel().getRobots().contains(robot)) {
+                label.setVisible(false);
+            }
             robotInfoLabels.put(robot.getId(), label);
             panel.add(label);
         }
         add(panel);
         this.gameModel.registerObs(this);
         setActionOnClose(() -> this.gameModel.unregisterObs(JInternalRobotInfoFrame.this));
-        onUpdate();
+        onModelUpdate(false);
     }
 
     public JInternalRobotInfoFrame(GameModel gameModel) {
@@ -54,15 +63,37 @@ public class JInternalRobotInfoFrame extends AbstractJInternalFrame implements O
     }
 
     @Override
-    public void onUpdate() {
+    public void onModelUpdate(boolean isLevelChanged) {
+//        if (isLevelChanged) {
+//            return;
+//        } else {
+//            List<Integer> ids = new ArrayList<>();
+//            for (Robot robot: gameModel.getAliveRobots()) {
+//                ids.add(robot.getId());
+//                JLabel label = robotInfoLabels.get(robot.getId());
+//                label.setText(robot.str(gameModel.getLevel().getFinalTarget()));
+//            }
+//            for (Map.Entry<Integer, JLabel> entry: robotInfoLabels.entrySet()) {
+//                if (!ids.contains(entry.getKey())) {
+//                    entry.getValue().setVisible(false);
+//                }
+//            }
+//        }
+//        robotInfoLabels.values().forEach(x -> x.setVisible(false));
+//        List<Integer> aliveRobotIds = gameModel.getAliveRobots().stream()
+//                .map(Robot::getId).collect(Collectors.toList());
 //        for (Robot robot: gameModel.getLevel().getRobots()) {
 //            JLabel label = robotInfoLabels.get(robot.getId());
-//            label.setText(robot.str(gameModel.getLevel().getFinalTarget()));
+//            if (aliveRobotIds.contains(robot.getId())) {
+//                label.setText(robot.str(gameModel.getLevel().getFinalTarget()));
+//                label.setVisible(true);
+//            } else {
+//                label.setVisible(false);
+//            }
 //        }
         revalidate();
     }
 
-    //
     @Override
     public boolean serialize() {
         return Save.storeObject(SAVES_FILE, this);

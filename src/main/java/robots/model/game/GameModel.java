@@ -24,7 +24,7 @@ public class GameModel implements JsonSerializable {
     public static final int HEIGHT = 550;
     private int currentLevel;
     private List<Robot> damagedRobots = new ArrayList<>();
-    private List<Robot> activeRobots = new ArrayList<>();
+    private List<Robot> aliveRobots = new ArrayList<>();
     private List<Turret> turrets = new LinkedList<>();
     private Level level;
     private State state;
@@ -38,8 +38,8 @@ public class GameModel implements JsonSerializable {
     private final ScheduledExecutorService executor =
             Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
-    public List<Robot> getActiveRobots() {
-        return activeRobots;
+    public List<Robot> getAliveRobots() {
+        return aliveRobots;
     }
 
     public Level getLevel() {
@@ -89,9 +89,10 @@ public class GameModel implements JsonSerializable {
 
     public void update() {
         boolean isRobotsAlive = false;
+        boolean isLevelChanged = false;
         damagedRobots = new ArrayList<>();
         List<Robot> dead = new ArrayList<>();
-        for (Robot robot : activeRobots) {
+        for (Robot robot : aliveRobots) {
             boolean isTargetReached = robot.move();
             if (isTargetReached) {
                 state = State.ROBOTS_WON;
@@ -108,17 +109,19 @@ public class GameModel implements JsonSerializable {
                 dead.add(robot);
             }
         }
-        activeRobots.removeAll(dead);
+        aliveRobots.removeAll(dead);
         if (!isRobotsAlive) {
             currentLevel = currentLevel + 1;
             if (currentLevel <= Levels.levelsCount() - 1) {
                 updateLevel(currentLevel);
+                isLevelChanged = true;
             } else {
                 state = State.ROBOT_LOST;
             }
-            activeRobots = new ArrayList<>(level.getRobots());
+            aliveRobots = new ArrayList<>(level.getRobots());
         }
-        observers.forEach(Observer::onUpdate);
+        boolean finalIsLevelChanged = isLevelChanged;
+        observers.forEach(x -> x.onModelUpdate(finalIsLevelChanged));
     }
 
     public void registerObs(Observer obs) {
@@ -134,7 +137,7 @@ public class GameModel implements JsonSerializable {
         state = State.RUNNING;
         int robotsCount = getLevel().getRobots().size();
         for (int i = 1; i <= robotsCount; i++) {
-            activeRobots = new ArrayList<>(getLevel().getRobots().subList(0, i));
+            aliveRobots = new ArrayList<>(getLevel().getRobots().subList(0, i));
             ScheduledFuture<?> task = scheduleRobots();
             if (i < robotsCount) {
                 Thread.sleep(1000);

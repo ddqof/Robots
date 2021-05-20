@@ -1,12 +1,14 @@
 package robots.model.game;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
 public class Levels {
-    private static final Map<Integer, Level> levels = getLevels();
+    public static final List<Robot> ALL_ROBOTS = new LinkedList<>();
     public static final double SPACE = 50;
+    private static final Map<Integer, Level> levels = getLevels();
 
     private static Map<Integer, Level> getLevels() {
         return Map.of(
@@ -21,11 +23,13 @@ public class Levels {
         double y = (double) GameModel.HEIGHT / 2;
         PathFinder pathFinder = new PathFinder(borders, target);
         Stack<Target> path = pathFinder.findPath(new GameEntity(x, y));
-        return List.of(
-                Robot.ofType(Robot.DEFAULT, x, y, path),
-                Robot.ofType(Robot.HEAVY, x, y, path),
-                Robot.ofType(Robot.DAMAGE_DEALER, x, y, path)
+        List<Robot> result = List.of(
+                Robot.ofType(Robot.DEFAULT, x, y, (Stack<Target>) path.clone()),
+                Robot.ofType(Robot.HEAVY, x, y, (Stack<Target>) path.clone()),
+                Robot.ofType(Robot.DAMAGE_DEALER, x, y, (Stack<Target>) path.clone())
         );
+        ALL_ROBOTS.addAll(result);
+        return result;
     }
 
     private static Level getLevel0() {
