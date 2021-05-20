@@ -11,7 +11,6 @@ public class Robot extends LiveEntity {
 
     public static final double DEFAULT_DURATION = 10;
     public static final double MAX_VELOCITY = 0.1;
-    public static final double MAX_ANGULAR_VELOCITY = 0.001;
 
     private double direction;
     private final int type;
@@ -78,19 +77,6 @@ public class Robot extends LiveEntity {
         this.id = count++;
     }
 
-
-    private double getAngularVelocity(GameEntity entity) {
-        double angularVelocity = 0;
-        double angleToTarget = angleTo(entity.getX(), entity.getY());
-        if (angleToTarget > direction) {
-            angularVelocity = MAX_ANGULAR_VELOCITY;
-        }
-        if (angleToTarget < direction) {
-            angularVelocity = -MAX_ANGULAR_VELOCITY;
-        }
-        return angularVelocity;
-    }
-
     public boolean move() {
         if (getDistanceTo(currentTarget) < 1) {
             if (!path.empty()) {
@@ -101,21 +87,12 @@ public class Robot extends LiveEntity {
             }
         } else {
             double velocity = MAX_VELOCITY;
-            double angularVelocity = getAngularVelocity(currentTarget);
-            double newDirection = direction + angularVelocity * duration;
-            double newX = getX() + velocity / angularVelocity *
-                    (Math.sin(newDirection) - Math.sin(direction));
-            if (!Double.isFinite(newX)) {
-                newX = getX() + velocity * duration * Math.cos(direction);
-            }
-            double newY = getY() - velocity / angularVelocity *
-                    (Math.cos(newDirection) - Math.cos(direction));
-            if (!Double.isFinite(newY)) {
-                newY = getY() + velocity * duration * Math.sin(direction);
-            }
+            double newX = getX() + velocity * duration * Math.cos(direction);
+            double newY = getY() + velocity * duration * Math.sin(direction);
             setX(newX);
             setY(newY);
             direction = angleTo(currentTarget);
+            System.out.println(direction);
             return false;
         }
     }

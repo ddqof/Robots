@@ -69,7 +69,7 @@ public class GamePanel extends JPanel implements Observer {
             gameModel.getAliveRobots().forEach(x -> drawRobot(g2d, x, widthRatio, heightRatio));
             drawTarget(g2d, gameModel.getLevel().getFinalTarget(), widthRatio, heightRatio);
             drawTurrets(g2d, gameModel.getTurrets(), widthRatio, heightRatio);
-            drawTurretCount(g2d, widthRatio, heightRatio);
+            drawTurretCount(g2d);
         }
         if (mousePosition != null && (state == GameModel.State.RUNNING)) {
             if (currentTurretType == Turret.RANDOM_BONUS) {
@@ -214,7 +214,7 @@ public class GamePanel extends JPanel implements Observer {
         }
     }
 
-    public void drawTurretCount(Graphics2D g, double widthRatio, double heightRatio) {
+    public void drawTurretCount(Graphics2D g) {
         g.drawString(
                 ResourceBundle.getBundle(BundleUtils.FRAME_LABELS_BUNDLE_NAME).getString("availableTurretsCountTitle")
                         + " " + (gameModel.getLevel().getTurretsCount() - gameModel.getTurrets().size()),
