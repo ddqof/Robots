@@ -89,7 +89,6 @@ public class GameModel implements JsonSerializable {
 
     public void update() {
         boolean isRobotsAlive = false;
-        boolean isLevelChanged = false;
         damagedRobots = new ArrayList<>();
         List<Robot> dead = new ArrayList<>();
         for (Robot robot : aliveRobots) {
@@ -114,14 +113,12 @@ public class GameModel implements JsonSerializable {
             currentLevel = currentLevel + 1;
             if (currentLevel <= Levels.levelsCount() - 1) {
                 updateLevel(currentLevel);
-                isLevelChanged = true;
             } else {
                 state = State.ROBOT_LOST;
             }
             aliveRobots = new ArrayList<>(level.getRobots());
         }
-        boolean finalIsLevelChanged = isLevelChanged;
-        observers.forEach(x -> x.onModelUpdate(finalIsLevelChanged));
+        observers.forEach(Observer::onModelUpdate);
     }
 
     public void registerObs(Observer obs) {
