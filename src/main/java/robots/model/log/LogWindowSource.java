@@ -25,7 +25,7 @@ public class LogWindowSource implements JsonSerializable {
     private volatile LogChangeListener[] activeListeners;
 
     public static LogWindowSource getDefaultSource() {
-        return new LogWindowSource(100);
+        return new LogWindowSource(1000);
     }
 
     @JsonGetter(MESSAGES_FIELD_NAME)

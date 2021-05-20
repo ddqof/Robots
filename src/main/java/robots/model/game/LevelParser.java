@@ -18,7 +18,6 @@ public class LevelParser {
             );
         }
         Path levelPath = Paths.get("levels", String.format("%d.txt", levelNumber));
-        System.out.println(levelPath.toAbsolutePath());
         List<String> lines = Files.readAllLines(levelPath);
         if (lines.size() != levelFileHeight) {
             throw new IllegalStateException(

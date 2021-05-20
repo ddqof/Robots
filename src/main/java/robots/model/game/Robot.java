@@ -1,5 +1,7 @@
 package robots.model.game;
 
+import robots.model.log.Logger;
+
 import java.util.Objects;
 import java.util.Stack;
 
@@ -9,7 +11,7 @@ public class Robot extends LiveEntity {
     public static final int HEAVY = 2;//робот, который имеет много хп, но идет медленно
     private static int count = 0;
 
-    public static final double DEFAULT_DURATION = 10;
+    public static final double DEFAULT_DURATION = 7;
     public static final double MAX_VELOCITY = 0.1;
 
     private double direction;
@@ -78,12 +80,12 @@ public class Robot extends LiveEntity {
     }
 
     public boolean move() {
+        boolean isTargetReached = false;
         if (getDistanceTo(currentTarget) < 1) {
             if (!path.empty()) {
                 currentTarget = path.pop();
-                return false;
             } else {
-                return true;
+                isTargetReached = true;
             }
         } else {
             double velocity = MAX_VELOCITY;
@@ -92,8 +94,11 @@ public class Robot extends LiveEntity {
             setX(newX);
             setY(newY);
             direction = angleTo(currentTarget);
-            return false;
         }
+        if (type == DAMAGE_DEALER) {
+            Logger.debug(String.format("(%f, %f), dir: %f", getX(), getY(), direction));
+        }
+        return isTargetReached;
     }
 
     @Override

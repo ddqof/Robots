@@ -93,14 +93,10 @@ public class GameModel implements JsonSerializable {
         List<Robot> dead = new ArrayList<>();
         for (Robot robot : aliveRobots) {
             boolean isTargetReached = robot.move();
-            if (isTargetReached) {
-                state = State.ROBOTS_WON;
-            }
+            if (isTargetReached) state = State.ROBOTS_WON;
             for (Turret turret : turrets) {
                 boolean wasDamaged = turret.dealDamage(robot);
-                if (wasDamaged) {
-                    damagedRobots.add(robot);
-                }
+                if (wasDamaged) damagedRobots.add(robot);
             }
             if (robot.getHp() > 0) {
                 isRobotsAlive = true;
