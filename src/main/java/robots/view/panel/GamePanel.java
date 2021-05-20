@@ -224,7 +224,7 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     @Override
-    public void onModelUpdate(boolean isLevelChanged) {
+    public void onModelUpdate() {
         EventQueue.invokeLater(this::repaint);
     }
 }
