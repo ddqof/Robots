@@ -1,7 +1,5 @@
 package robots.model.game;
 
-import robots.model.log.Logger;
-
 import java.util.Objects;
 import java.util.Stack;
 
@@ -95,9 +93,6 @@ public class Robot extends LiveEntity {
             setY(newY);
             direction = angleTo(currentTarget);
         }
-        if (type == DAMAGE_DEALER) {
-            Logger.debug(String.format("(%f, %f), dir: %f", getX(), getY(), direction));
-        }
         return isTargetReached;
     }
 
@@ -124,5 +119,17 @@ public class Robot extends LiveEntity {
                 getY(),
                 getDistanceTo(entity)
         );
+    }
+
+    @Override
+    public String toString() {
+        return "Robot{" +
+                "direction=" + direction +
+                ", type=" + type +
+                ", id=" + id +
+                ", duration=" + duration +
+                ", path=" + path +
+                ", currentTarget=" + currentTarget +
+                '}';
     }
 }

@@ -36,5 +36,4 @@ public class LiveEntity extends GameEntity {
         }
         return false;
     }
-
 }
