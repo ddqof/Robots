@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -32,11 +33,14 @@ public class GameModel implements JsonSerializable {
     private final Set<Observer> observers = new HashSet<>();
 
     public enum State {
-        STOPPED, RUNNING, ROBOTS_WON, ROBOT_LOST
+        STOPPED, RUNNING, ROBOTS_WON, ROBOT_LOST;
     }
 
-    private final ScheduledExecutorService executor =
+    private final ScheduledExecutorService scheduledExecutor =
             Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+
+    private final ExecutorService fixedExecutor =
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public List<Robot> getAliveRobots() {
         return aliveRobots;
@@ -114,7 +118,6 @@ public class GameModel implements JsonSerializable {
             }
             aliveRobots = new ArrayList<>(level.getRobots());
         }
-        observers.forEach(Observer::onModelUpdate);
     }
 
     public void registerObs(Observer obs) {
@@ -140,11 +143,12 @@ public class GameModel implements JsonSerializable {
     }
 
     private ScheduledFuture<?> scheduleRobots() {
-        return executor.scheduleWithFixedDelay(
+        return scheduledExecutor.scheduleWithFixedDelay(
                 () -> {
                     try {
                         if (state == State.RUNNING) {
                             update();
+                            observers.forEach(x -> fixedExecutor.execute(x::onModelUpdate));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

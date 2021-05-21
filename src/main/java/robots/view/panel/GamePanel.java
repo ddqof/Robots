@@ -1,8 +1,12 @@
 package robots.view.panel;
 
 import robots.BundleUtils;
+import robots.model.game.Border;
+import robots.model.game.GameModel;
 import robots.model.game.Robot;
-import robots.model.game.*;
+import robots.model.game.Side;
+import robots.model.game.Target;
+import robots.model.game.Turret;
 import robots.view.Observer;
 
 import javax.swing.*;
@@ -138,7 +142,7 @@ public class GamePanel extends JPanel implements Observer {
         g.setColor(Color.BLACK);
         drawOval(g, robotCenterX + eyeOffset, robotCenterY, eyeWidth, eyeHeight);
 
-        g.drawString(robot.getHp() + "" ,robotCenterX, robotCenterY - robotHeight);
+        g.drawString(robot.getHp() + "", robotCenterX, robotCenterY - robotHeight);
 
         //отросивка нанесения урона (она будет всего один (два) такт, то есть почти незаметна)
         if (gameModel.getDamagedRobots().contains(robot)) {
