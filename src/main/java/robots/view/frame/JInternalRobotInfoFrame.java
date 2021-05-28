@@ -53,7 +53,7 @@ public class JInternalRobotInfoFrame extends AbstractJInternalFrame implements O
         add(panel);
         this.gameModel.registerObs(this);
         setActionOnClose(() -> this.gameModel.unregisterObs(JInternalRobotInfoFrame.this));
-        onModelUpdate();
+//        onModelUpdate();
     }
 
     public JInternalRobotInfoFrame(GameModel gameModel) {

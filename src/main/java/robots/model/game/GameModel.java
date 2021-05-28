@@ -1,5 +1,7 @@
 package robots.model.game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import robots.serialize.JsonSerializable;
 import robots.serialize.save.Save;
 import robots.serialize.save.Saves;
@@ -29,6 +31,7 @@ public class GameModel implements JsonSerializable {
     private List<Turret> turrets = new LinkedList<>();
     private Level level;
     private State state;
+    private boolean wasDeserialized;
 
     private final Set<Observer> observers = new HashSet<>();
 
@@ -68,6 +71,16 @@ public class GameModel implements JsonSerializable {
 
     public GameModel(Level level) {
         this(level, State.STOPPED);
+    }
+
+    @JsonCreator
+    public GameModel(
+            @JsonProperty("level") Level level,
+            @JsonProperty("state") State state,
+            @JsonProperty("wasDeserialized") boolean b
+    ) {
+        this(level, state);
+        this.wasDeserialized = b;
     }
 
     public GameModel(Level level, State state) {
@@ -131,14 +144,18 @@ public class GameModel implements JsonSerializable {
 
     public void start() throws InterruptedException {
         state = State.RUNNING;
-        int robotsCount = getLevel().getRobots().size();
-        for (int i = 1; i <= robotsCount; i++) {
-            aliveRobots = new ArrayList<>(getLevel().getRobots().subList(0, i));
-            ScheduledFuture<?> task = scheduleRobots();
-            if (i < robotsCount) {
-                Thread.sleep(1000);
-                task.cancel(false);
+        if (wasDeserialized) {
+            int robotsCount = getLevel().getRobots().size();
+            for (int i = 1; i <= robotsCount; i++) {
+                aliveRobots = new ArrayList<>(getLevel().getRobots().subList(0, i));
+                ScheduledFuture<?> task = scheduleRobots();
+                if (i < robotsCount) {
+                    Thread.sleep(1000);
+                    task.cancel(false);
+                }
             }
+        } else {
+            scheduleRobots();
         }
     }
 

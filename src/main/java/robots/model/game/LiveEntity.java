@@ -1,24 +1,17 @@
 package robots.model.game;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
 public class LiveEntity extends GameEntity {
     private final double damage;
     private double hp;
-    private final double viewRange;
+    private double viewRange = 0;
     private long lastDealTime;
-    private final long restTime;
+    private long restTime = Long.MAX_VALUE;
 
-    public double getDamage() {
-        return damage;
-    }
-
-    public double getHp() {
-        return hp;
-    }
-
-    public double getViewRange() {
-        return viewRange;
-    }
-
+    @Builder(builderMethodName = "liveEntityBuilder")
     public LiveEntity(double x, double y, double damage, double hp, double viewRange, long restTime) {
         super(x, y);
         this.damage = damage;

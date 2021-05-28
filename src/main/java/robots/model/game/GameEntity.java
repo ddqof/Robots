@@ -1,26 +1,17 @@
 package robots.model.game;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+
+@Getter
+@Data
 public class GameEntity {
 
     private double x;
     private double y;
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
+    @Builder(builderMethodName = "entityBuilder")
     public GameEntity(double x, double y) {
         this.x = x;
         this.y = y;
@@ -44,22 +35,5 @@ public class GameEntity {
         double diffX = x - this.x;
         double diffY = y - this.y;
         return Math.atan2(diffY, diffX);
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Target)) {
-            return false;
-        }
-        return ((GameEntity) obj).x == this.x && ((GameEntity) obj).y == this.y;
-    }
-
-    @Override
-    public int hashCode() {
-        int res = 17;
-        res = (int) (res * 31 + Math.min(x, y));
-        res = (int) (res * 31 + Math.max(x, y));
-        return res;
     }
 }

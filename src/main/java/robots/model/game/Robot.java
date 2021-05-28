@@ -1,79 +1,77 @@
 package robots.model.game;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Stack;
 
+@Getter
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class Robot extends LiveEntity {
     public static final int DEFAULT = 0;//стандартный робот, который не умеет стрелять
     public static final int DAMAGE_DEALER = 1;//робот, который умеет стрелять
     public static final int HEAVY = 2;//робот, который имеет много хп, но идет медленно
     private static int count = 0;
 
-    public static final double DEFAULT_DURATION = 7;
     public static final double MAX_VELOCITY = 0.1;
 
     private double direction;
     private final int type;
     private final int id;
     private final double duration;
-    private Stack<Target> path;
-    private Target currentTarget;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setPath(Stack<Target> path) {
-        this.path = path;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public double getDirection() {
-        return direction;
-    }
+    private @Getter
+    final Stack<Target> path;
+    private @Setter
+    Target currentTarget;
 
     public static Robot ofType(int type, double x, double y, Stack<Target> path) {
-        switch (type) {
-            case DEFAULT:
-                return new Robot(x, y, 10, type, path);
-            case DAMAGE_DEALER:
-                return new Robot(x, y, 10, 0, 20, 20, 75, 1000, type, path);
-            case HEAVY:
-                return new Robot(x, y, 30, 5, type, path);
-            default:
-                throw new IllegalArgumentException("Illegal type of robot was passed");
+        RobotBuilder result;
+        if (type == DEFAULT) {
+            result = Robot.robotBuilder().hp(10).duration(7);
+        } else if (type == DAMAGE_DEALER) {
+            result = Robot.robotBuilder().
+                    duration(10).
+                    hp(20).
+                    damage(20).
+                    range(75).
+                    timeout(1000);
+        } else if (type == HEAVY) {
+            result = Robot.robotBuilder().
+                    hp(30).
+                    duration(5);
+        } else {
+            throw new IllegalArgumentException("Illegal type of robot was passed");
         }
+        return result.x(x).y(y).path(path).type(type).build();
     }
 
-    private Robot(double x, double y, double hp, int type, Stack<Target> path) {
-        this(x, y, hp, DEFAULT_DURATION, type, path);
-    }
-
-    private Robot(double x, double y, double hp, double duration, int type, Stack<Target> path) {
-        this(x, y, duration, 0, hp, 0, 0, Long.MAX_VALUE, type, path);
-    }
-
+    @lombok.Builder(builderMethodName = "robotBuilder")
+    @JsonCreator
     private Robot(
-            double x,
-            double y,
-            double duration,
-            double direction,
-            double hp,
-            double damage,
-            double range,
-            long timeout,
-            int type,
-            Stack<Target> path
+            @JsonProperty("x") double x,
+            @JsonProperty("y") double y,
+            @JsonProperty("duration") double duration,
+            @JsonProperty("direction") double direction,
+            @JsonProperty("hp") double hp,
+            @JsonProperty("damage") double damage,
+            @JsonProperty("viewRange") double range,
+            @JsonProperty("restTime") long timeout,
+            @JsonProperty("type") int type,
+            @JsonProperty("path") Stack<Target> path
     ) {
         super(x, y, damage, hp, range, timeout);
         this.duration = duration;
         this.direction = direction;
         this.type = type;
         this.path = path;
-        this.currentTarget = this.path.pop();
+        if (!path.isEmpty()) {
+            this.currentTarget = this.path.pop();
+        }
         this.id = count++;
     }
 
@@ -96,20 +94,6 @@ public class Robot extends LiveEntity {
         return isTargetReached;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Robot robot = (Robot) o;
-        return Double.compare(robot.direction, direction) == 0 && type == robot.type && Double.compare(robot.duration, duration) == 0 && path.equals(robot.path) && currentTarget.equals(robot.currentTarget);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), direction, type, duration, path, currentTarget);
-    }
-
     public String str(GameEntity entity) {
         return String.format(
                 "Robot %d: hp=%f, pos=(%f, %f), dist=%f",
@@ -119,17 +103,5 @@ public class Robot extends LiveEntity {
                 getY(),
                 getDistanceTo(entity)
         );
-    }
-
-    @Override
-    public String toString() {
-        return "Robot{" +
-                "direction=" + direction +
-                ", type=" + type +
-                ", id=" + id +
-                ", duration=" + duration +
-                ", path=" + path +
-                ", currentTarget=" + currentTarget +
-                '}';
     }
 }
